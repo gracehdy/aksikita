@@ -1,8 +1,13 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "tasks": {
+    "db:generate": {
+      "cache": true,
+      "inputs": ["prisma/schema.prisma"],
+      "outputs": ["src/generated/client/**"]
+    },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "db:generate"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", "out/**"]
     },
     "lint": {
@@ -13,7 +18,8 @@
     },
     "dev": {
       "persistent": true,
-      "cache": false
+      "cache": false,
+      "dependsOn": ["db:generate"]
     }
   }
 }
