@@ -6,7 +6,7 @@ const router = useRouter()
 const credentials = ref({
   email: '',
   password: '',
-  rememberMe: false
+  rememberMe: true // TODO: Temporary, for demo only
 })
 
 const login = async () => {
