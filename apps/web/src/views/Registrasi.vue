@@ -1,3 +1,51 @@
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const form = ref({
+  fullName: '',
+  email: '',
+  username: '',
+  password: '',
+  confirmPassword: ''
+})
+
+const register = async () => {
+  if (form.value.password !== form.value.confirmPassword) {
+    alert('Konfirmasi password tidak cocok')
+    return
+  }
+
+  try {
+    const res = await fetch('http://localhost:3000/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        full_name: form.value.fullName,
+        email: form.value.email,
+        username: form.value.username,
+        password: form.value.password,
+        confirmPassword: form.value.confirmPassword
+      })
+    })
+
+    if (res.ok) {
+      alert('Registrasi berhasil! Silakan login.')
+      router.push('/')
+    } else {
+      const error = await res.json()
+      alert(error.message || 'Registrasi gagal')
+    }
+  } catch (err) {
+    console.error(err)
+    alert('Terjadi kesalahan jaringan')
+  }
+}
+</script>
+
 <template>
 <v-app style="background-color: #F8F1F1;">
   <v-container class="register-wrapper" fluid>
@@ -9,24 +57,27 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
+                  v-model="form.fullName"
                   outlined
                   dense
-                  label="Nama Lengkap" 
+                  label="Nama Lengkap"
                   type="text"
                   color="#11698E"
                   class="custom-font-size"
                 ></v-text-field>
 
                 <v-text-field
+                  v-model="form.email"
                   outlined
                   dense
-                  label="Email" 
+                  label="Email"
                   type="email"
                   color="#11698E"
                   class="custom-font-size"
                 ></v-text-field>
 
                 <v-text-field
+                  v-model="form.username"
                   outlined
                   dense
                   label="Username"
@@ -36,6 +87,7 @@
                 ></v-text-field>
 
                 <v-text-field
+                  v-model="form.password"
                   outlined
                   dense
                   label="Password"
@@ -48,7 +100,7 @@
                   outlined
                   dense
                   label="Konfirmasi Password"
-                  type="password" 
+                  type="password"
                   color="#11698E"
                   class="custom-font-size"
                 ></v-text-field>
@@ -57,14 +109,14 @@
               <v-col cols="12">
                 <v-row>
                   <v-col cols="12" class="pt-0">
-                    <v-btn class="register-btn" block>
+                    <v-btn class="register-btn" block @click="register">
                       Daftar
                     </v-btn>
                   </v-col>
 
                   <v-col class="text-center footer-text">
                     <p>
-                      Sudah punya akun? 
+                      Sudah punya akun?
                       <router-link to="/" class="login-link">Login</router-link>
                     </p>
                   </v-col>
@@ -84,7 +136,7 @@
 
 .register-wrapper {
   font-family: 'Poppins', sans-serif !important;
-  font-size: 14px; 
+  font-size: 14px;
 }
 
 .custom-card {
@@ -93,14 +145,14 @@
 
 .register-title {
   font-family: 'Poppins', sans-serif !important;
-  color: #19456B; 
+  color: #19456B;
   margin-bottom: 20px;
   font-weight: 600;
-  font-size: 1.5rem; 
+  font-size: 1.5rem;
 }
 
 .register-btn {
-  background-color: #11698E !important; 
+  background-color: #11698E !important;
   color: white !important;
   font-family: 'Poppins', sans-serif !important;
   font-weight: 600;
@@ -122,12 +174,12 @@
 
 :deep(.v-label) {
   font-family: 'Poppins', sans-serif !important;
-  font-size: 13px !important; 
+  font-size: 13px !important;
 }
 
 :deep(input) {
   font-family: 'Poppins', sans-serif !important;
-  font-size: 14px !important; 
+  font-size: 14px !important;
 }
 
 :deep(.v-application) {
