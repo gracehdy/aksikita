@@ -6,6 +6,12 @@
     "apps/*",
     "packages/*"
   ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "clean": "turbo clean"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "turbo": "^2.9.6"
