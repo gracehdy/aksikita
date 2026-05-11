@@ -35,3 +35,9 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # Turborepo directory
 .turbo/
+
+# SQLite files
+*.db
+
+# Prisma-generated files
+apps/api/src/generated/prisma
