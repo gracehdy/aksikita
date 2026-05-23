@@ -161,35 +161,34 @@
 </template>
 
 <style scoped>
-/* Font Utama */
+
 * {
   font-family: 'Poppins', sans-serif !important;
 }
 
-/* Navbar */
 .logo-text { color: #000000; letter-spacing: -0.5px; font-size: 25px !important; }
 .nav-btn { text-transform: none !important; font-weight: 600 !important; font-size: 18px !important; color: #555555; }
 .active-nav { color: #11698E !important; background-color: #F8F1F1 !important; opacity: 1 !important; }
 .active-nav :deep(.v-icon) { color: #11698E !important; }
 .border-b { border-bottom: 1px solid #eeeeee !important; }
 
-/* Utilities */
+
 .gap-3 { gap: 12px; }
 .gap-4 { gap: 16px; }
 .text-primary-dark { color: #19456B !important; }
 .text-teal { color: #16C79A !important; }
 
-/* Styling Kartu */
+
 .border-card { border: 1px solid #EAEAEA !important; background-color: #FFFFFF; }
 .border-red-light { border: 1px solid #FBE9E9 !important; }
 
-/* List Item di Card 2 */
+
 .info-item { display: flex; align-items: flex-start; }
 
-/* Input Komentar */
+
 .comment-input :deep(.v-field__outline) { border-color: #EAEAEA; }
 
-/* Tambahkan ini di dalam <style scoped> */
+
 .category-chip {
   background-color: #F8F1F1 !important;
   color: #11698E !important;
@@ -202,19 +201,18 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-// Pastikan lokasi import ini sesuai dengan letak file mock data Anda
+
 import { mockReports } from '../data/mockReports' 
 
 const route = useRoute()
 const router = useRouter()
 const report = ref<any>(null)
 
-// 1. Ambil data saat komponen dimuat
+
 onMounted(() => {
-  // Tangkap parameter ID dari URL (misal dari /aksi/2, maka diambil angka 2)
+
   const idAksi = Number(route.params.id)
   
-  // Cari data laporan yang ID-nya cocok dengan parameter URL
   report.value = mockReports.find(r => r.id === idAksi)
 })
 
@@ -222,7 +220,7 @@ const goBack = () => {
   router.back()
 }
 
-// 2. Fungsi Bantuan Format (Disesuaikan dengan halaman utama)
+
 const formatDate = (date: Date | string) => {
   return new Date(date).toLocaleDateString('id-ID')
 }
@@ -231,7 +229,7 @@ const formatDateWithTime = (date: Date | string) => {
   const d = new Date(date)
   const day = d.toLocaleDateString('id-ID', { weekday: 'long' })
   const dateStr = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-  return `${day}, ${dateStr} pukul 08.00` // Hardcode waktu untuk kemudahan visual saat ini
+  return `${day}, ${dateStr} pukul 08.00` 
 }
 
 const formatStatusText = (status: string) => {
@@ -251,7 +249,7 @@ const getStatusColor = (status: string) => {
 const getStatusIcon = (status: string) => {
   const s = formatStatusText(status)
   if (s === 'Sedang Berjalan') return 'mdi-play'
-  if (s === 'Selesai') return 'mdi-check-circle-outline' // Ikon lingkaran centang
+  if (s === 'Selesai') return 'mdi-check-circle-outline' 
   return 'mdi-clock-outline'
 }
 </script>

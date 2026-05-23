@@ -117,7 +117,6 @@
 
             <!-- 3. Badge & Sertifikat (Side by Side) -->
             <v-row>
-              <!-- Badge Section -->
               <v-col>
                 <v-card class="pa-6 mb-6 custom-card" elevation="1" theme="light">
                   <div class="d-flex align-center mb-4">

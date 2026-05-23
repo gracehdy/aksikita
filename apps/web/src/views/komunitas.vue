@@ -208,7 +208,7 @@
   border-bottom: 1px solid #eeeeee !important;
 }
 
-/* Search & Filter */
+
 .search-bar :deep(input) {
   font-family: 'Poppins', sans-serif;
 }
@@ -228,7 +228,7 @@
   border-color: #11698E !important;
 }
 
-/* Cards */
+
 .card-hover {
   transition: all 0.3s ease;
   background: white !important;
@@ -243,14 +243,14 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  -webkit-line-clamp: 2; /* Batasi teks deskripsi jadi 2 baris */
+  -webkit-line-clamp: 2;
 }
 
 .hover-blue:hover {
   color: #11698E !important;
 }
 
-/* Tambahkan ini di bagian bawah <style scoped> Anda */
+
 .category-chip {
   background-color: #F8F1F1 !important;
   color: #11698E !important;
@@ -262,20 +262,18 @@
   font-family: 'Poppins', sans-serif !important;
   font-size: 18px;
   font-weight: 700;
-  color: #19456B; /* Warna biru gelap yang sama dengan halaman Laporan */
+  color: #19456B; 
 }
 </style>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-// Pastikan struktur data di mockReports Anda memiliki properti 'status' dan 'volunteerAction'
 import { mockReports } from '../data/mockReports'
 
 const router = useRouter()
 const reports = ref(mockReports)
 
-// Filter berdasarkan Status, bukan Kategori
 const filterStatus = ref('Semua')
 const filterOptions = [
   { label: 'Semua', value: 'Semua' },
@@ -285,10 +283,9 @@ const filterOptions = [
 ]
 
 const filteredReports = computed(() => {
-  // 1. Saring dulu: HANYA ambil data yang punya 'volunteerAction' (artinya ini adalah Aksi, bukan Laporan biasa)
+  
   const dataAksiSaja = reports.value.filter(r => r.volunteerAction)
 
-  // 2. Terapkan filter status (Semua, Akan Datang, Sedang Berjalan, Selesai)
   if (filterStatus.value === 'Semua') return dataAksiSaja
   
   return dataAksiSaja.filter(r => {
@@ -314,7 +311,7 @@ const formatDate = (date: Date | string) => {
   })
 }
 
-// FUNGSI BANTUAN UNTUK DESAIN DINAMIS
+
 const formatStatusText = (status: string) => {
   if (!status) return 'Akan Datang'
   if (status.toLowerCase().includes('jalan')) return 'Sedang Berjalan'

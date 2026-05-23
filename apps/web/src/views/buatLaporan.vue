@@ -1,6 +1,6 @@
 <template>
   <v-app style="background-color: white;" theme="light">
-    <!-- Navbar (Konsisten px-15) -->
+    <!-- Navbar -->
     <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
       <div class="d-flex align-center">
         <v-sheet color="#11698E" rounded="lg" width="36" height="36" class="d-flex align-center justify-center mr-3">
@@ -44,12 +44,11 @@
 
     <v-main>
       <v-container class="report-wrapper" fluid>
-        <!-- Header Page: Back Button & Title -->
         <div class="d-flex align-center justify-center mb-8">
           <v-spacer></v-spacer>
           <h1 class="page-title">Buat Laporan</h1>
           <v-spacer></v-spacer>
-          <div style="width: 50px"></div> <!-- Penyeimbang agar judul tetap tengah -->
+          <div style="width: 50px"></div> 
         </div>
 
         <!-- Form Card -->
@@ -57,7 +56,6 @@
           <v-col cols="12" md="8" lg="6">
             <v-card class="pa-6 custom-card" elevation="2">
               <v-form>
-                <!-- Judul -->
                 <div class="input-group">
                   <label class="input-label">Judul Laporan</label>
                   <v-text-field
@@ -69,7 +67,6 @@
                   ></v-text-field>
                 </div>
 
-                <!-- Kategori -->
                 <div class="input-group mt-4">
                   <label class="input-label">Kategori</label>
                   <v-select
@@ -82,7 +79,6 @@
                   ></v-select>
                 </div>
 
-                <!-- Lokasi -->
                 <div class="input-group mt-4">
                   <label class="input-label">Lokasi</label>
                   <v-text-field
@@ -95,7 +91,6 @@
                   ></v-text-field>
                 </div>
 
-                <!-- Deskripsi -->
                 <div class="input-group mt-4">
                   <label class="input-label">Deskripsi</label>
                   <v-textarea
@@ -108,7 +103,6 @@
                   ></v-textarea>
                 </div>
 
-                <!-- Upload Foto -->
                 <div class="input-group mt-4">
                   <label class="input-label">Foto (opsional)</label>
                   <div class="upload-area mt-1 d-flex flex-column align-center justify-center">
@@ -119,7 +113,7 @@
                   </div>
                 </div>
 
-                <!-- Checkbox Aksi -->
+
                 <v-checkbox
                   v-model="isRelawan"
                   label="Ubah menjadi aksi relawan"
@@ -170,7 +164,6 @@
                   ></v-textarea>
                 </div>
 
-                <!-- Tombol Batal dan Kirim -->
                 <v-row class="mt-6">
                   <v-col cols="6">
                     <v-btn block outlined color="#19456B" class="action-btn-cancel" @click="$router.back()">

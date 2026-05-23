@@ -197,7 +197,7 @@
   color: #555555;
 }
 
-/* Search & Filter */
+
 .search-bar :deep(input) {
   font-family: 'Poppins', sans-serif;
 }
@@ -298,7 +298,7 @@
   overflow: hidden;
 }
 
-/* Chips & Mini Info */
+
 .author-name {
   font-family: 'Poppins', sans-serif !important;
   font-size: 14px;

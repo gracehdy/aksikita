@@ -175,7 +175,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { mockReports } from '../data/mockReports' // Pastikan rute import data ini tepat
+import { mockReports } from '../data/mockReports' 
 
 const route = useRoute()
 const report = ref<any>(null)
@@ -184,9 +184,9 @@ const valid = ref(false)
 const agreement1 = ref(false)
 const agreement2 = ref(false)
 
-// Fungsi untuk mengambil data yang spesifik saat halaman dimuat
+
 onMounted(() => {
-  // Kita cek query parameter URL, bisa idLaporan atau idAksi tergantung dari mana user klik
+  
   const id = Number(route.query.idLaporan || route.query.idAksi)
   
   if (id) {
@@ -194,7 +194,7 @@ onMounted(() => {
   }
 })
 
-// Fungsi memformat tanggal (Sama seperti komponen lainnya)
+
 const formatDateWithTime = (date: Date | string) => {
   const d = new Date(date)
   const day = d.toLocaleDateString('id-ID', { weekday: 'long' })
@@ -204,29 +204,29 @@ const formatDateWithTime = (date: Date | string) => {
 </script>
 
 <style scoped>
-/* Font Utama */
+
 * {
   font-family: 'Poppins', sans-serif !important;
 }
 
-/* Navbar */
+
 .logo-text { color: #000000; letter-spacing: -0.5px; font-size: 25px !important; }
 .nav-btn { text-transform: none !important; font-weight: 600 !important; font-size: 18px !important; color: #555555; }
 .active-nav { color: #11698E !important; background-color: #F8F1F1 !important; opacity: 1 !important; }
 .active-nav :deep(.v-icon) { color: #11698E !important; }
 .border-b { border-bottom: 1px solid #eeeeee !important; }
 
-/* Utilities */
+
 .gap-4 { display: flex; gap: 16px; }
 .text-teal { color: #16C79A !important; }
 
-/* Styling Kartu */
+
 .border-card { 
   border: 1px solid #EAEAEA !important; 
   background-color: #FFFFFF; 
 }
 
-/* Input Fields */
+
 .input-form :deep(.v-field__outline) { 
   border-color: #EAEAEA; 
 }

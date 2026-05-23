@@ -38,7 +38,7 @@ export const mockReports = [
     description: 'Aksi swadaya masyarakat untuk menutupi lubang besar di jalan utama menggunakan material swadaya agar tidak membahayakan pengendara.',
     category: 'Infrastruktur',
     location: 'Jalan Utama, Demak',
-    status: 'Akan Datang', // Status aksi (Akan Datang / Sedang Berjalan / Selesai)
+    status: 'Akan Datang',
     createdAt: new Date(),
     image: '',
     author: {
@@ -46,9 +46,9 @@ export const mockReports = [
       avatar: ''
     },
     volunteerAction: {
-      requiredPeople: 20, // Target relawan yang dibutuhkan
-      registeredPeople: 5, // Relawan yang sudah mendaftar
-      scheduledDate: new Date('2026-05-30T08:00:00') // Tanggal aksi dilaksanakan
+      requiredPeople: 20, 
+      registeredPeople: 5, 
+      scheduledDate: new Date('2026-05-30T08:00:00') 
     }
   }
 ]

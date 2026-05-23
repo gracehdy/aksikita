@@ -24,9 +24,8 @@ const login = async () => {
 
     if (res.ok) {
       const data = await res.json();
-      // No need to store token – it's in httpOnly cookie
       alert(data.message || "Login berhasil");
-      router.push("/dashboard"); // or any protected page
+      router.push("/dashboard");
     } else {
       const error = await res.json();
       alert(error.message || "Login gagal");
@@ -81,7 +80,7 @@ const login = async () => {
             <v-col cols="12">
               <v-row>
                 <v-col cols="12" class="pt-0">
-                  <v-btn class="login-btn" block> Login </v-btn>
+                  <v-btn class="login-btn" block @click="login"> Login </v-btn>
                 </v-col>
 
                 <v-col class="text-center footer-text">

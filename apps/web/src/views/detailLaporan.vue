@@ -238,7 +238,7 @@ const formatDate = (dateString) => {
   background-color: #FFFFFF;
 }
 
-/* Penyesuaian Warna Chip Kategori */
+
 .category-chip {
   background-color: #F8F1F1 !important;
   color: #11698E !important;
