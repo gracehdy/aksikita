@@ -23,3 +23,11 @@ export class PelaporanController {
     return this.pelaporanService.findOne(id);
   }
 }
+
+@Controller('pelaporan/search')
+export class PelaporanSearchController {
+  @Get()
+  search() {
+    // TODO: implement search functionality here
+  }
+}
