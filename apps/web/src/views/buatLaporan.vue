@@ -121,11 +121,54 @@
 
                 <!-- Checkbox Aksi -->
                 <v-checkbox
+                  v-model="isRelawan"
                   label="Ubah menjadi aksi relawan"
                   color="#16C79A"
                   class="mt-6 custom-checkbox"
                   hide-details
                 ></v-checkbox>
+
+                <div v-if="isRelawan" class="volunteer-info-section pa-4 mt-4 mb-2">
+                  <h3 class="volunteer-title mb-4">Informasi Aksi Relawan</h3>
+
+                  <label class="input-label">Tanggal & Waktu Aksi</label>
+                  <v-text-field
+                    outlined
+                    dense
+                    type="datetime-local"
+                    placeholder="dd/mm/yyyy --:--"
+                    color="#11698E"
+                    class="mt-1 custom-input"
+                  ></v-text-field>
+
+                  <label class="input-label">Jumlah Relawan yang Dibutuhkan</label>
+                  <v-text-field
+                    outlined
+                    dense
+                    type="number"
+                    value="0"
+                    color="#11698E"
+                    class="mt-1 custom-input"
+                  ></v-text-field>
+
+                  <label class="input-label">Tempat Pelaksanaan (opsional jika sama dengan lokasi laporan)</label>
+                  <v-text-field
+                    outlined
+                    dense
+                    placeholder="Lokasi aksi relawan"
+                    color="#11698E"
+                    class="mt-1 custom-input"
+                  ></v-text-field>
+
+                  <label class="input-label">Informasi Tambahan (opsional)</label>
+                  <v-textarea
+                    outlined
+                    placeholder="Contoh: Bawa peralatan sendiri, titik kumpul di gerbang utama, dll."
+                    rows="3"
+                    color="#11698E"
+                    class="mt-1 custom-input"
+                  ></v-textarea>
+                </div>
 
                 <!-- Tombol Batal dan Kirim -->
                 <v-row class="mt-6">
@@ -148,6 +191,17 @@
     </v-main>
   </v-app>
 </template>
+
+<script>
+export default {
+  name: 'BuatLaporan',
+  data() {
+    return {
+      isRelawan: false,
+    };
+  },
+};
+</script>
 
 <style scoped>
 .logo-text {

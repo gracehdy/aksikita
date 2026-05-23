@@ -49,6 +49,7 @@
 <v-main class="bg-white">
   <v-container class="px-15 py-10" fluid>
 
+    
     <!--Header Laporan-->
 
     <div class="mb-10">
@@ -64,6 +65,16 @@
           </v-btn>
       </div>
     </div>
+
+      <v-text-field
+        prepend-inner-icon="mdi-magnify"
+        placeholder="Cari aksi berdasarkan judul, deskripsi, atau lokasi..."
+        variant="outlined"
+        rounded="lg"
+        hide-details
+        class="mb-6 search-bar"
+        color="#11698E"
+      ></v-text-field>
 
     <!--Filter/Kategori-->
 
@@ -141,7 +152,7 @@
                     {{ formatDate(report.volunteerAction.scheduledDate) }}
                   </div>
                 </div>
-                <v-btn block color="#16C79A" class="volunteer-btn" elevation="0" @click.stop>
+                <v-btn block color="#16C79A" class="volunteer-btn" elevation="0" @click.stop="goToDaftarRelawan(report.id)">
                   Daftar Relawan
                 </v-btn>
               </div>
@@ -184,6 +195,14 @@
   font-weight: 600 !important;
   font-size: 18px !important;
   color: #555555;
+}
+
+/* Search & Filter */
+.search-bar :deep(input) {
+  font-family: 'Poppins', sans-serif;
+}
+.search-bar :deep(.v-field__outline) {
+  color: #e0e0e0;
 }
 
 
@@ -342,15 +361,30 @@ const goToCreate = () => {
   router.push('/buat-laporan')
 }
 
-const goToDetail = (report : { id: number }) => {
-  router.push({
-    name: 'Aksi', 
-    params: { id: report.id } 
-  });
+const goToDetail = (report: any) => {
+  if (report.volunteerAction) {
+    router.push({
+      name: 'detailAksi',
+      params: { id: report.id } 
+    });
+  } 
+  else {
+    router.push({
+      name: 'detailLaporan',
+      params: { id: report.id } 
+    });
+  }
 }
 
 const formatDate = (date: Date) => {
   return new Date(date).toLocaleDateString('id-ID')
 }
+const goToDaftarRelawan = (id: number) => {
+  router.push({
+    path: '/daftarRelawan', 
+    query: { idLaporan: id }
+  });
+}
+
 </script>
 

@@ -1,50 +1,61 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '../views/Login.vue'
+import Login from '../views/login.vue'
 
 const routes = [
   {   path: '/',
     name: 'Login',
     component : Login
   },
-  {   path: '/ForgotPassword',
-    name: 'ForgotPassword',
-    component : () => import('../views/ForgotPassword.vue')
+  {   path: '/forgotPassword',
+    name: 'forgotPassword',
+    component : () => import('../views/forgotPassword.vue')
   },
   {
-    path: '/ResetPassword',
-    name: 'ResetPassword',
-    component : () => import('../views/ResetPassword.vue')  
+    path: '/resetPassword',
+    name: 'resetPassword',
+    component : () => import('../views/resetPassword.vue')  
   },
   {
-    path: '/Registrasi',
-    name: 'Registrasi',
-    component : () => import('../views/Registrasi.vue') 
+    path: '/registrasi',
+    name: 'registrasi',
+    component : () => import('../views/registrasi.vue') 
   },
   {
-    path: '/Home',
-    name: 'Home',
-    component : () => import('../views/Home.vue') 
+    path: '/home',
+    name: 'home',
+    component : () => import('../views/home.vue') 
   },
   {
-    path: '/Profile',
-    name: 'Profile',
-    component : () => import('../views/Profile.vue') 
+    path: '/profile',
+    name: 'profile',
+    component : () => import('../views/profile.vue') 
   },
   {
-    path: '/Komunitas',
-    name: 'Komunitas',
-    component : () => import('../views/Komunitas.vue') 
+    path: '/komunitas',
+    name: 'komunitas',
+    component : () => import('../views/komunitas.vue') 
   },
   {
-    path: '/BuatLaporan',
-    name: 'BuatLaporan',
-    component : () => import('../views/BuatLaporan.vue')
+    path: '/buatLaporan',
+    name: 'buatLaporan',
+    component : () => import('../views/buatLaporan.vue')
   },
   {
-    path: '/Aksi/:id',
-    name: 'Aksi',
-    component : () => import('../views/Aksi.vue') 
-  } 
+    path: '/detailLaporan/:id',
+    name: 'detailLaporan',
+    component : () => import('../views/detailLaporan.vue') 
+  }, 
+  {
+    path: '/daftarRelawan', 
+    name: 'daftarRelawan',
+    component : () => import('../views/daftarRelawan.vue')
+  },
+  {
+  path: '/detailAksi/:id',
+  name: 'detailAksi', 
+  component: () => import('../views/detailAksi.vue')
+  }
+  
 
 ]
 
