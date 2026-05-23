@@ -1,4 +1,25 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { PelaporanService } from './pelaporan.service';
+import { CreatePelaporanRequest } from './dto/create-pelaporan.dto';
 
 @Controller('pelaporan')
-export class PelaporanController {}
+export class PelaporanController {
+  constructor(private readonly pelaporanService: PelaporanService) {}
+
+  @Post()
+  create(@Body() createPelaporanDto: CreatePelaporanRequest) {
+    // Creates a new report record. Requires body conforming to CreatePelaporanRequest.
+    return this.pelaporanService.create(this.create(createPelaporanDto));
+  }
+  @Get()
+  findAll() {
+    // Returns all records. Ideally, implement pagination here for scalability.
+    return this.pelaporanService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    // Returns a single report by report_id.
+    return this.pelaporanService.findOne(id);
+  }
+}
