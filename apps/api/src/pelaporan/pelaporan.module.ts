@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { PelaporanController } from './pelaporan.controller';
+import { PelaporanService } from './pelaporan.service';
 
 @Module({
-  controllers: [PelaporanController]
+  controllers: [PelaporanController],
+  providers: [PelaporanService]
 })
 export class PelaporanModule {}
