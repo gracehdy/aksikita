@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model users {
+  id            String  @id
+  username      String? @unique
+  display_name  String?
+  phone_number  String?
+  lokasi_gps    String?
+  password      String?
+  email         String? @unique
+  profile_image String?
+
+  pelaporan   pelaporan[]
+  aksi        aksi[]
+  point       point[]
+  certificate certificate[]
+  reward      reward[]
+}
+
+model pelaporan {
+  report_id         String   @id
+  user_id           String
+  konten            String?
+  media_id          String?
+  kategori_masalah  String?
+  tipe_post         String?
+  lokasi            String?
+  tanggal_pembuatan DateTime @default(now())
+  reply_post        String?
+  status            String?
+
+  user users @relation(fields: [user_id], references: [id])
+
+  media media[]
+  aksi  aksi[]
+}
+
+model media {
+  media_id   String  @id
+  report_id  String
+  media_type String?
+
+  pelaporan pelaporan @relation(fields: [report_id], references: [report_id])
+}
+
+model aksi {
+  aksi_id           String    @id
+  report_id         String
+  user_id           String
+  konten            String?
+  media_id          String?
+  kategori_masalah  String?
+  titik_kumpul      String?
+  waktu_pelaksanaan DateTime?
+  status_aksi       String?
+
+  pelaporan pelaporan @relation(fields: [report_id], references: [report_id])
+  user      users     @relation(fields: [user_id], references: [id])
+}
+
+model point {
+  point_id String  @id
+  user_id  String
+  source   String?
+  value    Int?
+
+  user users @relation(fields: [user_id], references: [id])
+
+  reward reward[]
+}
+
+model badge {
+  badge_id    String  @id
+  badge_name  String?
+  description String?
+
+  reward reward[]
+}
+
+model certificate {
+  certificate_id String  @id
+  user_id        String
+  title          String?
+  file           String?
+
+  user users @relation(fields: [user_id], references: [id])
+
+  reward reward[]
+}
+
+model reward {
+  reward_id      String @id
+  user_id        String
+  point_id       String
+  badge_id       String
+  certificate_id String
+
+  user        users       @relation(fields: [user_id], references: [id])
+  point       point       @relation(fields: [point_id], references: [point_id])
+  badge       badge       @relation(fields: [badge_id], references: [badge_id])
+  certificate certificate @relation(fields: [certificate_id], references: [certificate_id])
+}
