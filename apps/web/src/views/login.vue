@@ -95,13 +95,13 @@ const login = async () => {
                 <v-col class="text-center footer-text">
                   <p>
                     Lupa Password?
-                    <router-link to="/ForgotPassword" class="login-link">
+                    <router-link to="/forgotPassword" class="login-link">
                       Klik Di Sini
                     </router-link>
                   </p>
                   <p>
                     Belum Punya Akun?
-                    <router-link to="/Registrasi" class="login-link">
+                    <router-link to="/registrasi" class="login-link">
                       Daftar Sekarang!
                     </router-link>
                   </p>

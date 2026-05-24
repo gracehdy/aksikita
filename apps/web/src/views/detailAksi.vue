@@ -9,9 +9,9 @@
       </div>
       <v-spacer></v-spacer>
       <div class="d-flex align-center gap-4">
-        <v-btn variant="text" class="nav-btn mr-2" to="/Home"><v-icon start>mdi-home-variant-outline</v-icon>Beranda</v-btn>
-        <v-btn variant="flat" class="nav-btn active-nav mr-2" to="/Komunitas" rounded="xl"><v-icon start>mdi-account-group-outline</v-icon>Aksi Komunitas</v-btn>
-        <v-btn variant="text" class="nav-btn" to="/Profile"><v-icon start>mdi-account-outline</v-icon>Akun</v-btn>
+        <v-btn variant="text" class="nav-btn mr-2" to="/home"><v-icon start>mdi-home-variant-outline</v-icon>Beranda</v-btn>
+        <v-btn variant="flat" class="nav-btn active-nav mr-2" to="/komunitas" rounded="xl"><v-icon start>mdi-account-group-outline</v-icon>Aksi Komunitas</v-btn>
+        <v-btn variant="text" class="nav-btn" to="/profile"><v-icon start>mdi-account-outline</v-icon>Akun</v-btn>
       </div>
     </v-app-bar>
 

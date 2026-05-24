@@ -16,15 +16,15 @@
 
     <v-spacer></v-spacer>
     <div class="d-flex align-center gap-4">
-      <v-btn variant="text" class="nav-btn mr-2" to="/Home">
+      <v-btn variant="text" class="nav-btn mr-2" to="/home">
         <v-icon start >mdi-home-variant-outline</v-icon> Beranda
       </v-btn>
 
-      <v-btn variant="text" class="nav-btn" to="/Komunitas">
+      <v-btn variant="text" class="nav-btn" to="/komunitas">
         <v-icon start>mdi-account-group-outline</v-icon> Aksi Komunitas
       </v-btn>
 
-      <v-btn variant="flat" color="#F8F1F1" class="nav-btn active-nav mr-2" to="/Profile" rounded="xl">
+      <v-btn variant="flat" color="#F8F1F1" class="nav-btn active-nav mr-2" to="/profile" rounded="xl">
         <v-icon start>mdi-account-outline</v-icon> Akun
       </v-btn>
     </div>

@@ -10,17 +10,17 @@
 
       <v-spacer></v-spacer>
         <div class="d-flex align-center gap-4">
-        <v-btn variant="text" class="nav-btn mr-2" to ="/Home" rounded="xl">
+        <v-btn variant="text" class="nav-btn mr-2" to="/home" rounded="xl">
             <v-icon start >mdi-home-variant-outline</v-icon>
             Beranda
         </v-btn>
 
-        <v-btn variant="text" class="nav-btn mr-2" to="/Komunitas">
+        <v-btn variant="text" class="nav-btn mr-2" to="/komunitas">
             <v-icon start>mdi-account-group-outline</v-icon>
             Aksi Komunitas
         </v-btn>
 
-        <v-btn variant="text" class="nav-btn" to="/Profile">
+        <v-btn variant="text" class="nav-btn" to="/profile">
             <v-icon start>mdi-account-outline</v-icon>
             Akun
         </v-btn>

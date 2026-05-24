@@ -20,7 +20,7 @@
           <v-col cols="12">
                 <v-row>
                   <v-col cols="12" class="pt-0">
-                    <v-btn class="fp-btn" block to="/ResetPassword">
+                    <v-btn class="fp-btn" block to="/resetPassword">
                       Kirim Link Reset Password
                     </v-btn>
                   </v-col>

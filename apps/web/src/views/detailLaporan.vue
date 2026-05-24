@@ -19,7 +19,7 @@
         <v-btn 
             variant="flat"
             class="nav-btn active-nav mr-2"
-            to ="/Home"
+            to ="/home"
             rounded="xl"
             
         >
@@ -30,12 +30,12 @@
         <v-btn
             variant="text" 
             class="nav-btn mr-2"
-            to="/Komunitas">
+            to="/komunitas">
             <v-icon start>mdi-account-group-outline</v-icon>
             Aksi Komunitas
         </v-btn>
 
-        <v-btn variant="text" class="nav-btn" to="/Profile">
+        <v-btn variant="text" class="nav-btn" to="/profile">
             <v-icon start>mdi-account-outline</v-icon>
             Akun
         </v-btn>
