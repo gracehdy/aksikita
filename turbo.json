@@ -3,23 +3,21 @@
   "tasks": {
     "db:generate": {
       "cache": true,
-      "inputs": ["database/prisma/schema.prisma"],
-      "outputs": ["src/generated/client/**"]
+      "inputs": ["prisma/schema.prisma", "schema.prisma"],
+      "outputs": ["node_modules/.prisma/client/**", "src/generated/client/**"]
     },
     "build": {
       "dependsOn": ["^build", "db:generate"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", ".next/**", ".output/**"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
-    },
-    "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": ["^lint"],
+      "outputs": []
     },
     "dev": {
       "persistent": true,
       "cache": false,
-      "dependsOn": ["db:generate"]
+      "dependsOn": ["^db:generate"]
     }
   }
 }

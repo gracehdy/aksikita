@@ -4,6 +4,6 @@ import { PelaporanService } from './pelaporan.service';
 
 @Module({
   controllers: [PelaporanController],
-  providers: [PelaporanService]
+  providers: [PelaporanService],
 })
 export class PelaporanModule {}
