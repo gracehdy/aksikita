@@ -70,7 +70,7 @@ const handleForgotPassword = async () => {
                   >
                     Kirim Link Reset Password
                   </v-btn>
-                </v-col>s
+                </v-col>
 
                   <v-col class="text-center footer-text">
                     <p>
