@@ -1,96 +1,87 @@
-import {
-  Injectable,
-  Inject,
-  BadRequestException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { DATABASE_CONNECTION } from '../config/database.config';
-import { Pool } from 'pg';
-import * as bcrypt from 'bcryptjs';
-import * as crypto from 'crypto';
+import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { PrismaService } from '../prisma/prisma.service.ts';
+import { 
+  RegisterRequest, 
+  RegisterResponse, 
+  LoginRequest, 
+  LoginResponse, 
+  JwtPayload, 
+  User 
+} from './auth.contract';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(DATABASE_CONNECTION) private pool: Pool,
-    private jwtService: JwtService,
+    private prisma: PrismaService, 
+    private jwt: JwtService
   ) {}
 
-  // register
-  async register(body: any) {
-    const { fullName, email, username, password, confirmPassword } = body;
+  // 1. REGISTER
+  async register(dto: RegisterRequest): Promise<RegisterResponse> {
+    const { fullName, email, username, password } = dto;
 
-    if (!fullName || !email || !username || !password || !confirmPassword) {
+    if (!fullName || !email || !username || !password) {
       throw new BadRequestException('Please provide all required fields');
     }
 
-    if (password !== confirmPassword) {
-      throw new BadRequestException('Passwords do not match');
-    }
+    const existingUser = await this.prisma.user.findFirst({
+      where: {
+        OR: [{ email }, { username }],
+      },
+    });
 
-    const existingUser = await this.pool.query(
-      'SELECT * FROM users WHERE email = $1 OR username = $2',
-      [email, username],
-    );
-
-    if (existingUser.rows.length > 0) {
+    if (existingUser) {
       throw new BadRequestException('User already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const userId = crypto.randomBytes(10).toString('hex');
-
-    const newUser = await this.pool.query(
-      'INSERT INTO users (id, display_name, email, username, password) VALUES ($1, $2, $3, $4, $5) RETURNING id, display_name, email, username',
-      [userId, fullName, email, username, hashedPassword],
-    );
+    const hashed = await bcrypt.hash(password, 10);
+    
+    await this.prisma.user.create({
+      data: { fullName, email, username, password: hashed },
+    });
 
     return {
-      message: 'User created successfully',
-      user: newUser.rows[0],
+      message: 'Account created successfully',
     };
   }
 
-  //login
-  async login(loginData: any) {
-    const { email, password, rememberMe } = loginData;
+  // 2. LOGIN
+  async login(loginData: LoginRequest): Promise<LoginResponse> {
+    const { usernameOrEmail, password } = loginData;
 
-    if (!email || !password) {
-      throw new BadRequestException('Email and password are required');
+    if (!usernameOrEmail || !password) {
+      throw new BadRequestException('Username/Email and password are required');
     }
 
-    const result = await this.pool.query(
-      'SELECT * FROM users WHERE email = $1',
-      [email],
-    );
+    const user = await this.prisma.user.findFirst({
+      where: {
+        OR: [{ email: usernameOrEmail }, { username: usernameOrEmail }],
+      },
+    });
 
-    if (result.rows.length === 0) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const user = result.rows[0];
+    const payload: JwtPayload = { 
+      sub: user.id, 
+      username: user.username 
+    };
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
-    const expiresIn = rememberMe ? '30d' : '1d';
-
-    const payload = { id: user.id, username: user.username };
-    const token = this.jwtService.sign(payload, { expiresIn });
+    const sanitisedUser: User = {
+      id: user.id,
+      fullName: user.fullName,
+      email: user.email,
+      username: user.username,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
 
     return {
-      message: 'Login successful',
-      user: {
-        id: user.id,
-        display_name: user.display_name,
-        email: user.email,
-        username: user.username,
-      },
-      token,
-      rememberMe,
+      access_token: this.jwt.sign(payload),
+      user: sanitisedUser,
     };
   }
 }
