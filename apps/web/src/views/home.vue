@@ -19,7 +19,7 @@
         <v-btn 
           variant="flat"
           class="nav-btn active-nav mr-2"
-          to ="/home"
+          to="/home"
           rounded="xl"
           
         >

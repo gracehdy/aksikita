@@ -83,6 +83,7 @@ const login = async () => {
                 prepend-inner-icon="mdi-lock"
                 color="#11698E"
                 class="custom-font-size"
+                @keyup.enter="login"
               ></v-text-field>
             </v-card-text>
 

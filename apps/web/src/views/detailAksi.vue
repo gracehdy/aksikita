@@ -141,14 +141,24 @@
 
             <div class="d-flex align-start gap-4 mt-6">
               <v-text-field
+                v-model="newComment"
                 placeholder="Tulis komentar..."
                 variant="outlined"
                 rounded="lg"
                 hide-details
                 color="#11698E"
                 class="comment-input"
+                @keyup.enter="submitComment"
               ></v-text-field>
-              <v-btn color="#11698E" height="56" rounded="lg" class="text-none font-weight-bold px-8 text-white" flat>
+              <v-btn 
+                color="#11698E" 
+                height="56" 
+                rounded="lg" 
+                class="text-none font-weight-bold px-8 text-white" 
+                flat
+                :disabled="!newComment.trim()"
+                @click="submitComment"
+              >
                 <v-icon start>mdi-send-outline</v-icon> Kirim
               </v-btn>
             </div>
@@ -203,12 +213,14 @@ import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
 const router = useRouter()
+
 const report = ref<any>(null)
+const newComment = ref<string>('') 
+const idAksi = route.params.id 
 
 const fetchDetailAksi = async () => {
   const token = localStorage.getItem('jwt_token')
-  const idAksi = route.params.id 
-
+  
   if (!token) {
     router.push('/')
     return
@@ -236,6 +248,35 @@ const fetchDetailAksi = async () => {
   }
 }
 
+const submitComment = async () => {
+  if (!newComment.value.trim()) return
+
+  const token = localStorage.getItem('jwt_token')
+  if (!token) return
+
+  try {
+    const res = await fetch(`http://localhost:3000/api/reports/${idAksi}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        text: newComment.value
+      })
+    })
+
+    if (res.ok) {
+      newComment.value = ''
+      fetchDetailAksi()
+    } else {
+      alert("Gagal mengirim komentar.")
+    }
+  } catch (error) {
+    console.error("Kesalahan mengirim komentar:", error)
+  }
+}
+
 onMounted(() => {
   fetchDetailAksi()
 })
@@ -245,14 +286,16 @@ const goBack = () => {
 }
 
 const formatDate = (date: Date | string) => {
+  if (!date) return ''
   return new Date(date).toLocaleDateString('id-ID')
 }
 
 const formatDateWithTime = (date: Date | string) => {
+  if (!date) return ''
   const d = new Date(date)
   const day = d.toLocaleDateString('id-ID', { weekday: 'long' })
   const dateStr = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-  return `${day}, ${dateStr}`
+  return `${day}, ${dateStr} pukul 08.00`
 }
 
 const formatStatusText = (status: string) => {

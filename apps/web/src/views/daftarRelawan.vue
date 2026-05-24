@@ -76,6 +76,7 @@
           <v-form v-model="valid">
             <label class="font-weight-bold text-body-2 text-grey-darken-3 mb-2 d-block">Nama Lengkap *</label>
             <v-text-field
+              v-model="form.fullName"
               variant="outlined"
               placeholder="Masukkan nama lengkap Anda"
               color="#11698E"
@@ -85,6 +86,7 @@
 
             <label class="font-weight-bold text-body-2 text-grey-darken-3 mb-2 d-block">Email *</label>
             <v-text-field
+              v-model="form.email"
               variant="outlined"
               placeholder="contoh@email.com"
               color="#11698E"
@@ -94,6 +96,7 @@
 
             <label class="font-weight-bold text-body-2 text-grey-darken-3 mb-2 d-block">Nomor Telepon *</label>
             <v-text-field
+              v-model="form.phone"
               variant="outlined"
               placeholder="08xxxxxxxxx"
               color="#11698E"
@@ -104,6 +107,7 @@
             <label class="font-weight-bold text-body-2 text-grey-darken-3 mb-1 d-block">Kondisi Kesehatan / Alergi (opsional)</label>
             <p class="text-caption text-grey-darken-1 mb-2">Informasi ini membantu panitia mempersiapkan kondisi yang sesuai.</p>
             <v-text-field
+              v-model="form.healthCondition"
               variant="outlined"
               placeholder="Contoh: Alergi debu parah, asma, dll."
               color="#11698E"
@@ -113,6 +117,7 @@
 
             <label class="font-weight-bold text-body-2 text-grey-darken-3 mb-2 d-block">Alasan Mengikuti Aksi (opsional)</label>
             <v-textarea
+              v-model="form.reason"
               variant="outlined"
               placeholder="Ceritakan mengapa Anda ingin ikut serta dalam aksi ini..."
               rows="3"
@@ -182,7 +187,6 @@ const route = useRoute()
 const router = useRouter()
 const report = ref<any>(null)
 
-
 const valid = ref(false)
 const agreement1 = ref(false)
 const agreement2 = ref(false)
@@ -224,7 +228,7 @@ const submitRegistration = async () => {
 
   try {
     const payload = {
-      actionId: report.value.id, 
+      actionId: report.value?.id, 
       ...form.value
     }
 
