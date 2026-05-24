@@ -1,6 +1,4 @@
 <template>
-
-  <!-- Navbar -->
   <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
     <div class="d-flex align-center">
       <v-sheet
@@ -267,14 +265,13 @@
 </style>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { mockReports } from '../data/mockReports'
 
 const router = useRouter()
-const reports = ref(mockReports)
-
+const reports = ref<any[]>([]) 
 const filterStatus = ref('Semua')
+
 const filterOptions = [
   { label: 'Semua', value: 'Semua' },
   { label: 'Akan Datang', value: 'Akan Datang' },
@@ -282,35 +279,60 @@ const filterOptions = [
   { label: 'Selesai', value: 'Selesai' }
 ]
 
-const filteredReports = computed(() => {
+const fetchActions = async () => {
+  const token = localStorage.getItem('jwt_token')
   
+  if (!token) {
+    router.push('/')
+    return
+  }
+
+  try {
+    const res = await fetch('http://localhost:3000/api/actions', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+      }
+    })
+
+    if (res.ok) {
+      const data = await res.json()
+      reports.value = data
+    } else if (res.status === 401) {
+      localStorage.removeItem('jwt_token')
+      router.push('/')
+    }
+  } catch (error) {
+    console.error("Error mengambil data aksi:", error)
+  }
+}
+
+onMounted(() => {
+  fetchActions()
+})
+
+const filteredReports = computed(() => {
   const dataAksiSaja = reports.value.filter(r => r.volunteerAction)
 
   if (filterStatus.value === 'Semua') return dataAksiSaja
   
   return dataAksiSaja.filter(r => {
-    const rStatus = r.status ? r.status.toLowerCase() : ''
-    const filterVal = filterStatus.value.toLowerCase()
-    return rStatus.includes(filterVal) || rStatus === filterVal
+    const rStatus = formatStatusText(r.status)
+    return rStatus === filterStatus.value
   })
 })
 
-const goToDetail = (report: { id: number }) => {
-  router.push({
-    name: 'detailAksi', 
-    params: { id: report.id } 
-  });
+
+const goToDetail = (report: any) => {
+  router.push({ name: 'detailAksi', params: { id: report.id } });
 }
 
 const formatDate = (date: Date | string) => {
   return new Date(date).toLocaleDateString('id-ID', {
-    weekday: 'long', 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric'
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   })
 }
-
 
 const formatStatusText = (status: string) => {
   if (!status) return 'Akan Datang'
@@ -319,49 +341,47 @@ const formatStatusText = (status: string) => {
   return 'Akan Datang'
 }
 
-
 const getStatusColor = (status: string) => {
   const s = formatStatusText(status)
   if (s === 'Sedang Berjalan') return '#19456B' 
-  if (s === 'Selesai') return '#16C79A'        
-  return '#11698E'                              
+  if (s === 'Selesai') return '#16C79A' 
+  return '#11698E'
 }
-
 
 const getStatusIcon = (status: string) => {
   const s = formatStatusText(status)
   if (s === 'Sedang Berjalan') return 'mdi-play'
-  if (s === 'Selesai') return 'mdi-check-circle-outline' 
+  if (s === 'Selesai') return 'mdi-check-circle-outline'
   return 'mdi-clock-outline'
 }
 
 const getProgressBarColor = (status: string) => {
   const s = formatStatusText(status)
-  if (s === 'Sedang Berjalan') return '#14b8a6'
+  if (s === 'Sedang Berjalan') return '#11698E'
   if (s === 'Selesai') return 'grey'
-  return '#11698E'
+  return '#16C79A'
 }
 
 const getButtonConfig = (status: string) => {
   const s = formatStatusText(status)
   if (s === 'Sedang Berjalan') {
-    return { color: '#1e3a8a', text: 'Lihat Detail', textClass: 'text-none text-white font-weight-bold' }
+    return { color: '#11698E', text: 'Lihat Detail', textClass: 'text-none text-white font-weight-bold' }
   }
   if (s === 'Selesai') {
     return { color: 'grey-lighten-2', text: 'Aksi Selesai', textClass: 'text-none text-grey-darken-3 font-weight-bold' }
   }
-  return { color: '#20c997', text: 'Daftar Sekarang', textClass: 'text-none text-white font-weight-bold' }
+  return { color: '#16C79A', text: 'Daftar Sekarang', textClass: 'text-none text-white font-weight-bold' }
 }
-
 
 const handleActionClick = (report: any) => {
   const statusText = formatStatusText(report.status)
-
   if (statusText === 'Akan Datang') { 
     router.push({ path: '/daftarRelawan', query: { idAksi: report.id } })
-    
-  } else if (statusText === 'Sedang Berjalan') {
+  } else {
     goToDetail(report)
   }
+}
+const goToDaftarRelawan = (id: number) => {
+  router.push({ path: '/daftarRelawan', query: { idAksi: id } });
 }
 </script>

@@ -160,6 +160,7 @@
                   class="text-none font-weight-bold text-white" 
                   elevation="0"
                   :disabled="!(agreement1 && agreement2)"
+                  @click="submitRegistration"
                 >
                   Kirim Pendaftaran
                 </v-btn>
@@ -174,32 +175,83 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { mockReports } from '../data/mockReports' 
 
 const route = useRoute()
+const router = useRouter()
 const report = ref<any>(null)
+
 
 const valid = ref(false)
 const agreement1 = ref(false)
 const agreement2 = ref(false)
 
+const form = ref({
+  fullName: '',
+  email: '',
+  phone: '',
+  healthCondition: '',
+  reason: ''
+})
 
 onMounted(() => {
-  
   const id = Number(route.query.idLaporan || route.query.idAksi)
-  
   if (id) {
     report.value = mockReports.find(r => r.id === id)
   }
 })
-
 
 const formatDateWithTime = (date: Date | string) => {
   const d = new Date(date)
   const day = d.toLocaleDateString('id-ID', { weekday: 'long' })
   const dateStr = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
   return `${day}, ${dateStr} pukul 08.00`
+}
+
+const submitRegistration = async () => {
+  if (!form.value.fullName || !form.value.email || !form.value.phone) {
+    alert("Mohon isi Nama Lengkap, Email, dan Nomor Telepon Anda.")
+    return
+  }
+
+  const token = localStorage.getItem('jwt_token')
+  if (!token) {
+    alert("Anda harus login terlebih dahulu untuk mendaftar.")
+    router.push('/')
+    return
+  }
+
+  try {
+    const payload = {
+      actionId: report.value.id, 
+      ...form.value
+    }
+
+    const res = await fetch('http://localhost:3000/api/volunteers/register', { 
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+      },
+      body: JSON.stringify(payload)
+    })
+
+    if (res.ok) {
+      alert("Pendaftaran berhasil! Terima kasih atas partisipasi Anda.")
+      router.push('/Komunitas')
+    } else if (res.status === 401) {
+      alert("Sesi login Anda sudah habis. Silakan login ulang.")
+      localStorage.removeItem('jwt_token')
+      router.push('/')
+    } else {
+      const error = await res.json()
+      alert(error.message || "Gagal mendaftar. Silakan coba lagi.")
+    }
+  } catch (err) {
+    console.error("Terjadi kesalahan jaringan:", err)
+    alert("Terjadi kesalahan jaringan.")
+  }
 }
 </script>
 

@@ -147,8 +147,16 @@
                   rounded="lg"
                   color="#11698E"
                   class="comment-input"
+                  @keyup.enter="submitComment"
                 ></v-text-field>
-                <v-btn color="#11698E" height="56" class="px-8 text-none font-weight-bold rounded-lg text-white" flat>
+                <v-btn 
+                  color="#11698E" 
+                  height="56" 
+                  class="px-8 text-none font-weight-bold rounded-lg text-white" 
+                  flat
+                  :disabled="!newComment.trim()"
+                  @click="submitComment"
+                >
                   <v-icon start>mdi-send-outline</v-icon> Kirim
                 </v-btn>
               </div>
@@ -162,22 +170,99 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
-import { computed } from 'vue';
-import { mockReports } from '../data/mockReports'
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
+const router = useRouter();
+
+
+const reportData = ref(null);
+const newComment = ref('');
 const reportId = route.params.id;
 
-const reportData = computed(() => {
-  return mockReports.find(r => r.id === parseInt(reportId));
+const fetchReportDetail = async () => {
+  const token = localStorage.getItem('jwt_token');
+
+  if (!token) {
+    router.push('/');
+    return;
+  }
+
+  try {
+    const res = await fetch(`http://localhost:3000/api/reports/${reportId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+      }
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      reportData.value = data;
+    } else if (res.status === 401) {
+      alert("Sesi Anda telah berakhir.");
+      localStorage.removeItem('jwt_token');
+      router.push('/');
+    } else {
+      console.error("Gagal memuat detail laporan");
+    }
+  } catch (error) {
+    console.error("Terjadi kesalahan jaringan:", error);
+  }
+};
+
+
+const submitComment = async () => {
+  if (!newComment.value.trim()) return;
+
+  const token = localStorage.getItem('jwt_token');
+  if (!token) return;
+
+  try {
+    const res = await fetch(`http://localhost:3000/api/reports/${reportId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        text: newComment.value
+      })
+    });
+
+    if (res.ok) {
+  
+      newComment.value = '';
+
+      fetchReportDetail(); 
+    } else {
+      alert("Gagal mengirim komentar.");
+    }
+  } catch (error) {
+    console.error("Kesalahan mengirim komentar:", error);
+  }
+};
+
+
+onMounted(() => {
+  fetchReportDetail();
 });
+
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
   const date = new Date(dateString);
   const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
   return date.toLocaleDateString('id-ID', options);
+};
+
+const formatDateWithTime = (dateString) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+  return date.toLocaleDateString('id-ID', options) + ' pukul 08.00';
 };
 </script>
 

@@ -201,25 +201,48 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-
-import { mockReports } from '../data/mockReports' 
-
 const route = useRoute()
 const router = useRouter()
 const report = ref<any>(null)
 
+const fetchDetailAksi = async () => {
+  const token = localStorage.getItem('jwt_token')
+  const idAksi = route.params.id 
+
+  if (!token) {
+    router.push('/')
+    return
+  }
+
+  try {
+    const res = await fetch(`http://localhost:3000/api/actions/${idAksi}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+      }
+    })
+
+    if (res.ok) {
+      const data = await res.json()
+      report.value = data
+    } else if (res.status === 401) {
+      alert("Sesi Anda telah berakhir.")
+      localStorage.removeItem('jwt_token')
+      router.push('/')
+    }
+  } catch (error) {
+    console.error("Gagal memuat detail aksi:", error)
+  }
+}
 
 onMounted(() => {
-
-  const idAksi = Number(route.params.id)
-  
-  report.value = mockReports.find(r => r.id === idAksi)
+  fetchDetailAksi()
 })
 
 const goBack = () => {
   router.back()
 }
-
 
 const formatDate = (date: Date | string) => {
   return new Date(date).toLocaleDateString('id-ID')
@@ -229,7 +252,7 @@ const formatDateWithTime = (date: Date | string) => {
   const d = new Date(date)
   const day = d.toLocaleDateString('id-ID', { weekday: 'long' })
   const dateStr = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-  return `${day}, ${dateStr} pukul 08.00` 
+  return `${day}, ${dateStr}`
 }
 
 const formatStatusText = (status: string) => {
@@ -243,7 +266,7 @@ const getStatusColor = (status: string) => {
   const s = formatStatusText(status)
   if (s === 'Sedang Berjalan') return '#19456B'
   if (s === 'Selesai') return '#16C79A'         
-  return '#11698E'                       
+  return '#11698E' 
 }
 
 const getStatusIcon = (status: string) => {

@@ -24,8 +24,16 @@ const login = async () => {
 
     if (res.ok) {
       const data = await res.json();
-      alert(data.message || "Login berhasil");
-      router.push("/dashboard");
+  
+      const token = data.access_token || data.token; 
+      
+      if (token) {
+        localStorage.setItem("jwt_token", token);
+      }
+
+      alert(data.message || "Login berhasil");  
+      router.push("/Home"); 
+      
     } else {
       const error = await res.json();
       alert(error.message || "Login gagal");
@@ -35,6 +43,7 @@ const login = async () => {
     alert("Error jaringan");
   }
 };
+
 </script>
 
 <template>

@@ -32,9 +32,20 @@ const register = async () => {
       })
     })
 
-    if (res.ok) {
-      alert('Registrasi berhasil! Silakan login.')
-      router.push('/')
+   if (res.ok) {
+      const data = await res.json()
+      const token = data.access_token || data.token; 
+      
+      if (token) {
+        localStorage.setItem("jwt_token", token);
+        alert(data.message || 'Registrasi berhasil! Anda otomatis masuk.');
+        router.push('/Home') 
+      } else {
+
+        alert('Registrasi berhasil! Silakan login.');
+        router.push('/')
+      }
+
     } else {
       const error = await res.json()
       alert(error.message || 'Registrasi gagal')

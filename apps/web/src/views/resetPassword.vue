@@ -1,3 +1,52 @@
+<script setup>
+import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
+
+const form = ref({
+  newPassword: '',
+  confirmPassword: ''
+})
+
+const handleResetPassword = async () => {
+  if (form.value.newPassword !== form.value.confirmPassword) {
+    alert('Konfirmasi password tidak cocok!')
+    return
+  }
+  const token = route.query.token
+
+  if (!token) {
+    alert('Token reset password tidak ditemukan. Silakan minta link reset baru.')
+    return
+  }
+
+  try {
+    const res = await fetch('http://localhost:3000/auth/reset-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        token: token,
+        newPassword: form.value.newPassword
+      })
+    })
+
+    if (res.ok) {
+      const data = await res.json()
+      alert(data.message || 'Password berhasil diubah! Silakan login.')
+      router.push('/')
+    } else {
+      const error = await res.json()
+      alert(error.message || 'Gagal mengubah password')
+    }
+  } catch (err) {
+    console.error(err)
+    alert('Terjadi kesalahan jaringan')
+  }
+}
+</script>
+
 <template>
 <v-app style="background-color: #F8F1F1;">
   <v-container class="fill-height fill-width d-flex align-center justify-center">
@@ -8,6 +57,7 @@
 
           <v-card-text>
             <v-text-field
+              v-model="form.newPassword"
               outlined
               dense
               label="Password Baru" 
@@ -18,6 +68,7 @@
             ></v-text-field>
 
             <v-text-field 
+              v-model="form.confirmPassword"
               outlined
               dense
               label="Konfirmasi Password Baru" 
@@ -31,7 +82,7 @@
           <v-col cols="12">
                 <v-row>
                   <v-col cols="12" class="pt-0">
-                    <v-btn class="rp-btn" block to="/Home">
+                    <v-btn class="rp-btn" block @click="handleResetPassword">
                       Reset Password
                     </v-btn>
                   </v-col>
