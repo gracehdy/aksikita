@@ -20,9 +20,7 @@ bun run build
 ├── apps/
 │ ├── api/ # NestJS backend API
 │ └── web/ # Vue.js frontend application
-├── packages/
-│ ├── shared/ # Shared database schemas (Prisma)
-│ └── types/ # Shared TypeScript types/interfaces
+├── packages/types/ # Shared TypeScript types/interfaces
 ├── turbo.json # Turborepo configuration
 └── package.json # Root package.json
 ```
