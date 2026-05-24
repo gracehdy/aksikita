@@ -239,7 +239,7 @@ const submitRegistration = async () => {
 
     if (res.ok) {
       alert("Pendaftaran berhasil! Terima kasih atas partisipasi Anda.")
-      router.push('/Komunitas')
+      router.push('/komunitas')
     } else if (res.status === 401) {
       alert("Sesi login Anda sudah habis. Silakan login ulang.")
       localStorage.removeItem('jwt_token')

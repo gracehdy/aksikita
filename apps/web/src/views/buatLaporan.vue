@@ -256,7 +256,7 @@ const submitReport = async () => {
 
     if (res.ok) {
       alert("Laporan berhasil dikirim!")
-      router.push('/Home')
+      router.push('/home')
     } else if (res.status === 401) {
       alert("Sesi login Anda tidak valid. Silakan login ulang.")
       router.push('/')

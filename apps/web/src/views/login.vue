@@ -32,7 +32,7 @@ const login = async () => {
       }
 
       alert(data.message || "Login berhasil");  
-      router.push("/Home"); 
+      router.push("/home"); 
       
     } else {
       const error = await res.json();

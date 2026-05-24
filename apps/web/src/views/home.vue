@@ -224,7 +224,7 @@ const filteredReports = computed(() => {
 })
 
 const goToCreate = () => {
-  router.push('/buat-laporan')
+  router.push('/buatLaporan')
 }
 
 const goToDetail = (report: any) => {

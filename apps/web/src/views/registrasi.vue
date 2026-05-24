@@ -39,7 +39,7 @@ const register = async () => {
       if (token) {
         localStorage.setItem("jwt_token", token);
         alert(data.message || 'Registrasi berhasil! Anda otomatis masuk.');
-        router.push('/Home') 
+        router.push('/home') 
       } else {
 
         alert('Registrasi berhasil! Silakan login.');
