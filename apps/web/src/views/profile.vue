@@ -226,9 +226,19 @@ const fetchProfile = async () => {
 
     if (res.ok) {
       const data = await res.json();
+      if (data) {
+        userData.value = {
+          name: data.name || userData.value.name,
+          email: data.email || userData.value.email,
+          initials: data.name ? data.name.substring(0, 2).toUpperCase() : 'AM',
+          joinDate: data.joinDate || userData.value.joinDate,
+          stats: data.stats || userData.value.stats
+        };
+      }
     } else if (res.status === 401) {
       alert("Sesi Anda telah berakhir. Silakan login kembali.");
-      handleLogout();
+      localStorage.removeItem('jwt_token');
+      router.push('/');
     }
   } catch (error) {
     console.error("Gagal mengambil data profil:", error);

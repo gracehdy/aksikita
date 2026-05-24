@@ -61,7 +61,7 @@ const handleResetPassword = async () => {
               outlined
               dense
               label="Password Baru" 
-              prepend-inner-icon="mdi-account"
+              prepend-inner-icon="mdi-lock"
               type="password"
               color="#11698E"
               class="custom-font-size"
@@ -73,9 +73,10 @@ const handleResetPassword = async () => {
               dense
               label="Konfirmasi Password Baru" 
               type="password"
-              prepend-inner-icon="mdi-lock"
+              prepend-inner-icon="mdi-lock-check"
               color="#11698E"
               class="custom-font-size"
+              @keyup.enter="handleResetPassword"
             ></v-text-field>
           </v-card-text>
 

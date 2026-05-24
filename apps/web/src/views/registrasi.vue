@@ -108,12 +108,14 @@ const register = async () => {
                 ></v-text-field>
 
                 <v-text-field
+                  v-model="form.confirmPassword"
                   outlined
                   dense
                   label="Konfirmasi Password"
                   type="password"
                   color="#11698E"
                   class="custom-font-size"
+                  @keyup.enter="register"
                 ></v-text-field>
               </v-col>
 

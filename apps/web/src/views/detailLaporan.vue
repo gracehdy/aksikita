@@ -2,45 +2,46 @@
   <v-app style="background-color:white;" theme="light">
     <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
         <div class="d-flex align-center">
-        <v-sheet
-            color="#11698E"
-            rounded="lg"
-            width="36"
-            height="36"
-            class="d-flex align-center justify-center mr-3"
-        >
-            <v-icon color="white" size="30">mdi-account-group</v-icon>
-        </v-sheet>
-        <span class="text-h4 font-weight-bold logo-text">AksiKita</span>
+          <v-sheet
+              color="#11698E"
+              rounded="lg"
+              width="36"
+              height="36"
+              class="d-flex align-center justify-center mr-3"
+          >
+              <v-icon color="white" size="30">mdi-account-group</v-icon>
+          </v-sheet>
+          <span class="text-h4 font-weight-bold logo-text">AksiKita</span>
         </div>
 
         <v-spacer></v-spacer>
         <div class="d-flex align-center gap-4">
-        <v-btn 
-            variant="flat"
-            class="nav-btn active-nav mr-2"
-            to ="/home"
-            rounded="xl"
-            
-        >
-            <v-icon start >mdi-home-variant-outline</v-icon>
-            Beranda
-        </v-btn>
+          <v-btn 
+              variant="flat"
+              class="nav-btn active-nav mr-2"
+              to="/home"
+              rounded="xl"
+          >
+              <v-icon start>mdi-home-variant-outline</v-icon>
+              Beranda
+          </v-btn>
 
-        <v-btn
-            variant="text" 
-            class="nav-btn mr-2"
-            to="/komunitas">
-            <v-icon start>mdi-account-group-outline</v-icon>
-            Aksi Komunitas
-        </v-btn>
+          <v-btn
+              variant="text" 
+              class="nav-btn mr-2"
+              to="/komunitas"
+          >
+              <v-icon start>mdi-account-group-outline</v-icon>
+              Aksi Komunitas
+          </v-btn>
 
-        <v-btn variant="text" class="nav-btn" to="/profile">
-            <v-icon start>mdi-account-outline</v-icon>
-            Akun
-        </v-btn>
+          <v-btn variant="text" class="nav-btn" to="/profile">
+              <v-icon start>mdi-account-outline</v-icon>
+              Akun
+          </v-btn>
         </div>
     </v-app-bar>
+
     <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
       <v-btn variant="text" @click="$router.back()" class="text-none font-weight-medium text-grey-darken-3" style="font-family: 'Poppins', sans-serif;">
         <v-icon start>mdi-arrow-left</v-icon> Kembali
@@ -48,24 +49,29 @@
     </v-app-bar>
 
     <v-main style="background-color:white;" theme="light">
-      <v-container class="px-15 py-10" v-if="reportData">
+      <v-container class="px-15 py-10 text-center" v-if="!reportData">
+        <v-progress-circular indeterminate color="#11698E" size="50"></v-progress-circular>
+      </v-container>
+
+      <v-container class="px-15 py-10" v-else>
         <v-row justify="center">
           <v-col cols="12" md="10" lg="8">
             <v-card class="pa-6 mb-6 rounded-xl border-card" elevation="0">
               <div class="d-flex align-center mb-4">
                 <v-avatar color="#11698E" size="48" class="mr-3">
-                  <span class="text-white text-h6 font-weight-bold">{{ reportData.author.name.charAt(0).toUpperCase() }}</span>
+                  <span class="text-white text-h6 font-weight-bold">
+                    {{ reportData.author?.name ? reportData.author.name.charAt(0).toUpperCase() : 'U' }}
+                  </span>
                 </v-avatar>
                 <div>
-                  <div class="font-weight-bold text-body-1" style="color: #1a202c;">{{ reportData.author.name }}</div>
+                  <div class="font-weight-bold text-body-1" style="color: #1a202c;">{{ reportData.author?.name || 'User' }}</div>
                   <div class="text-caption text-grey">{{ formatDate(reportData.createdAt) }}</div>
                 </div>
               </div>
 
               <div class="d-flex gap-3 mb-6">
                 <v-chip class="category-chip px-4" size="large">{{ reportData.category }}</v-chip>
-                
-                <v-chip v-if="reportData.status === 'action'" class="text-white font-weight-medium px-4" size="large" color="#16C79A">
+                <v-chip v-if="reportData.status === 'action' || reportData.volunteerAction" class="text-white font-weight-medium px-4" size="large" color="#16C79A">
                    Aksi Dibuka
                 </v-chip>
               </div>
@@ -88,7 +94,7 @@
               </p>
             </v-card>
 
-            <v-card v-if="reportData.status === 'action' && reportData.volunteerAction" class="pa-6 mb-6 rounded-xl border-card" elevation="0">
+            <v-card v-if="reportData.volunteerAction" class="pa-6 mb-6 rounded-xl border-card" elevation="0">
               <h3 class="text-h5 font-weight-bold mb-6" style="color: #19456B;">Informasi Aksi Relawan</h3>
               
               <div class="mb-6">
@@ -115,7 +121,14 @@
                 </div>
               </div>
 
-              <v-btn block color="#16C79A" size="large" class="text-white font-weight-bold rounded-lg text-none" elevation="0">
+              <v-btn 
+                block 
+                color="#16C79A" 
+                size="large" 
+                class="text-white font-weight-bold rounded-lg text-none" 
+                elevation="0"
+                @click="goToDaftarRelawan(reportData.id)"
+              >
                 Daftar Relawan
               </v-btn>
             </v-card>
@@ -128,7 +141,7 @@
 
               <div v-for="comment in reportData.comments" :key="comment.id" class="pa-5 rounded-xl mb-4 d-flex" style="background-color: #F8F1F1;">
                 <v-avatar size="40" color="#11698E" class="mr-4 mt-1">
-                  <span class="text-white font-weight-bold">{{ comment.author.charAt(0).toUpperCase() }}</span>
+                  <span class="text-white font-weight-bold">{{ comment.author ? comment.author.charAt(0).toUpperCase() : 'U' }}</span>
                 </v-avatar>
                 <div class="w-100">
                   <div class="d-flex justify-space-between align-center mb-1">
@@ -141,6 +154,7 @@
 
               <div class="d-flex align-start gap-4 mt-6">
                 <v-text-field
+                  v-model="newComment"
                   placeholder="Tulis komentar..."
                   variant="outlined"
                   hide-details
@@ -169,16 +183,15 @@
   </v-app>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
 
-
-const reportData = ref(null);
-const newComment = ref('');
+const reportData = ref<any>(null);
+const newComment = ref<string>('');
 const reportId = route.params.id;
 
 const fetchReportDetail = async () => {
@@ -202,7 +215,7 @@ const fetchReportDetail = async () => {
       const data = await res.json();
       reportData.value = data;
     } else if (res.status === 401) {
-      alert("Sesi Anda telah berakhir.");
+      alert("Sesi Anda telah berakhir. Silakan login kembali.");
       localStorage.removeItem('jwt_token');
       router.push('/');
     } else {
@@ -212,7 +225,6 @@ const fetchReportDetail = async () => {
     console.error("Terjadi kesalahan jaringan:", error);
   }
 };
-
 
 const submitComment = async () => {
   if (!newComment.value.trim()) return;
@@ -233,9 +245,7 @@ const submitComment = async () => {
     });
 
     if (res.ok) {
-  
       newComment.value = '';
-
       fetchReportDetail(); 
     } else {
       alert("Gagal mengirim komentar.");
@@ -245,23 +255,28 @@ const submitComment = async () => {
   }
 };
 
+const goToDaftarRelawan = (id: number) => {
+  router.push({
+    path: '/daftarRelawan',
+    query: { idLaporan: id }
+  });
+};
 
 onMounted(() => {
   fetchReportDetail();
 });
 
-
-const formatDate = (dateString) => {
+const formatDate = (dateString: string | Date) => {
   if (!dateString) return '';
   const date = new Date(dateString);
-  const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+  const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
   return date.toLocaleDateString('id-ID', options);
 };
 
-const formatDateWithTime = (dateString) => {
+const formatDateWithTime = (dateString: string | Date) => {
   if (!dateString) return '';
   const date = new Date(dateString);
-  const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+  const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
   return date.toLocaleDateString('id-ID', options) + ' pukul 08.00';
 };
 </script>

@@ -1,3 +1,42 @@
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const email = ref('')
+const isLoading = ref(false)
+
+const handleForgotPassword = async () => {
+  if (!email.value.trim()) {
+    alert('Mohon masukkan email Anda terlebih dahulu!')
+    return
+  }
+
+  isLoading.value = true
+  try {
+    const res = await fetch('http://localhost:3000/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email.value })
+    })
+
+    if (res.ok) {
+      const data = await res.json()
+      alert(data.message || 'Link reset password telah dikirim ke email Anda. Silakan periksa kotak masuk!')
+      router.push('/')
+    } else {
+      const error = await res.json()
+      alert(error.message || 'Gagal memproses permintaan reset password')
+    }
+  } catch (err) {
+    console.error(err)
+    alert('Terjadi kesalahan jaringan')
+  } finally {
+    isLoading.value = false
+  }
+}
+</script>
+
 <template>
 <v-app style="background-color: #F8F1F1;">
   <v-container class="fill-height fill-width d-flex align-center justify-center">
@@ -11,19 +50,27 @@
               outlined
               dense
               label="Email" 
-              prepend-inner-icon="mdi-account"
+              prepend-inner-icon="mdi-email"
               type="email"
               color="#11698E"
               class="custom-font-size"
+              :disabled="isLoading"
+              @keyup.enter="handleForgotPassword"
             ></v-text-field>
 
           <v-col cols="12">
                 <v-row>
                   <v-col cols="12" class="pt-0">
-                    <v-btn class="fp-btn" block to="/resetPassword">
-                      Kirim Link Reset Password
-                    </v-btn>
-                  </v-col>
+                  <v-btn 
+                    class="fp-btn" 
+                    block 
+                    :loading="isLoading"
+                    :disabled="isLoading"
+                    @click="handleForgotPassword"
+                  >
+                    Kirim Link Reset Password
+                  </v-btn>
+                </v-col>
 
                   <v-col class="text-center footer-text">
                     <p>

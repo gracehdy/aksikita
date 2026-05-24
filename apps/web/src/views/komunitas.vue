@@ -1,4 +1,5 @@
-<template>s
+<template>
+  <v-app>
   <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
     <div class="d-flex align-center">
       <v-sheet
@@ -27,7 +28,7 @@
         variant="flat"
         color="#F8F1F1"
         class="nav-btn active-nav mr-2"
-        to ="/komunitas"
+        to="/komunitas"
         rounded="xl">
         <v-icon start>mdi-account-group-outline</v-icon>
         Aksi Komunitas
@@ -40,7 +41,7 @@
     </div>
   </v-app-bar>
 
-<v-app>
+
 <v-main class="bg-white">
     <v-container class="px-md-15 py-10" fluid>
 

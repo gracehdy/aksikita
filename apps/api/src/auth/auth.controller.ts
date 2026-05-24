@@ -13,14 +13,14 @@ export class AuthController {
 
   @Post('login')
   async login(
-    @Body() loginDto: any, 
-    @Res({ passthrough: true }) res: Response // Gunakan tipe data Response
+    @Body() loginDto: any,
+    @Res({ passthrough: true }) res: Response, // Gunakan tipe data Response
   ) {
     const result = await this.authService.login(loginDto);
-    
+
     // Tentukan durasi cookie (30 hari jika rememberMe, selain itu 1 hari)
-    const maxAge = result.rememberMe 
-      ? 30 * 24 * 60 * 60 * 1000 
+    const maxAge = result.rememberMe
+      ? 30 * 24 * 60 * 60 * 1000
       : 24 * 60 * 60 * 1000;
 
     // Simpan JWT ke dalam cookie
@@ -32,9 +32,9 @@ export class AuthController {
     });
 
     // Mengembalikan data user ke frontend
-    return { 
-      message: result.message, 
-      user: result.user 
+    return {
+      message: result.message,
+      user: result.user,
     };
   }
 
