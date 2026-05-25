@@ -43,7 +43,7 @@
           <v-col cols="12" md="8" lg="6">
             <v-card class="pa-8 custom-card border-card" elevation="0">
               <v-form v-model="isFormValid">
-                
+
                 <div class="input-group">
                   <label class="input-label">Judul Laporan *</label>
                   <v-text-field
@@ -169,11 +169,11 @@
                     </v-btn>
                   </v-col>
                   <v-col cols="6">
-                    <v-btn 
-                      block 
-                      color="#16C79A" 
-                      size="large" 
-                      class="text-none font-weight-bold text-white rounded-lg" 
+                    <v-btn
+                      block
+                      color="#16C79A"
+                      size="large"
+                      class="text-none font-weight-bold text-white rounded-lg"
                       elevation="0"
                       @click="submitReport"
                     >
@@ -245,9 +245,9 @@ const submitReport = async () => {
       volunteerDetails: isRelawan.value ? volunteerForm.value : null
     }
 
-    const res = await fetch('http://localhost:3000/api/reports', { // Ganti dengan URL backend Anda
+    const res = await fetch('/api/reports', {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}` // Sisipkan JWT
       },
