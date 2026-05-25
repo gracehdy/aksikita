@@ -4,7 +4,7 @@
     "db:generate": {
       "cache": true,
       "inputs": ["prisma/schema.prisma", "schema.prisma"],
-      "outputs": ["node_modules/.prisma/client/**", "src/generated/client/**"]
+      "outputs": ["node_modules/.prisma/client/**", "src/generated/prisma"]
     },
     "build": {
       "dependsOn": ["^build", "db:generate"],
