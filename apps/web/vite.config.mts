@@ -10,14 +10,14 @@ export default defineConfig({
   plugins: [
     Vue({
       template: { transformAssetUrls },
-    }), 
+    }),
     // https://github.com/vuetifyjs/vuetify-loader/tree/master/packages/vite-plugin#readme
     Vuetify({
       autoImport: true,
       styles: {
         configFile: 'src/styles/settings.scss',
       },
-    }), 
+    }),
     Fonts({
       fontsource: {
         families: [
@@ -32,7 +32,7 @@ export default defineConfig({
           },
         ],
       },
-    }), 
+    }),
     UnoCSS()
   ],
   define: { 'process.env': {} },
@@ -52,6 +52,12 @@ export default defineConfig({
     ],
   },
   server: {
-    port: 3000,
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'localhost:3000',
+        changeOrigin: true
+      }
+    }
   },
 })
