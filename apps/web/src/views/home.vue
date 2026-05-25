@@ -69,7 +69,6 @@
           hide-details
           class="mb-6 search-bar"
           color="#11698E"
-          @keyup.enter="handleSearch"
         ></v-text-field>
 
       <div class="d-flex ga-3 mb-8 overflow-x-auto pb-2">
@@ -180,7 +179,7 @@ const router = useRouter()
 
 const reports = ref<any[]>([]) 
 const filterCategory = ref('all')
-const searchKeyword = ref('')
+
 const categories = ['all', 'Lingkungan', 'Infrastruktur', 'Sosial', 'Kesehatan']
 const fetchReports = async () => {
   const token = localStorage.getItem('jwt_token')
@@ -211,42 +210,6 @@ const fetchReports = async () => {
     }
   } catch (error) {
     console.error("Error jaringan:", error)
-  }
-}
-
-const handleSearch = async () => {
-  const token = localStorage.getItem('jwt_token')
-  if (!token) return
-  if (!searchKeyword.value.trim()) {
-    fetchReports()
-    return
-  }
-
-  try {
-    const res = await fetch('http://localhost:3000/pelaporan/search', { 
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-
-      body: JSON.stringify({
-        keywords: searchKeyword.value
-      })
-    })
-
-    if (res.ok) {
-      const data = await res.json()
-      reports.value = data 
-    } else if (res.status === 401) {
-      alert("Sesi Anda telah berakhir. Silakan login kembali.")
-      localStorage.removeItem('jwt_token')
-      router.push('/')
-    } else {
-      console.error("Gagal melakukan pencarian")
-    }
-  } catch (error) {
-    console.error("Error saat melakukan pencarian:", error)
   }
 }
 
