@@ -1,21 +1,25 @@
-import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { PrismaService } from '../prisma/prisma.service.ts';
-import { 
-  RegisterRequest, 
-  RegisterResponse, 
-  LoginRequest, 
-  LoginResponse, 
-  JwtPayload, 
-  User 
+import { PrismaService } from '../prisma/prisma.service';
+import {
+  RegisterRequest,
+  RegisterResponse,
+  LoginRequest,
+  LoginResponse,
+  JwtPayload,
+  User,
 } from './auth.contract';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private prisma: PrismaService, 
-    private jwt: JwtService
+    private prisma: PrismaService,
+    private jwt: JwtService,
   ) {}
 
   // 1. REGISTER
@@ -26,7 +30,7 @@ export class AuthService {
       throw new BadRequestException('Please provide all required fields');
     }
 
-    const existingUser = await this.prisma.user.findFirst({
+    const existingUser = await this.prisma.users.findFirst({
       where: {
         OR: [{ email }, { username }],
       },
@@ -37,9 +41,14 @@ export class AuthService {
     }
 
     const hashed = await bcrypt.hash(password, 10);
-    
-    await this.prisma.user.create({
-      data: { fullName, email, username, password: hashed },
+
+    await this.prisma.users.create({
+      data: {
+        display_name: fullName,
+        email,
+        username,
+        password: hashed,
+      },
     });
 
     return {
@@ -55,28 +64,32 @@ export class AuthService {
       throw new BadRequestException('Username/Email and password are required');
     }
 
-    const user = await this.prisma.user.findFirst({
+    const user = await this.prisma.users.findFirst({
       where: {
         OR: [{ email: usernameOrEmail }, { username: usernameOrEmail }],
       },
     });
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (
+      !user ||
+      !password ||
+      !(await bcrypt.compare(password, user.password))
+    ) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload: JwtPayload = { 
-      sub: user.id, 
-      username: user.username 
+    const payload: JwtPayload = {
+      sub: user.id,
+      username: user.username,
     };
 
     const sanitisedUser: User = {
-      id: user.id,
-      fullName: user.fullName,
-      email: user.email,
-      username: user.username,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      id: user.id ?? '',
+      fullName: user.display_name ?? '',
+      email: user.email ?? '',
+      username: user.username ?? '',
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     return {
