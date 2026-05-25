@@ -1,12 +1,20 @@
-import { Controller, Post, Body, Res, Get, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Res,
+  Get,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import type { Response } from 'express';
-import { 
-  RegisterRequest, 
-  RegisterResponse, 
-  LoginRequest, 
-  LoginResponse 
+import type {
+  RegisterRequest,
+  RegisterResponse,
+  LoginRequest,
+  LoginResponse,
 } from './auth.contract';
 
 @Controller('auth')
@@ -14,7 +22,9 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  async register(@Body() registerDto: RegisterRequest): Promise<RegisterResponse> {
+  async register(
+    @Body() registerDto: RegisterRequest,
+  ): Promise<RegisterResponse> {
     return this.authService.register(registerDto);
   }
 
@@ -40,7 +50,9 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(@Res({ passthrough: true }) res: Response): Promise<{ message: string }> {
+  async logout(
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ message: string }> {
     res.clearCookie('token');
     return { message: 'Logged out successfully' };
   }
