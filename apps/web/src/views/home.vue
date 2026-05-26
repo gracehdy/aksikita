@@ -21,16 +21,16 @@
           class="nav-btn active-nav mr-2"
           to="/home"
           rounded="xl"
-          
         >
-          <v-icon start >mdi-home-variant-outline</v-icon>
+          <v-icon start>mdi-home-variant-outline</v-icon>
           Beranda
         </v-btn>
 
         <v-btn
           variant="text" 
           class="nav-btn mr-2"
-          to="/komunitas">
+          to="/komunitas"
+        >
           <v-icon start>mdi-account-group-outline</v-icon>
           Aksi Komunitas
         </v-btn>
@@ -41,25 +41,23 @@
         </v-btn>
       </div>
     </v-app-bar>
-  <v-spacer></v-spacer>
+    <v-spacer></v-spacer>
 
-  <v-main class="bg-white">
-    <v-container class="px-15 py-10" fluid>
-
-      
-      <div class="mb-10">
-        <h1 class="text-h4 font-weight-bold section-title mb-2">Laporan Masalah
-        </h1>
-        <div class="d-flex justify-space-between align-center">
-          <p class="section-subtitle">
-            Laporkan masalah sosial di lingkungan Anda!
-          </p>
-          <v-btn color="#11698E" to="/buatLaporan" class="action-btn" elevation="0">
+    <v-main class="bg-white">
+      <v-container class="px-15 py-10" fluid>
+        
+        <div class="mb-10">
+          <h1 class="text-h4 font-weight-bold section-title mb-2">Laporan Masalah</h1>
+          <div class="d-flex justify-space-between align-center">
+            <p class="section-subtitle">
+              Laporkan masalah sosial di lingkungan Anda!
+            </p>
+            <v-btn color="#11698E" to="/buatLaporan" class="action-btn" elevation="0">
               <v-icon start>mdi-plus</v-icon>
               Buat Laporan
             </v-btn>
+          </div>
         </div>
-      </div>
 
         <v-text-field
           prepend-inner-icon="mdi-magnify"
@@ -71,7 +69,7 @@
           color="#11698E"
         ></v-text-field>
 
-      <div class="d-flex ga-3 mb-8 overflow-x-auto pb-2">
+        <div class="d-flex ga-3 mb-8 overflow-x-auto pb-2">
           <v-btn
             v-for="cat in categories"
             :key="cat"
@@ -90,25 +88,22 @@
             :key="report.id" 
             cols="12" md="6" lg="4"
           >
-          <v-card class="report-card" elevation="0" @click="goToDetail(report)">
-            <v-img
-              v-if="report.image"
-              :src="report.image" 
-              height="220"
-              cover
-              class = "rounded-lg"
-              >
-            </v-img>
-            <div v-else class="no-image-placeholder rounded-lg">
+            <v-card class="report-card" elevation="0" @click="goToDetail(report)">
+              <v-img
+                v-if="report.image"
+                :src="report.image" 
+                height="220"
+                cover
+                class="rounded-lg"
+              ></v-img>
+              <div v-else class="no-image-placeholder rounded-lg">
                 <v-icon size="48" color="#11698E">mdi-alert-circle-outline</v-icon>
               </div>
 
               <v-card-text class="px-0 pt-4">
                 <div class="d-flex align-center mb-4 ga-3">
-                  <v-avatar size = "36" color="#11698E">
-                    <v-img v-if="report.author?.avatar"
-                    :src="report.author.avatar"
-                    />
+                  <v-avatar size="36" color="#11698E">
+                    <v-img v-if="report.author?.avatar" :src="report.author.avatar" />
                     <span v-else class="text-[#11698E] font-weight-bold">
                       {{ report.author?.name?.charAt(0).toUpperCase() || 'U' }} 
                     </span>
@@ -118,14 +113,22 @@
                     <div class="post-date">{{ formatDate(report.createdAt) }}</div>
                   </div>
                 </div>
+
                 <div class="d-flex justify-space-between align-center mb-3">
                   <v-chip size="small" class="category-chip">
                     {{ report.category }}
                   </v-chip>
-                  <v-chip v-if="report.status === 'action' || report.volunteerAction" size="small" class="status-chip">
-                    Aksi Dibuka
+                  
+                  <v-chip 
+                    v-if="report.volunteerAction" 
+                    size="small" 
+                    :color="getActionProperties(report.volunteerAction.status).color"
+                    class="text-white font-weight-bold"
+                  >
+                    {{ report.volunteerAction.status }}
                   </v-chip>
                 </div>
+
                 <h3 class="report-title mb-2">{{ report.title }}</h3>
                 <p class="report-desc mb-4">{{ report.description }}</p>
 
@@ -133,7 +136,8 @@
                   <v-icon size="16" class="mr-1">mdi-map-marker-outline</v-icon>
                   {{ report.location }}
                 </div>
-              <div v-if="report.volunteerAction" class="volunteer-box mt-4">
+
+                <div v-if="report.volunteerAction" class="volunteer-box mt-4">
                   <div class="d-flex align-center justify-space-between mb-4">
                     <div class="volunteer-info">
                       <v-icon size="18" class="mr-1">mdi-account-group-outline</v-icon>
@@ -144,12 +148,21 @@
                       {{ formatDate(report.volunteerAction.scheduledDate) }}
                     </div>
                   </div>
-                  <v-btn block color="#16C79A" class="volunteer-btn" elevation="0" @click.stop="goToDaftarRelawan(report.id)">
-                    Daftar Relawan
+
+                  <v-btn 
+                    block 
+                    :color="getActionProperties(report.volunteerAction.status).color"
+                    :class="getActionProperties(report.volunteerAction.status).textClass"
+                    class="volunteer-btn" 
+                    elevation="0" 
+                    :disabled="report.volunteerAction.status === 'Selesai'"
+                    @click.stop="goToDaftarRelawan(report.id)"
+                  >
+                    {{ getActionProperties(report.volunteerAction.status).text }}
                   </v-btn>
                 </div>
               </v-card-text>
-          </v-card>
+            </v-card>
           </v-col>
         </v-row>
 
@@ -166,9 +179,9 @@
             </div>
           </v-col> 
         </v-row>
-    </v-container>
-  </v-main>
-</v-app>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script setup lang="ts">
@@ -181,6 +194,7 @@ const reports = ref<any[]>([])
 const filterCategory = ref('all')
 
 const categories = ['all', 'Lingkungan', 'Infrastruktur', 'Sosial', 'Kesehatan']
+
 const fetchReports = async () => {
   const token = localStorage.getItem('jwt_token')
   
@@ -223,6 +237,30 @@ const filteredReports = computed(() => {
     : reports.value.filter(r => r.category === filterCategory.value)
 })
 
+// PERBAIKAN: Fungsi penentu warna, teks tombol, dan class styling berdasarkan parameter status dari database
+const getActionProperties = (status: string) => {
+  if (status === 'Sedang Berjalan') {
+    return { 
+      color: '#11698E', 
+      text: 'Lihat Detail', 
+      textClass: 'text-none text-white font-weight-bold' 
+    }
+  }
+  if (status === 'Selesai') {
+    return { 
+      color: '#E0E0E0', // Menggunakan warna abu-abu representatif untuk status selesai
+      text: 'Aksi Selesai', 
+      textClass: 'text-none text-grey-darken-3 font-weight-bold' 
+    }
+  }
+  // Default: Jika status 'Akan Datang' atau status baru dibuat
+  return { 
+    color: '#16C79A', 
+    text: 'Daftar Sekarang', 
+    textClass: 'text-none text-white font-weight-bold' 
+  }
+}
+
 const goToCreate = () => {
   router.push('/buatLaporan')
 }
@@ -246,6 +284,7 @@ const formatDate = (date: string | Date) => {
   if (!date) return ''
   return new Date(date).toLocaleDateString('id-ID')
 }
+
 const goToDaftarRelawan = (id: number) => {
   router.push({
     path: '/daftarRelawan', 

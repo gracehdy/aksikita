@@ -9,9 +9,9 @@
       </div>
 
       <v-spacer></v-spacer>
-        <div class="d-flex align-center gap-4">
+      <div class="d-flex align-center gap-4">
         <v-btn variant="text" class="nav-btn mr-2" to="/home" rounded="xl">
-            <v-icon start >mdi-home-variant-outline</v-icon>
+            <v-icon start>mdi-home-variant-outline</v-icon>
             Beranda
         </v-btn>
 
@@ -24,7 +24,7 @@
             <v-icon start>mdi-account-outline</v-icon>
             Akun
         </v-btn>
-        </div>
+      </div>
     </v-app-bar>
 
     <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
@@ -36,7 +36,7 @@
     <v-main>
       <v-container class="report-wrapper" fluid>
         <div class="d-flex align-center justify-center mb-8">
-          <h1 class="page-title text-h4 font-weight-bold" style="color: #19456B;">Buat Laporan</h1>
+          <h1 class="page-title text-h4 font-weight-bold" style="color: #19456B;">Buat Aksi Relawan</h1>
         </div>
 
         <v-row justify="center">
@@ -44,64 +44,58 @@
             <v-card class="pa-8 custom-card border-card" elevation="0">
               <v-form v-model="isFormValid">
 
-                <div class="input-group">
-                  <label class="input-label">Judul Laporan *</label>
-                  <v-text-field
-                    v-model="form.title"
-                    variant="outlined"
-                    placeholder="Contoh: Sampah menumpuk di taman kota"
-                    color="#11698E"
-                    class="mt-2 custom-input"
-                    rounded="lg"
-                  ></v-text-field>
-                </div>
+                <div class="volunteer-info-section pa-5 rounded-xl" style="background-color: #F8F1F1;">
+                  <h3 class="volunteer-title mb-4" style="color: #19456B;">Informasi Aksi Relawan</h3>
 
-                <div class="input-group mt-2">
-                  <label class="input-label">Kategori *</label>
-                  <v-select
-                    v-model="form.category"
-                    variant="outlined"
-                    :items="['Lingkungan', 'Sosial', 'Infrastruktur', 'Keamanan']"
-                    placeholder="Pilih Kategori"
-                    color="#11698E"
-                    class="mt-2 custom-input"
-                    rounded="lg"
-                  ></v-select>
-                </div>
+                  <div class="input-group">
+                    <label class="input-label">Tanggal & Waktu Aksi</label>
+                    <v-text-field
+                      v-model="volunteerForm.date"
+                      variant="outlined"
+                      type="datetime-local"
+                      color="#11698E"
+                      class="mt-2 custom-input bg-white"
+                      rounded="lg"
+                    ></v-text-field>
+                  </div>
 
-                <div class="input-group mt-2">
-                  <label class="input-label">Lokasi *</label>
-                  <v-text-field
-                    v-model="form.location"
-                    variant="outlined"
-                    placeholder="Contoh: Taman Menteng, Jakarta Pusat"
-                    prepend-inner-icon="mdi-map-marker"
-                    color="#11698E"
-                    class="mt-2 custom-input"
-                    rounded="lg"
-                  ></v-text-field>
-                </div>
+                  <div class="input-group mt-4">
+                    <label class="input-label">Jumlah Relawan yang Dibutuhkan</label>
+                    <v-text-field
+                      v-model="volunteerForm.requiredPeople"
+                      variant="outlined"
+                      type="number"
+                      min="1"
+                      placeholder="Contoh: 15"
+                      color="#11698E"
+                      class="mt-2 custom-input bg-white"
+                      rounded="lg"
+                    ></v-text-field>
+                  </div>
 
-                <div class="input-group mt-2">
-                  <label class="input-label">Deskripsi *</label>
-                  <v-textarea
-                    v-model="form.description"
-                    variant="outlined"
-                    placeholder="Jelaskan masalah yang Anda temukan secara detail..."
-                    rows="4"
-                    color="#11698E"
-                    class="mt-2 custom-input"
-                    rounded="lg"
-                  ></v-textarea>
-                </div>
+                  <div class="input-group mt-4">
+                    <label class="input-label">Tempat Kumpul</label>
+                    <v-text-field
+                      v-model="volunteerForm.meetingPoint"
+                      variant="outlined"
+                      placeholder="Contoh: Di depan gerbang utama"
+                      color="#11698E"
+                      class="mt-2 custom-input bg-white"
+                      rounded="lg"
+                    ></v-text-field>
+                  </div>
 
-                <div class="input-group mt-2">
-                  <label class="input-label">Foto (opsional)</label>
-                  <div class="upload-area mt-2 d-flex flex-column align-center justify-center">
-                    <v-icon size="40" color="#11698E">mdi-cloud-upload-outline</v-icon>
-                    <span class="upload-text mt-2">{{ fileName || 'Klik untuk upload foto' }}</span>
-                    <span class="upload-subtext" v-if="!fileName">PNG, JPG hingga 10MB</span>
-                    <input type="file" class="file-input" accept="image/*" @change="handleFileUpload" />
+                  <div class="input-group mt-4">
+                    <label class="input-label">Peralatan / Info Tambahan</label>
+                    <v-textarea
+                      v-model="volunteerForm.additionalInfo"
+                      variant="outlined"
+                      placeholder="Contoh: Bawa sarung tangan dan kantong sampah sendiri."
+                      rows="3"
+                      color="#11698E"
+                      class="mt-2 custom-input bg-white"
+                      rounded="lg"
+                    ></v-textarea>
                   </div>
                 </div>
 
@@ -118,9 +112,9 @@
                       size="large"
                       class="text-none font-weight-bold text-white rounded-lg"
                       elevation="0"
-                      @click="submitReport"
+                      @click="submitAction"
                     >
-                      Kirim Laporan
+                      Buka Aksi Relawan
                     </v-btn>
                   </v-col>
                 </v-row>
@@ -135,21 +129,14 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 const isFormValid = ref(false)
-const isRelawan = ref(false)
-const fileName = ref('')
-const fileObj = ref(null)
 
-const form = ref({
-  title: '',
-  category: null,
-  location: '',
-  description: ''
-})
+const reportId = route.query.idLaporan
 
 const volunteerForm = ref({
   date: '',
@@ -158,36 +145,29 @@ const volunteerForm = ref({
   additionalInfo: ''
 })
 
-
-const handleFileUpload = (event) => {
-  const file = event.target.files[0]
-  if (file) {
-    fileName.value = file.name
-    fileObj.value = file
-  }
-}
-
-const submitReport = async () => {
-
-  if (!form.value.title || !form.value.category || !form.value.location || !form.value.description) {
-    alert("Mohon lengkapi semua kolom wajib (Judul, Kategori, Lokasi, Deskripsi)!")
+const submitAction = async () => {
+  if (!volunteerForm.value.date || !volunteerForm.value.requiredPeople || !volunteerForm.value.additionalInfo) {
+    alert("Mohon lengkapi semua kolom wajib aksi (Tanggal, Jumlah Relawan, Peralatan)!")
     return
   }
 
   const token = localStorage.getItem('jwt_token')
   if (!token) {
-    alert("Anda harus login terlebih dahulu untuk membuat laporan.")
+    alert("Anda harus login terlebih dahulu untuk membuat aksi relawan.")
     router.push('/')
     return
   }
 
   try {
     const payloadData = {
-      ...form.value,
-      isAction: false
+      reportId: Number(reportId), 
+      scheduledDate: volunteerForm.value.date,
+      requiredPeople: Number(volunteerForm.value.requiredPeople),
+      meetingPoint: volunteerForm.value.meetingPoint,
+      additionalInfo: volunteerForm.value.additionalInfo
     }
 
-    const res = await fetch('/api/reports', {
+    const res = await fetch(`http://localhost:3000/api/reports/${reportId}/action`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -197,17 +177,17 @@ const submitReport = async () => {
     })
 
     if (res.ok) {
-      alert("Laporan berhasil dikirim!")
+      alert("Aksi relawan berhasil dibuka!")
       router.push({
         name: 'detailLaporan',
-        params: { id: data.id }
+        params: { id: reportId }
       })
     } else if (res.status === 401) {
       alert("Sesi login Anda tidak valid. Silakan login ulang.")
       router.push('/')
     } else {
       const error = await res.json()
-      alert(error.message || "Gagal mengirim laporan")
+      alert(error.message || "Gagal membuat aksi relawan")
     }
 
   } catch (err) {
@@ -218,7 +198,6 @@ const submitReport = async () => {
 </script>
 
 <style scoped>
-
 * {
   font-family: 'Poppins', sans-serif !important;
 }
@@ -242,30 +221,6 @@ const submitReport = async () => {
   font-weight: 600;
   color: #19456B;
   display: block;
-}
-
-
-.upload-area {
-  border: 2px dashed #CFD8DC;
-  border-radius: 12px;
-  padding: 30px;
-  position: relative;
-  cursor: pointer;
-  transition: 0.3s;
-  background-color: #FAFAFA;
-}
-.upload-area:hover {
-  background-color: #F0F4F7;
-  border-color: #11698E;
-}
-.file-input {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-  top: 0;
-  left: 0;
 }
 
 :deep(.v-field__outline) { border-color: #EAEAEA !important; }

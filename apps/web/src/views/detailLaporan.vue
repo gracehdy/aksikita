@@ -56,6 +56,7 @@
       <v-container class="px-15 py-10" v-else>
         <v-row justify="center">
           <v-col cols="12" md="10" lg="8">
+            
             <v-card class="pa-6 mb-6 rounded-xl border-card" elevation="0">
               <div class="d-flex align-center mb-4">
                 <v-avatar color="#11698E" size="48" class="mr-3">
@@ -71,12 +72,25 @@
 
               <div class="d-flex gap-3 mb-6">
                 <v-chip class="category-chip px-4" size="large">{{ reportData.category }}</v-chip>
-                <v-chip v-if="reportData.status === 'action' || reportData.volunteerAction" class="text-white font-weight-medium px-4" size="large" color="#16C79A">
-                   Aksi Dibuka
-                </v-chip>
               </div>
 
-              <h1 class="font-weight-bold text-h4 mb-6" style="color: #19456B; font-family: 'Poppins', sans-serif !important;">{{ reportData.title }}</h1>
+              <div class="d-flex justify-space-between align-center mb-6">
+                <h1 class="font-weight-bold text-h4 mb-0" style="color: #19456B; font-family: 'Poppins', sans-serif !important;">
+                  {{ reportData.title }}
+                </h1>
+                
+                <v-btn 
+                  color="#11698E" 
+                  class="text-white font-weight-bold text-none" 
+                  elevation="0"
+                  height="44"
+                  style="border-radius: 12px; font-family: 'Poppins', sans-serif !important;"
+                  @click="goToBuatAksi(reportData.id)"
+                >
+                  <v-icon start>mdi-plus</v-icon>
+                  Ubah Menjadi Aksi
+                </v-btn>
+              </div>
               
               <div class="d-flex flex-wrap ga-4 mb-6 text-grey-darken-3">
                 <div class="d-flex align-center text-body-1">
@@ -92,45 +106,6 @@
               <p class="text-body-1 text-black" style="line-height: 1.6;">
                 {{ reportData.description }}
               </p>
-            </v-card>
-
-            <v-card v-if="reportData.volunteerAction" class="pa-6 mb-6 rounded-xl border-card" elevation="0">
-              <h3 class="text-h5 font-weight-bold mb-6" style="color: #19456B;">Informasi Aksi Relawan</h3>
-              
-              <div class="mb-6">
-                <div class="d-flex align-center mb-4 text-black text-body-1">
-                  <v-icon start color="#11698E" size="28" class="mr-4">mdi-account-group-outline</v-icon>
-                  <div>
-                      <div class="font-weight-bold" style="color: #19456B;">Relawan Terdaftar</div>
-                      {{ reportData.volunteerAction.registeredPeople }}/{{ reportData.volunteerAction.requiredPeople }} relawan terdaftar
-                  </div>
-                </div>
-                <div class="d-flex align-center mb-4 text-black text-body-1">
-                  <v-icon start color="#11698E" size="28" class="mr-4">mdi-map-marker-outline</v-icon>
-                  <div>
-                      <div class="font-weight-bold" style="color: #19456B;">Lokasi Pelaksanaan</div>
-                      {{ reportData.location }}
-                  </div>
-                </div>
-                <div class="d-flex align-center text-black text-body-1">
-                  <v-icon start color="#11698E" size="28" class="mr-4">mdi-calendar-check-outline</v-icon>
-                  <div>
-                      <div class="font-weight-bold" style="color: #19456B;">Tanggal Pelaksanaan</div>
-                      {{ formatDate(reportData.volunteerAction.scheduledDate) }}
-                  </div>
-                </div>
-              </div>
-
-              <v-btn 
-                block 
-                color="#16C79A" 
-                size="large" 
-                class="text-white font-weight-bold rounded-lg text-none" 
-                elevation="0"
-                @click="goToDaftarRelawan(reportData.id)"
-              >
-                Daftar Relawan
-              </v-btn>
             </v-card>
 
             <v-card class="pa-6 rounded-xl border-card" elevation="0">
@@ -255,9 +230,9 @@ const submitComment = async () => {
   }
 };
 
-const goToDaftarRelawan = (id: number) => {
+const goToBuatAksi = (id: number) => {
   router.push({
-    path: '/daftarRelawan',
+    path: '/buatAksi',
     query: { idLaporan: id }
   });
 };
@@ -271,13 +246,6 @@ const formatDate = (dateString: string | Date) => {
   const date = new Date(dateString);
   const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
   return date.toLocaleDateString('id-ID', options);
-};
-
-const formatDateWithTime = (dateString: string | Date) => {
-  if (!dateString) return '';
-  const date = new Date(dateString);
-  const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-  return date.toLocaleDateString('id-ID', options) + ' pukul 08.00';
 };
 </script>
 
@@ -337,7 +305,6 @@ const formatDateWithTime = (dateString: string | Date) => {
   border: 1px solid #EAEAEA !important;
   background-color: #FFFFFF;
 }
-
 
 .category-chip {
   background-color: #F8F1F1 !important;

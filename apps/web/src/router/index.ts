@@ -50,6 +50,12 @@ const routes = [
     name: 'daftarRelawan',
     component : () => import('../views/daftarRelawan.vue')
   },
+   {
+  path: '/buatAksi/:id',
+  name: 'buatAksi', 
+  component: () => import('../views/buatAksi.vue')
+  },
+  
   {
   path: '/detailAksi/:id',
   name: 'detailAksi', 
