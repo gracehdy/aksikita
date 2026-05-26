@@ -237,7 +237,6 @@ const filteredReports = computed(() => {
     : reports.value.filter(r => r.category === filterCategory.value)
 })
 
-// PERBAIKAN: Fungsi penentu warna, teks tombol, dan class styling berdasarkan parameter status dari database
 const getActionProperties = (status: string) => {
   if (status === 'Sedang Berjalan') {
     return { 
@@ -248,12 +247,11 @@ const getActionProperties = (status: string) => {
   }
   if (status === 'Selesai') {
     return { 
-      color: '#E0E0E0', // Menggunakan warna abu-abu representatif untuk status selesai
+      color: '#E0E0E0',
       text: 'Aksi Selesai', 
       textClass: 'text-none text-grey-darken-3 font-weight-bold' 
     }
   }
-  // Default: Jika status 'Akan Datang' atau status baru dibuat
   return { 
     color: '#16C79A', 
     text: 'Daftar Sekarang', 
