@@ -64,6 +64,19 @@
                     {{ reportData.author?.name ? reportData.author.name.charAt(0).toUpperCase() : 'U' }}
                   </span>
                 </v-avatar>
+
+                 <v-btn 
+                  color="#11698E" 
+                  class="text-white font-weight-bold text-none" 
+                  elevation="0"
+                  height="44"
+                  style="border-radius: 12px; font-family: 'Poppins', sans-serif !important;"
+                  @click="goToBuatAksi(reportData.id)"
+                >
+                  <v-icon start>mdi-plus</v-icon>
+                  Ubah Menjadi Aksi
+                </v-btn>
+                
                 <div>
                   <div class="font-weight-bold text-body-1" style="color: #1a202c;">{{ reportData.author?.name || 'User' }}</div>
                   <div class="text-caption text-grey">{{ formatDate(reportData.createdAt) }}</div>
@@ -78,18 +91,7 @@
                 <h1 class="font-weight-bold text-h4 mb-0" style="color: #19456B; font-family: 'Poppins', sans-serif !important;">
                   {{ reportData.title }}
                 </h1>
-                
-                <v-btn 
-                  color="#11698E" 
-                  class="text-white font-weight-bold text-none" 
-                  elevation="0"
-                  height="44"
-                  style="border-radius: 12px; font-family: 'Poppins', sans-serif !important;"
-                  @click="goToBuatAksi(reportData.id)"
-                >
-                  <v-icon start>mdi-plus</v-icon>
-                  Ubah Menjadi Aksi
-                </v-btn>
+              
               </div>
               
               <div class="d-flex flex-wrap ga-4 mb-6 text-grey-darken-3">
