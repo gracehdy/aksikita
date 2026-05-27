@@ -70,12 +70,20 @@ export class AuthService {
       },
     });
 
-    if (
-      !user ||
-      !password ||
-      !(await bcrypt.compare(password, user.password))
-    ) {
+    if (!user) {
       throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const match: boolean = await bcrypt.compare(password, user.password ?? '');
+
+    if (!user || !password || !match) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (!user.username) {
+      throw new UnauthorizedException(
+        'User profile is incomplete: missing username.',
+      );
     }
 
     const payload: JwtPayload = {
@@ -85,7 +93,7 @@ export class AuthService {
 
     const sanitisedUser: User = {
       id: user.id ?? '',
-      fullName: user.display_name ?? '',
+      fullName: user.displayName ?? '',
       email: user.email ?? '',
       username: user.username ?? '',
       createdAt: new Date(),
