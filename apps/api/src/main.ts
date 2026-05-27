@@ -9,6 +9,10 @@ async function bootstrap() {
     credentials: true, // allows cookie to be sent
   });
 
+  app.setGlobalPrefix('api', {
+    exclude: ['auth/(.*)', 'auth'],
+  });
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
