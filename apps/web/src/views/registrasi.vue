@@ -19,7 +19,7 @@ const register = async () => {
   }
 
   try {
-    const res = await fetch('http://localhost:3000/auth/register', {
+    const res = await fetch('/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -34,12 +34,12 @@ const register = async () => {
 
    if (res.ok) {
       const data = await res.json()
-      const token = data.access_token || data.token; 
-      
+      const token = data.access_token || data.token;
+
       if (token) {
         localStorage.setItem("jwt_token", token);
         alert(data.message || 'Registrasi berhasil! Anda otomatis masuk.');
-        router.push('/home') 
+        router.push('/home')
       } else {
 
         alert('Registrasi berhasil! Silakan login.');
