@@ -72,17 +72,15 @@ export interface JwtPayload {
   exp?: number; // Expiration timestamp
 }
 
-export interface Pelaporan {
-  report_id: string;
-  user_id: string;
-  konten?: string | null;
-  media_id?: string | null;
-  kategori_masalah?: string | null;
-  tipe_post?: string | null;
-  lokasi?: string | null;
-  tanggal_pembuatan: Date; // Note: Dates arrive as ISO strings over JSON
-  reply_post?: string | null;
-  status?: string | null;
+export interface ReportModel {
+    id: string;
+    userId: string;
+    title: string;
+    description: string;
+    category: string;
+    postType: boolean;
+    location: string | null;
+    createdAt: Date;
 }
 
 export interface CreatePelaporanInterface {
