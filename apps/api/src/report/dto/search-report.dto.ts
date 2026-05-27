@@ -1,4 +1,4 @@
-// search-pelaporan.dto.ts
+// search-report.dto.ts
 import { IsOptional } from 'class-validator';
 
 export class SearchPelaporanDto {

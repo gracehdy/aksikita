@@ -16,7 +16,7 @@
 
       <v-spacer></v-spacer>
       <div class="d-flex align-center gap-4">
-        <v-btn 
+        <v-btn
           variant="flat"
           class="nav-btn active-nav mr-2"
           to="/home"
@@ -27,7 +27,7 @@
         </v-btn>
 
         <v-btn
-          variant="text" 
+          variant="text"
           class="nav-btn mr-2"
           to="/komunitas"
         >
@@ -45,7 +45,7 @@
 
     <v-main class="bg-white">
       <v-container class="px-15 py-10" fluid>
-        
+
         <div class="mb-10">
           <h1 class="text-h4 font-weight-bold section-title mb-2">Laporan Masalah</h1>
           <div class="d-flex justify-space-between align-center">
@@ -84,14 +84,14 @@
 
         <v-row v-if="filteredReports.length > 0">
           <v-col
-            v-for="report in filteredReports" 
-            :key="report.id" 
+            v-for="report in filteredReports"
+            :key="report.id"
             cols="12" md="6" lg="4"
           >
             <v-card class="report-card" elevation="0" @click="goToDetail(report)">
               <v-img
                 v-if="report.image"
-                :src="report.image" 
+                :src="report.image"
                 height="220"
                 cover
                 class="rounded-lg"
@@ -105,7 +105,7 @@
                   <v-avatar size="36" color="#11698E">
                     <v-img v-if="report.author?.avatar" :src="report.author.avatar" />
                     <span v-else class="text-[#11698E] font-weight-bold">
-                      {{ report.author?.name?.charAt(0).toUpperCase() || 'U' }} 
+                      {{ report.author?.name?.charAt(0).toUpperCase() || 'U' }}
                     </span>
                   </v-avatar>
                   <div>
@@ -118,10 +118,10 @@
                   <v-chip size="small" class="category-chip">
                     {{ report.category }}
                   </v-chip>
-                  
-                  <v-chip 
-                    v-if="report.volunteerAction" 
-                    size="small" 
+
+                  <v-chip
+                    v-if="report.volunteerAction"
+                    size="small"
                     :color="getActionProperties(report.volunteerAction.status).color"
                     class="text-white font-weight-bold"
                   >
@@ -149,12 +149,12 @@
                     </div>
                   </div>
 
-                  <v-btn 
-                    block 
+                  <v-btn
+                    block
                     :color="getActionProperties(report.volunteerAction.status).color"
                     :class="getActionProperties(report.volunteerAction.status).textClass"
-                    class="volunteer-btn" 
-                    elevation="0" 
+                    class="volunteer-btn"
+                    elevation="0"
                     :disabled="report.volunteerAction.status === 'Selesai'"
                     @click.stop="goToDaftarRelawan(report.id)"
                   >
@@ -177,7 +177,7 @@
                 Jadilah yang pertama melaporkan masalah di sekitar Anda!
               </p>
             </div>
-          </v-col> 
+          </v-col>
         </v-row>
       </v-container>
     </v-main>
@@ -190,31 +190,31 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const reports = ref<any[]>([]) 
+const reports = ref<any[]>([])
 const filterCategory = ref('all')
 
 const categories = ['all', 'Lingkungan', 'Infrastruktur', 'Sosial', 'Kesehatan']
 
 const fetchReports = async () => {
   const token = localStorage.getItem('jwt_token')
-  
+
   if (!token) {
     router.push('/')
     return
   }
 
   try {
-    const res = await fetch('http://localhost:3000/api/reports', { 
+    const res = await fetch('/api/reports', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
+        'Authorization': `Bearer ${token}`
       }
     })
 
     if (res.ok) {
       const data = await res.json()
-      reports.value = data 
+      reports.value = data
     } else if (res.status === 401) {
       alert("Sesi Anda telah berakhir. Silakan login kembali.")
       localStorage.removeItem('jwt_token')
@@ -239,23 +239,23 @@ const filteredReports = computed(() => {
 
 const getActionProperties = (status: string) => {
   if (status === 'Sedang Berjalan') {
-    return { 
-      color: '#11698E', 
-      text: 'Lihat Detail', 
-      textClass: 'text-none text-white font-weight-bold' 
+    return {
+      color: '#11698E',
+      text: 'Lihat Detail',
+      textClass: 'text-none text-white font-weight-bold'
     }
   }
   if (status === 'Selesai') {
-    return { 
+    return {
       color: '#E0E0E0',
-      text: 'Aksi Selesai', 
-      textClass: 'text-none text-grey-darken-3 font-weight-bold' 
+      text: 'Aksi Selesai',
+      textClass: 'text-none text-grey-darken-3 font-weight-bold'
     }
   }
-  return { 
-    color: '#16C79A', 
-    text: 'Daftar Sekarang', 
-    textClass: 'text-none text-white font-weight-bold' 
+  return {
+    color: '#16C79A',
+    text: 'Daftar Sekarang',
+    textClass: 'text-none text-white font-weight-bold'
   }
 }
 
@@ -267,13 +267,13 @@ const goToDetail = (report: any) => {
   if (report.volunteerAction) {
     router.push({
       name: 'detailAksi',
-      params: { id: report.id } 
+      params: { id: report.id }
     });
-  } 
+  }
   else {
     router.push({
       name: 'detailLaporan',
-      params: { id: report.id } 
+      params: { id: report.id }
     });
   }
 }
@@ -285,7 +285,7 @@ const formatDate = (date: string | Date) => {
 
 const goToDaftarRelawan = (id: number) => {
   router.push({
-    path: '/daftarRelawan', 
+    path: '/daftarRelawan',
     query: { idLaporan: id }
   });
 }

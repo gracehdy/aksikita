@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PelaporanModule } from './report/pelaporan.module';
+import { PelaporanModule } from './report/report.module';
 import { AchievementsModule } from './achievements/achievements.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AchievementsController } from './achievements/achievements.controller';

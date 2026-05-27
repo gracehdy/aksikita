@@ -1,5 +1,6 @@
+// create-report.dto.ts
 import { IsString, IsOptional, IsUUID } from 'class-validator';
-import { CreatePelaporanDto } from '@aksikita/types'; // Your shared lib
+import { CreatePelaporanDto } from '@aksikita/types';
 
 export class CreatePelaporanRequest implements CreatePelaporanDto {
   @IsUUID()

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
-import { PelaporanService } from './pelaporan.service';
-import { CreatePelaporanRequest } from './dto/create-pelaporan.dto';
+import { PelaporanService } from './report.service';
+import { CreatePelaporanRequest } from './dto/create-report.dto';
 
 @Controller('pelaporan')
 export class PelaporanController {

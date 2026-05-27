@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePelaporanRequest } from './dto/create-pelaporan.dto';
+import { CreatePelaporanRequest } from './dto/create-report.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Report } from '../generated/prisma/client/client';
 
