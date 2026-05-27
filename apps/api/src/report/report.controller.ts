@@ -6,6 +6,7 @@ import {
   Param,
   UseGuards,
   Req,
+  Query,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { CreateReportRequest } from './dto/create-report.dto';
@@ -14,10 +15,7 @@ import { SearchService } from './search/search.service';
 
 @Controller('reports')
 export class ReportController {
-  constructor(
-    private readonly pelaporanService: ReportService,
-    private readonly searchService: SearchService,
-  ) {}
+  constructor(private readonly pelaporanService: ReportService) {}
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
@@ -41,9 +39,12 @@ export class ReportController {
 }
 
 @Controller('pelaporan/search')
-export class PelaporanSearchController {
+export class ReportSearchController {
+  constructor(private readonly searchService: SearchService) {}
+
   @Get()
-  search() {
-    return this.searchService.search();
+  search(@Query('keywords') keywords?: string) {
+    const keywordArr = keywords ? keywords.split(',') : [];
+    return this.searchService.search(keywordArr);
   }
 }
