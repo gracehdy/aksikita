@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { PelaporanService } from './report.service';
 import { CreatePelaporanRequest } from './dto/create-report.dto';
 
-@Controller('pelaporan')
+@Controller('reports')
 export class PelaporanController {
   constructor(private readonly pelaporanService: PelaporanService) {}
 
