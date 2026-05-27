@@ -10,10 +10,14 @@ import {
 import { ReportService } from './report.service';
 import { CreateReportRequest } from './dto/create-report.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { SearchService } from './search/search.service';
 
 @Controller('reports')
 export class ReportController {
-  constructor(private readonly pelaporanService: ReportService) {}
+  constructor(
+    private readonly pelaporanService: ReportService,
+    private readonly searchService: SearchService,
+  ) {}
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
@@ -40,6 +44,6 @@ export class ReportController {
 export class PelaporanSearchController {
   @Get()
   search() {
-    // TODO: implement search functionality here
+    return this.searchService.search();
   }
 }

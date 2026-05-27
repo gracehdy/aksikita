@@ -132,7 +132,7 @@
                 <h3 class="report-title mb-2">{{ report.title }}</h3>
                 <p class="report-desc mb-4">{{ report.description }}</p>
 
-                <div class="d-flex align-center location-text mb-4">
+                <div v-if="report.location" class="d-flex align-center location-text mb-4">
                   <v-icon size="16" class="mr-1">mdi-map-marker-outline</v-icon>
                   {{ report.location }}
                 </div>
@@ -187,10 +187,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { ReportModel } from '@aksikita/types'
 
 const router = useRouter()
 
-const reports = ref<any[]>([])
+const reports = ref<ReportModel[]>([])
 const filterCategory = ref('all')
 
 const categories = ['all', 'Lingkungan', 'Infrastruktur', 'Sosial', 'Kesehatan']
