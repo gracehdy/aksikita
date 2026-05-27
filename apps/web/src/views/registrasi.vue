@@ -1,6 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { RegisterRequest } from '@aksikita/types'
 
 const router = useRouter()
 
@@ -19,17 +20,18 @@ const register = async () => {
   }
 
   try {
+    const body: RegisterRequest = {
+      email: form.value.email,
+      username: form.value.username,
+      password: form.value.password,
+      fullName: form.value.fullName,
+    };
+
     const res = await fetch('/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({
-        full_name: form.value.fullName,
-        email: form.value.email,
-        username: form.value.username,
-        password: form.value.password,
-        confirmPassword: form.value.confirmPassword
-      })
+      body: JSON.stringify(body),
     })
 
    if (res.ok) {

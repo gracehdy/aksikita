@@ -65,6 +65,7 @@
       "name": "@aksikita/web",
       "version": "0.0.0",
       "dependencies": {
+        "@aksikita/types": "workspace:*",
         "@fontsource/roboto": "^5.2.10",
         "@fontsource/roboto-mono": "^5.2.8",
         "@mdi/font": "7.4.47",
