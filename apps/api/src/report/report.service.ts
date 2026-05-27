@@ -4,7 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Report } from '../generated/prisma/client/client';
 
 @Injectable()
-export class PelaporanService {
+export class ReportService {
   constructor(private prismaClient: PrismaService) {}
 
   async create(request: CreatePelaporanRequest, userId: string) {

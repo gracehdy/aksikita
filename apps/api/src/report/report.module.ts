@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PelaporanController } from './report.controller';
-import { PelaporanService } from './report.service';
+import { ReportController } from './report.controller';
+import { ReportService } from './report.service';
 
 @Module({
   imports: [],
-  controllers: [PelaporanController],
-  providers: [PelaporanService],
+  controllers: [ReportController],
+  providers: [ReportService],
 })
-export class PelaporanModule {}
+export class ReportModule {}

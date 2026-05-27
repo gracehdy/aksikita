@@ -7,13 +7,13 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
-import { PelaporanService } from './report.service';
+import { ReportService } from './report.service';
 import { CreatePelaporanRequest } from './dto/create-report.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('reports')
-export class PelaporanController {
-  constructor(private readonly pelaporanService: PelaporanService) {}
+export class ReportController {
+  constructor(private readonly pelaporanService: ReportService) {}
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
