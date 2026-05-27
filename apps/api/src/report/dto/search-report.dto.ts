@@ -1,7 +1,7 @@
 // search-report.dto.ts
 import { IsOptional } from 'class-validator';
 
-export class SearchPelaporanDto {
+export class SearchReportDto {
   @IsOptional()
   keywords: [string];
 }

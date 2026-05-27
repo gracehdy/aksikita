@@ -1,8 +1,8 @@
 // create-report.dto.ts
 import { IsString } from 'class-validator';
-import { CreatePelaporanInterface } from '@aksikita/types';
+import { CreateReportInterface } from '@aksikita/types';
 
-export class CreatePelaporanRequest implements CreatePelaporanInterface {
+export class CreateReportRequest implements CreateReportInterface {
   @IsString()
   category: string;
 

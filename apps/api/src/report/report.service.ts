@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePelaporanRequest } from './dto/create-report.dto';
+import { CreateReportRequest } from './dto/create-report.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Report } from '../generated/prisma/client/client';
 
@@ -7,7 +7,7 @@ import { Report } from '../generated/prisma/client/client';
 export class ReportService {
   constructor(private prismaClient: PrismaService) {}
 
-  async create(request: CreatePelaporanRequest, userId: string) {
+  async create(request: CreateReportRequest, userId: string) {
     const newReport: Report = await this.prismaClient.report.create({
       data: {
         category: request.category,

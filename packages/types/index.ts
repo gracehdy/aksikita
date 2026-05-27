@@ -83,11 +83,11 @@ export interface ReportModel {
     createdAt: Date;
 }
 
-export interface CreatePelaporanInterface {
+export interface CreateReportInterface {
   category: string;
   description: string;
   location: string;
   title: string;
 }
 
-export type UpdatePelaporanDto = Partial<CreatePelaporanInterface>;
+export type UpdatePelaporanDto = Partial<CreateReportInterface>;
