@@ -7,8 +7,19 @@ import { Report } from '../generated/prisma/client/client';
 export class PelaporanService {
   constructor(private prismaClient: PrismaService) {}
 
-  create(createPelaporanDto: CreatePelaporanRequest) {
-    // Logic to save the report record
+  async create(request: CreatePelaporanRequest, userId: string) {
+    const newReport: Report = await this.prismaClient.report.create({
+      data: {
+        category: request.category,
+        description: request.description,
+        location: request.location,
+        title: request.title,
+        postType: false,
+        userId: userId,
+      },
+    });
+
+    return newReport;
   }
 
   async findAll(): Promise<Report[]> {

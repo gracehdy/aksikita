@@ -85,6 +85,11 @@ export interface Pelaporan {
   status?: string | null;
 }
 
-export type CreatePelaporanDto = Omit<Pelaporan, "tanggal_pembuatan">;
+export interface CreatePelaporanInterface {
+  category: string;
+  description: string;
+  location: string;
+  title: string;
+}
 
-export type UpdatePelaporanDto = Partial<CreatePelaporanDto>;
+export type UpdatePelaporanDto = Partial<CreatePelaporanInterface>;

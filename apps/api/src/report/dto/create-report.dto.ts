@@ -1,39 +1,17 @@
 // create-report.dto.ts
-import { IsString, IsOptional, IsUUID } from 'class-validator';
-import { CreatePelaporanDto } from '@aksikita/types';
+import { IsString } from 'class-validator';
+import { CreatePelaporanInterface } from '@aksikita/types';
 
-export class CreatePelaporanRequest implements CreatePelaporanDto {
-  @IsUUID()
-  report_id: string;
-
-  @IsUUID()
-  user_id: string;
+export class CreatePelaporanRequest implements CreatePelaporanInterface {
+  @IsString()
+  category: string;
 
   @IsString()
-  @IsOptional()
-  konten?: string | null;
+  description: string;
 
   @IsString()
-  @IsOptional()
-  media_id?: string | null;
+  location: string;
 
   @IsString()
-  @IsOptional()
-  kategori_masalah?: string | null;
-
-  @IsString()
-  @IsOptional()
-  tipe_post?: string | null;
-
-  @IsString()
-  @IsOptional()
-  lokasi?: string | null;
-
-  @IsString()
-  @IsOptional()
-  reply_post?: string | null;
-
-  @IsString()
-  @IsOptional()
-  status?: string | null;
+  title: string;
 }

@@ -9,6 +9,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [
+    ConfigModule,
     PrismaModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
 
@@ -16,9 +17,7 @@ import { PrismaModule } from '../prisma/prisma.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret:
-          configService.get<string>('JWT_SECRET') ||
-          'RAHASIA_SUPER_AMAN_AKSI_KITA',
+        secret: configService.get<string>('JWT_SECRET') || 'RAHASIA_AKSI_KITA',
         signOptions: { expiresIn: '1d' },
       }),
     }),

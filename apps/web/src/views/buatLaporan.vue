@@ -133,9 +133,10 @@
   </v-app>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { CreatePelaporanInterface } from '@aksikita/types'
 
 const router = useRouter()
 
@@ -146,7 +147,7 @@ const fileObj = ref(null)
 
 const form = ref({
   title: '',
-  category: null,
+  category: '',
   location: '',
   description: ''
 })
@@ -182,10 +183,12 @@ const submitReport = async () => {
   }
 
   try {
-    const payloadData = {
-      ...form.value,
-      isAction: false
-    }
+    const payloadData: CreatePelaporanInterface = {
+      category: (!form.value.category || form.value.category === '') ? 'Lainnya' : form.value.category ,
+      description: form.value.description,
+      location: form.value.location,
+      title: form.value.title,
+    };
 
     const res = await fetch('/api/reports', {
       method: 'POST',
