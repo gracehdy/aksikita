@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePelaporanRequest } from './dto/create-pelaporan.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { pelaporanModel } from '../generated/prisma/models';
+import { ReportModel } from '../generated/prisma/models';
 
 @Injectable()
 export class PelaporanService {
@@ -11,17 +11,17 @@ export class PelaporanService {
     // Logic to save the report record
   }
 
-  async findAll(): Promise<pelaporanModel[]> {
+  async findAll(): Promise<ReportModel[]> {
     // Logic to return an array of all reports
-    const allReports = await this.prismaClient.pelaporan.findMany();
+    const allReports = await this.prismaClient.report.findMany();
     return allReports;
   }
 
-  async findOne(id: string): Promise<pelaporanModel | null> {
+  async findOne(id: string): Promise<ReportModel | null> {
     // Logic to find a report by ID
-    const result: pelaporanModel | null =
-      await this.prismaClient.pelaporan.findUnique({
-        where: { report_id: id },
+    const result: ReportModel | null =
+      await this.prismaClient.report.findUnique({
+        where: { id: id },
       });
 
     return result;

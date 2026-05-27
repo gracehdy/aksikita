@@ -30,7 +30,7 @@ export class AuthService {
       throw new BadRequestException('Please provide all required fields');
     }
 
-    const existingUser = await this.prisma.users.findFirst({
+    const existingUser = await this.prisma.user.findFirst({
       where: {
         OR: [{ email }, { username }],
       },
@@ -42,9 +42,9 @@ export class AuthService {
 
     const hashed = await bcrypt.hash(password, 10);
 
-    await this.prisma.users.create({
+    await this.prisma.user.create({
       data: {
-        display_name: fullName,
+        displayName: fullName,
         email,
         username,
         password: hashed,
@@ -64,7 +64,7 @@ export class AuthService {
       throw new BadRequestException('Username/Email and password are required');
     }
 
-    const user = await this.prisma.users.findFirst({
+    const user = await this.prisma.user.findFirst({
       where: {
         OR: [{ email: usernameOrEmail }, { username: usernameOrEmail }],
       },
