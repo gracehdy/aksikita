@@ -1,39 +1,39 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { LoginRequest } from "@aksikita/types";
 
 const router = useRouter();
 const credentials = ref({
   email: "",
   password: "",
-  rememberMe: false,
 });
 
 const login = async () => {
   try {
-    const res = await fetch("http://localhost:3000/auth/login", {
+    const body: LoginRequest = {
+      usernameOrEmail: credentials.value.email,
+      password: credentials.value.password,
+    };
+
+    const res = await fetch("/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({
-        email: credentials.value.email,
-        password: credentials.value.password,
-        rememberMe: credentials.value.rememberMe,
-      }),
+      body: JSON.stringify(body),
     });
 
     if (res.ok) {
       const data = await res.json();
-  
-      const token = data.access_token || data.token; 
-      
+      const token = data.access_token || data.token;
+
       if (token) {
         localStorage.setItem("jwt_token", token);
       }
 
-      alert(data.message || "Login berhasil");  
-      router.push("/home"); 
-      
+      alert(data.message || "Login berhasil");
+      router.push("/home");
+
     } else {
       const error = await res.json();
       alert(error.message || "Login gagal");
