@@ -6,12 +6,10 @@ import {
   Param,
   UseGuards,
   Req,
-  Query,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { CreateReportRequest } from './dto/create-report.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { SearchService } from './search/search.service';
 
 @Controller('reports')
 export class ReportController {
@@ -35,16 +33,5 @@ export class ReportController {
   findOne(@Param('id') id: string) {
     // Returns a single report by report_id.
     return this.pelaporanService.findOne(id);
-  }
-}
-
-@Controller('pelaporan/search')
-export class ReportSearchController {
-  constructor(private readonly searchService: SearchService) {}
-
-  @Get()
-  search(@Query('keywords') keywords?: string) {
-    const keywordArr = keywords ? keywords.split(',') : [];
-    return this.searchService.search(keywordArr);
   }
 }
