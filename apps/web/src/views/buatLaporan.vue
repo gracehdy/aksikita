@@ -111,7 +111,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { CreatePelaporanInterface } from '@aksikita/types'
+import { CreateReportInterface } from '@aksikita/types'
 import Navbar from '../components/Navbar.vue'
 
 const router = useRouter()
@@ -159,7 +159,7 @@ const submitReport = async () => {
   }
 
   try {
-    const payloadData: CreatePelaporanInterface = {
+    const payloadData: CreateReportInterface = {
       category: (!form.value.category || form.value.category === '') ? 'Lainnya' : form.value.category ,
       description: form.value.description,
       location: form.value.location,
