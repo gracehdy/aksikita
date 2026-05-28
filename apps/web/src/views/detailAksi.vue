@@ -1,19 +1,6 @@
 <template>
   <v-app style="background-color: #FAFAFA;" theme="light">
-    <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
-      <div class="d-flex align-center">
-        <v-sheet color="#11698E" rounded="lg" width="36" height="36" class="d-flex align-center justify-center mr-3">
-          <v-icon color="white" size="30">mdi-account-group</v-icon>
-        </v-sheet>
-        <span class="text-h4 font-weight-bold logo-text">AksiKita</span>
-      </div>
-      <v-spacer></v-spacer>
-      <div class="d-flex align-center gap-4">
-        <v-btn variant="text" class="nav-btn mr-2" to="/home"><v-icon start>mdi-home-variant-outline</v-icon>Beranda</v-btn>
-        <v-btn variant="flat" class="nav-btn active-nav mr-2" to="/komunitas" rounded="xl"><v-icon start>mdi-account-group-outline</v-icon>Aksi Komunitas</v-btn>
-        <v-btn variant="text" class="nav-btn" to="/profile"><v-icon start>mdi-account-outline</v-icon>Akun</v-btn>
-      </div>
-    </v-app-bar>
+    <Navbar />
 
     <v-main>
       <v-container v-if="!report" class="py-15 text-center">
@@ -21,7 +8,7 @@
       </v-container>
 
       <v-container v-else class="py-10" style="max-width: 900px;">
-        
+
         <v-btn variant="text" class="mb-6 text-none font-weight-medium text-grey-darken-3" prepend-icon="mdi-arrow-left" @click="goBack" style="font-family: 'Poppins', sans-serif;">
           Kembali
         </v-btn>
@@ -43,7 +30,7 @@
                 {{ report.category }}
               </v-chip>
               <v-chip :color="getStatusColor(report.status)" class="text-white font-weight-medium px-4" size="large">
-                <v-icon start size="small">{{ getStatusIcon(report.status) }}</v-icon> 
+                <v-icon start size="small">{{ getStatusIcon(report.status) }}</v-icon>
                 {{ formatStatusText(report.status) }}
               </v-chip>
             </div>
@@ -51,13 +38,13 @@
             <h1 class="font-weight-bold text-h4 mb-6 text-black" style="font-family: 'Poppins', sans-serif !important;">
               {{ report.title }}
             </h1>
-            
+
             <div class="d-flex align-center text-body-1 text-grey-darken-3 mb-2">
-              <v-icon color="grey-darken-1" size="small" class="mr-3">mdi-map-marker-outline</v-icon> 
+              <v-icon color="grey-darken-1" size="small" class="mr-3">mdi-map-marker-outline</v-icon>
               {{ report.location }}
             </div>
             <div class="d-flex align-center text-body-1 text-grey-darken-3 mb-6">
-              <v-icon color="grey-darken-1" size="small" class="mr-3">mdi-calendar-blank-outline</v-icon> 
+              <v-icon color="grey-darken-1" size="small" class="mr-3">mdi-calendar-blank-outline</v-icon>
               {{ report.volunteerAction ? formatDateWithTime(report.volunteerAction.scheduledDate) : 'Tanggal belum ditentukan' }}
             </div>
 
@@ -69,7 +56,7 @@
 
         <v-card v-if="report.volunteerAction" class="mb-6 rounded-xl border-card px-4 py-4" elevation="0">
           <v-card-title class="font-weight-bold text-h5 text-primary-dark mb-4">Informasi Aksi</v-card-title>
-          
+
           <v-card-text>
             <div class="info-item mb-6">
               <v-icon color="#11698E" size="28" class="mr-4 mt-1">mdi-calendar-check-outline</v-icon>
@@ -87,10 +74,10 @@
                   <div class="text-black">{{ report.volunteerAction.requiredPeople }} orang</div>
                   <div class="font-weight-bold text-teal">{{ report.volunteerAction.registeredPeople }}/{{ report.volunteerAction.requiredPeople }} terdaftar</div>
                 </div>
-                <v-progress-linear 
-                  :model-value="(report.volunteerAction.registeredPeople / report.volunteerAction.requiredPeople) * 100" 
-                  color="#16C79A" 
-                  height="10" 
+                <v-progress-linear
+                  :model-value="(report.volunteerAction.registeredPeople / report.volunteerAction.requiredPeople) * 100"
+                  color="#16C79A"
+                  height="10"
                   rounded>
                 </v-progress-linear>
               </div>
@@ -115,7 +102,7 @@
           <v-card-title class="font-weight-bold text-h5 text-primary-dark mb-4 d-flex align-center">
             <v-icon class="mr-2" size="28">mdi-comment-outline</v-icon> Komentar (2)
           </v-card-title>
-          
+
           <v-card-text>
             <v-sheet color="#F8F1F1" class="pa-5 rounded-xl mb-4 d-flex">
               <v-avatar color="#11698E" size="40" class="text-white font-weight-bold mr-4 mt-1">R</v-avatar>
@@ -150,11 +137,11 @@
                 class="comment-input"
                 @keyup.enter="submitComment"
               ></v-text-field>
-              <v-btn 
-                color="#11698E" 
-                height="56" 
-                rounded="lg" 
-                class="text-none font-weight-bold px-8 text-white" 
+              <v-btn
+                color="#11698E"
+                height="56"
+                rounded="lg"
+                class="text-none font-weight-bold px-8 text-white"
                 flat
                 :disabled="!newComment.trim()"
                 @click="submitComment"
@@ -210,17 +197,18 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import Navbar from '../components/Navbar.vue'
 
 const route = useRoute()
 const router = useRouter()
 
 const report = ref<any>(null)
-const newComment = ref<string>('') 
-const idAksi = route.params.id 
+const newComment = ref<string>('')
+const idAksi = route.params.id
 
 const fetchDetailAksi = async () => {
   const token = localStorage.getItem('jwt_token')
-  
+
   if (!token) {
     router.push('/')
     return
@@ -231,7 +219,7 @@ const fetchDetailAksi = async () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
+        'Authorization': `Bearer ${token}`
       }
     })
 
@@ -308,14 +296,14 @@ const formatStatusText = (status: string) => {
 const getStatusColor = (status: string) => {
   const s = formatStatusText(status)
   if (s === 'Sedang Berjalan') return '#19456B'
-  if (s === 'Selesai') return '#16C79A'         
-  return '#11698E' 
+  if (s === 'Selesai') return '#16C79A'
+  return '#11698E'
 }
 
 const getStatusIcon = (status: string) => {
   const s = formatStatusText(status)
   if (s === 'Sedang Berjalan') return 'mdi-play'
-  if (s === 'Selesai') return 'mdi-check-circle-outline' 
+  if (s === 'Selesai') return 'mdi-check-circle-outline'
   return 'mdi-clock-outline'
 }
 </script>

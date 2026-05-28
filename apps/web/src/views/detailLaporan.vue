@@ -1,46 +1,6 @@
 <template>
   <v-app style="background-color:white;" theme="light">
-    <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
-        <div class="d-flex align-center">
-          <v-sheet
-              color="#11698E"
-              rounded="lg"
-              width="36"
-              height="36"
-              class="d-flex align-center justify-center mr-3"
-          >
-              <v-icon color="white" size="30">mdi-account-group</v-icon>
-          </v-sheet>
-          <span class="text-h4 font-weight-bold logo-text">AksiKita</span>
-        </div>
-
-        <v-spacer></v-spacer>
-        <div class="d-flex align-center gap-4">
-          <v-btn 
-              variant="flat"
-              class="nav-btn active-nav mr-2"
-              to="/home"
-              rounded="xl"
-          >
-              <v-icon start>mdi-home-variant-outline</v-icon>
-              Beranda
-          </v-btn>
-
-          <v-btn
-              variant="text" 
-              class="nav-btn mr-2"
-              to="/komunitas"
-          >
-              <v-icon start>mdi-account-group-outline</v-icon>
-              Aksi Komunitas
-          </v-btn>
-
-          <v-btn variant="text" class="nav-btn" to="/profile">
-              <v-icon start>mdi-account-outline</v-icon>
-              Akun
-          </v-btn>
-        </div>
-    </v-app-bar>
+    <Navbar />
 
     <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
       <v-btn variant="text" @click="$router.back()" class="text-none font-weight-medium text-grey-darken-3" style="font-family: 'Poppins', sans-serif;">
@@ -56,7 +16,7 @@
       <v-container class="px-15 py-10" v-else>
         <v-row justify="center">
           <v-col cols="12" md="10" lg="8">
-            
+
             <v-card class="pa-6 mb-6 rounded-xl border-card" elevation="0">
               <div class="d-flex align-center mb-4">
                 <v-avatar color="#11698E" size="48" class="mr-3">
@@ -65,9 +25,9 @@
                   </span>
                 </v-avatar>
 
-                 <v-btn 
-                  color="#11698E" 
-                  class="text-white font-weight-bold text-none" 
+                 <v-btn
+                  color="#11698E"
+                  class="text-white font-weight-bold text-none"
                   elevation="0"
                   height="44"
                   style="border-radius: 12px; font-family: 'Poppins', sans-serif !important;"
@@ -76,7 +36,7 @@
                   <v-icon start>mdi-plus</v-icon>
                   Ubah Menjadi Aksi
                 </v-btn>
-                
+
                 <div>
                   <div class="font-weight-bold text-body-1" style="color: #1a202c;">{{ reportData.author?.name || 'User' }}</div>
                   <div class="text-caption text-grey">{{ formatDate(reportData.createdAt) }}</div>
@@ -91,9 +51,9 @@
                 <h1 class="font-weight-bold text-h4 mb-0" style="color: #19456B; font-family: 'Poppins', sans-serif !important;">
                   {{ reportData.title }}
                 </h1>
-              
+
               </div>
-              
+
               <div class="d-flex flex-wrap ga-4 mb-6 text-grey-darken-3">
                 <div class="d-flex align-center text-body-1">
                   <v-icon start size="small" color="grey-darken-1" class="mr-2">mdi-map-marker-outline</v-icon>
@@ -140,10 +100,10 @@
                   class="comment-input"
                   @keyup.enter="submitComment"
                 ></v-text-field>
-                <v-btn 
-                  color="#11698E" 
-                  height="56" 
-                  class="px-8 text-none font-weight-bold rounded-lg text-white" 
+                <v-btn
+                  color="#11698E"
+                  height="56"
+                  class="px-8 text-none font-weight-bold rounded-lg text-white"
                   flat
                   :disabled="!newComment.trim()"
                   @click="submitComment"
@@ -163,6 +123,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import Navbar from '../components/Navbar.vue';
+
 
 const route = useRoute();
 const router = useRouter();
@@ -184,7 +146,7 @@ const fetchReportDetail = async () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
+        'Authorization': `Bearer ${token}`
       }
     });
 
@@ -223,7 +185,7 @@ const submitComment = async () => {
 
     if (res.ok) {
       newComment.value = '';
-      fetchReportDetail(); 
+      fetchReportDetail();
     } else {
       alert("Gagal mengirim komentar.");
     }

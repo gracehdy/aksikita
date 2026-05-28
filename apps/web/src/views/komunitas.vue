@@ -1,46 +1,6 @@
 <template>
   <v-app>
-  <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
-    <div class="d-flex align-center">
-      <v-sheet
-        color="#11698E"
-        rounded="lg"
-        width="36"
-        height="36"
-        class="d-flex align-center justify-center mr-3"
-      >
-        <v-icon color="white" size="30">mdi-account-group</v-icon>
-      </v-sheet>
-      <span class="text-h4 font-weight-bold logo-text">AksiKita</span>
-    </div>
-    <v-spacer></v-spacer>
-
-    <div class="d-flex align-center gap-4">
-      <v-btn variant="text" 
-      class="nav-btn mr-2"
-      to="/home"
-      >
-        <v-icon start >mdi-home-variant-outline</v-icon>
-        Beranda
-      </v-btn>
-
-      <v-btn
-        variant="flat"
-        color="#F8F1F1"
-        class="nav-btn active-nav mr-2"
-        to="/komunitas"
-        rounded="xl">
-        <v-icon start>mdi-account-group-outline</v-icon>
-        Aksi Komunitas
-      </v-btn>
-
-      <v-btn variant="text" class="nav-btn" to="/profile">
-        <v-icon start>mdi-account-outline</v-icon>
-        Akun
-      </v-btn>
-    </div>
-  </v-app-bar>
-
+  <Navbar />
 
 <v-main class="bg-white">
     <v-container class="px-md-15 py-10" fluid>
@@ -76,15 +36,15 @@
 
       <v-row v-if="filteredReports.length > 0">
         <v-col
-          v-for="report in filteredReports" 
-          :key="report.id" 
+          v-for="report in filteredReports"
+          :key="report.id"
           cols="12" md="6" lg="4"
         >
           <v-card elevation="0" class="rounded-xl card-hover" style="font-family: 'Poppins', sans-serif;" @click="goToDetail(report)">
             <v-sheet color="#F8F1F1" height="200" class="d-flex justify-center align-center">
               <v-icon size="80" color="#4a5568">mdi-account-group</v-icon>
             </v-sheet>
-            
+
             <v-card-text class="pa-5">
               <div class="d-flex align-center mb-4">
                 <v-avatar color="#11698E" size="36" class="text-white font-weight-bold">
@@ -101,7 +61,7 @@
                   {{ report.category }}
                 </v-chip>
                 <v-chip size="small" :color="getStatusColor(report.status)" variant="flat" class="text-white font-weight-bold px-3">
-                  <v-icon start :icon="getStatusIcon(report.status)" size="small"></v-icon> 
+                  <v-icon start :icon="getStatusIcon(report.status)" size="small"></v-icon>
                   {{ formatStatusText(report.status) }}
                 </v-chip>
               </div>
@@ -113,7 +73,7 @@
                 <v-icon color="#14b8a6" size="small" class="mr-2">mdi-map-marker</v-icon> {{ report.location }}
               </div>
               <div class="text-body-2 text-grey-darken-2 mb-5">
-                <v-icon color="#14b8a6" size="small" class="mr-2">mdi-calendar-blank</v-icon> 
+                <v-icon color="#14b8a6" size="small" class="mr-2">mdi-calendar-blank</v-icon>
                 {{ report.volunteerAction ? formatDate(report.volunteerAction.scheduledDate) : 'Tanggal belum ditentukan' }}
               </div>
 
@@ -122,30 +82,30 @@
                   <span class="text-grey-darken-2">Relawan terdaftar</span>
                   <span class="font-weight-bold">{{ report.volunteerAction.registeredPeople }}/{{ report.volunteerAction.requiredPeople }}</span>
                 </div>
-                <v-progress-linear 
-                  :model-value="(report.volunteerAction.registeredPeople / report.volunteerAction.requiredPeople) * 100" 
-                  :color="getProgressBarColor(report.status)" 
-                  height="8" 
-                  rounded 
+                <v-progress-linear
+                  :model-value="(report.volunteerAction.registeredPeople / report.volunteerAction.requiredPeople) * 100"
+                  :color="getProgressBarColor(report.status)"
+                  height="8"
+                  rounded
                   class="mb-5"
                 ></v-progress-linear>
               </div>
 
-              <v-btn 
-                block 
-                :color="getButtonConfig(report.status).color" 
-                :class="getButtonConfig(report.status).textClass" 
-                rounded="lg" 
-                size="large" 
+              <v-btn
+                block
+                :color="getButtonConfig(report.status).color"
+                :class="getButtonConfig(report.status).textClass"
+                rounded="lg"
+                size="large"
                 flat
                 :disabled="report.status === 'Selesai'"
                 @click.stop="handleActionClick(report)"
               >
                 {{ getButtonConfig(report.status).text }}
               </v-btn>
-              
+
               <div class="text-center mt-4">
-                <a href="#" 
+                <a href="#"
                 @click.prevent="goToDetail(report)"
                 class="text-grey-darken-1 text-decoration-none text-caption d-inline-flex align-center hover-blue">
                   <v-icon size="small" class="mr-1">mdi-comment-outline</v-icon> Lihat komentar
@@ -167,7 +127,7 @@
               Tidak ada aksi komunitas untuk filter yang dipilih.
             </p>
           </div>
-        </v-col> 
+        </v-col>
       </v-row>
     </v-container>
   </v-main>
@@ -261,16 +221,17 @@
   font-family: 'Poppins', sans-serif !important;
   font-size: 18px;
   font-weight: 700;
-  color: #19456B; 
+  color: #19456B;
 }
 </style>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import Navbar from '../components/Navbar.vue'
 
 const router = useRouter()
-const reports = ref<any[]>([]) 
+const reports = ref<any[]>([])
 const filterStatus = ref('Semua')
 
 const filterOptions = [
@@ -282,7 +243,7 @@ const filterOptions = [
 
 const fetchActions = async () => {
   const token = localStorage.getItem('jwt_token')
-  
+
   if (!token) {
     router.push('/')
     return
@@ -293,7 +254,7 @@ const fetchActions = async () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
+        'Authorization': `Bearer ${token}`
       }
     })
 
@@ -317,7 +278,7 @@ const filteredReports = computed(() => {
   const dataAksiSaja = reports.value.filter(r => r.volunteerAction)
 
   if (filterStatus.value === 'Semua') return dataAksiSaja
-  
+
   return dataAksiSaja.filter(r => {
     const rStatus = formatStatusText(r.status)
     return rStatus === filterStatus.value
@@ -344,8 +305,8 @@ const formatStatusText = (status: string) => {
 
 const getStatusColor = (status: string) => {
   const s = formatStatusText(status)
-  if (s === 'Sedang Berjalan') return '#19456B' 
-  if (s === 'Selesai') return '#16C79A' 
+  if (s === 'Sedang Berjalan') return '#19456B'
+  if (s === 'Selesai') return '#16C79A'
   return '#11698E'
 }
 
@@ -376,7 +337,7 @@ const getButtonConfig = (status: string) => {
 
 const handleActionClick = (report: any) => {
   const statusText = formatStatusText(report.status)
-  if (statusText === 'Akan Datang') { 
+  if (statusText === 'Akan Datang') {
     router.push({ path: '/daftarRelawan', query: { idAksi: report.id } })
   } else {
     goToDetail(report)

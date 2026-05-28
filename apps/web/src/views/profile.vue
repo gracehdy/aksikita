@@ -1,34 +1,6 @@
 <template>
 <v-app style="background-color:white;">
-  <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
-    <div class="d-flex align-center">
-      <v-sheet
-        color="#11698E"
-        rounded="lg"
-        width="36"
-        height="36"
-        class="d-flex align-center justify-center mr-3"
-      >
-        <v-icon color="white" size="30">mdi-account-group</v-icon>
-      </v-sheet>
-      <span class="text-h4 font-weight-bold logo-text">AksiKita</span>
-    </div>
-
-    <v-spacer></v-spacer>
-    <div class="d-flex align-center gap-4">
-      <v-btn variant="text" class="nav-btn mr-2" to="/home">
-        <v-icon start >mdi-home-variant-outline</v-icon> Beranda
-      </v-btn>
-
-      <v-btn variant="text" class="nav-btn" to="/komunitas">
-        <v-icon start>mdi-account-group-outline</v-icon> Aksi Komunitas
-      </v-btn>
-
-      <v-btn variant="flat" color="#F8F1F1" class="nav-btn active-nav mr-2" to="/profile" rounded="xl">
-        <v-icon start>mdi-account-outline</v-icon> Akun
-      </v-btn>
-    </div>
-  </v-app-bar>
+  <Navbar />
 
   <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
     <v-btn variant="text" @click="$router.back()" class="text-none font-weight-medium text-grey-darken-3" style="font-family: 'Poppins', sans-serif;">
@@ -40,7 +12,7 @@
     <v-container class="px-15 py-10" fluid>
       <v-row justify="center">
         <v-col cols="12" md="11" lg="10">
-          
+
           <v-card class="pa-8 mb-6 custom-card border-card" elevation="0" theme="light">
             <v-row align="center" no-gutters>
               <v-col cols="12" sm="4" class="d-flex justify-center">
@@ -59,7 +31,7 @@
                     <v-icon start>mdi-logout</v-icon> Keluar
                   </v-btn>
                 </div>
-                
+
                 <v-row class="mt-6" justify="start">
                   <div cols="auto" class="mr-16 text-center">
                     <div class="stat-val">{{ userData.stats.completed }}</div>
@@ -94,7 +66,7 @@
               rounded
               class="mb-6"
             ></v-progress-linear>
-            
+
             <v-row class="mt-4 text-center">
               <v-col cols="6" sm="3" v-for="(item, i) in poinInfo" :key="i">
                 <div class="poin-box pa-3">
@@ -158,13 +130,14 @@
       </v-row>
     </v-container>
   </v-main>
-  
+
 </v-app>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import Navbar from '../components/Navbar.vue'
 
 const router = useRouter()
 const userData = ref({
@@ -209,18 +182,18 @@ const handleLogout = () => {
 
 const fetchProfile = async () => {
   const token = localStorage.getItem('jwt_token');
-  
+
   if (!token) {
     router.push('/');
     return;
   }
 
   try {
-    const res = await fetch('http://localhost:3000/api/profile', { 
+    const res = await fetch('http://localhost:3000/api/profile', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
+        'Authorization': `Bearer ${token}`
       }
     });
 

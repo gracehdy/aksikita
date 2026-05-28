@@ -1,29 +1,6 @@
 <template>
   <v-app style="background-color: #FAFAFA;" theme="light">
-    <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
-      <div class="d-flex align-center">
-        <v-sheet color="#11698E" rounded="lg" width="36" height="36" class="d-flex align-center justify-center mr-3">
-          <v-icon color="white" size="30">mdi-account-group</v-icon>
-        </v-sheet>
-        <span class="text-h4 font-weight-bold logo-text">AksiKita</span>
-      </div>
-
-      <v-spacer></v-spacer>
-      
-      <div class="d-flex align-center gap-4">
-        <v-btn variant="text" class="nav-btn mr-2" to="/home">
-          <v-icon start>mdi-home-variant-outline</v-icon>Beranda
-        </v-btn>
-
-        <v-btn variant="flat" class="nav-btn active-nav mr-2" to="/komunitas" rounded="xl">
-          <v-icon start>mdi-account-group-outline</v-icon>Aksi Komunitas
-        </v-btn>
-
-        <v-btn variant="text" class="nav-btn" to="/profile">
-          <v-icon start>mdi-account-outline</v-icon>Akun
-        </v-btn>
-      </div>
-    </v-app-bar>
+    <Navbar />
 
     <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
       <v-btn variant="text" @click="$router.back()" class="text-none font-weight-medium text-grey-darken-3" style="font-family: 'Poppins', sans-serif;">
@@ -44,7 +21,7 @@
           <p class="text-body-1 text-black mb-6" style="line-height: 1.6;">
             {{ report.description }}
           </p>
-          
+
           <div class="d-flex align-center mb-4 text-black text-body-1">
             <v-icon start color="#11698E" size="28" class="mr-4">mdi-calendar-check-outline</v-icon>
             <div>
@@ -72,7 +49,7 @@
 
         <v-card class="pa-6 rounded-xl border-card" elevation="0">
           <h3 class="font-weight-bold text-h5 mb-6" style="color: #19456B; border-bottom: 2px solid #F8F1F1; padding-bottom: 12px;">Formulir Pendaftaran</h3>
-          
+
           <v-form v-model="valid">
             <label class="font-weight-bold text-body-2 text-grey-darken-3 mb-2 d-block">Nama Lengkap *</label>
             <v-text-field
@@ -157,12 +134,12 @@
                 </v-btn>
               </v-col>
               <v-col cols="6">
-                <v-btn 
-                  block 
-                  :color="agreement1 && agreement2 ? '#16C79A' : 'grey-lighten-2'" 
-                  size="large" 
-                  rounded="lg" 
-                  class="text-none font-weight-bold text-white" 
+                <v-btn
+                  block
+                  :color="agreement1 && agreement2 ? '#16C79A' : 'grey-lighten-2'"
+                  size="large"
+                  rounded="lg"
+                  class="text-none font-weight-bold text-white"
                   elevation="0"
                   :disabled="!(agreement1 && agreement2)"
                   @click="submitRegistration"
@@ -181,7 +158,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { mockReports } from '../data/mockReports' 
+import { mockReports } from '../data/mockReports'
+import Navbar from '../components/Navbar.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -228,15 +206,15 @@ const submitRegistration = async () => {
 
   try {
     const payload = {
-      actionId: report.value?.id, 
+      actionId: report.value?.id,
       ...form.value
     }
 
-    const res = await fetch('http://localhost:3000/api/volunteers/register', { 
+    const res = await fetch('http://localhost:3000/api/volunteers/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(payload)
     })
@@ -277,13 +255,13 @@ const submitRegistration = async () => {
 .text-teal { color: #16C79A !important; }
 
 
-.border-card { 
-  border: 1px solid #EAEAEA !important; 
-  background-color: #FFFFFF; 
+.border-card {
+  border: 1px solid #EAEAEA !important;
+  background-color: #FFFFFF;
 }
 
 
-.input-form :deep(.v-field__outline) { 
-  border-color: #EAEAEA; 
+.input-form :deep(.v-field__outline) {
+  border-color: #EAEAEA;
 }
 </style>
