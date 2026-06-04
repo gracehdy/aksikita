@@ -176,11 +176,14 @@ const submitReport = async () => {
     })
 
     if (res.ok) {
-      alert("Laporan berhasil dikirim!")
-      router.push({
-        name: 'detailLaporan',
-        params: { id: data.id }
-      })
+      const data = await res.json();
+      if (data.id !== '') {
+        alert("Laporan berhasil dikirim!");
+        router.push({
+          name: 'detailLaporan',
+          params: { id: data.id }
+        })
+      }
     } else if (res.status === 401) {
       alert("Sesi login Anda tidak valid. Silakan login ulang.")
       router.push('/')
