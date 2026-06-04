@@ -16,6 +16,7 @@ export class UserService {
         email: true,
         displayName: true,
         username: true,
+        createdAt: true,
       },
     });
 
@@ -26,6 +27,7 @@ export class UserService {
       queryResult.email,
       queryResult.displayName ?? '',
       queryResult.username,
+      queryResult.createdAt,
     );
   }
 

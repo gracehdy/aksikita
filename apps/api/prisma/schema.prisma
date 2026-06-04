@@ -26,6 +26,8 @@ model User {
   points       Point[]
   certificates Certificate[]
   rewards      Reward[]
+
+  createdAt DateTime @default(now()) @map("created_at")
 }
 
 model Report {

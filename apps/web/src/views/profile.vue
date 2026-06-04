@@ -140,15 +140,17 @@ import { useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
 
 const router = useRouter()
+
+// 1. Initialize default/empty state structure so the template doesn't crash
 const userData = ref({
-  name: 'Andi Maulana',
-  email: 'andi.maulana@gmail.com',
-  initials: 'AM',
-  joinDate: 'Bergabung sejak Januari 2026',
+  name: '',
+  email: '',
+  initials: '',
+  joinDate: '',
   stats: {
-    completed: 12,
-    created: 5,
-    badges: 3
+    completed: 0,
+    created: 0,
+    badges: 0
   }
 })
 
@@ -171,15 +173,39 @@ const certs = ref([
   { title: 'Donor Darah Komunitas', date: '15/4/2026', tag: 'Kesehatan' }
 ])
 
+function getInitials(name: string) {
+  if (!name) return '';
+  return name
+    .trim()
+    .split(' ')
+    .filter((part) => part.length > 0)
+    .map((part) => part[0].toUpperCase())
+    .slice(0, 2)
+    .join('');
+}
+
 const handleLogout = () => {
   const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
   if (confirmLogout) {
     localStorage.removeItem('jwt_token');
-
     router.push('/');
   }
 }
 
+const formatDate = (isoString) => {
+  if (!isoString) return '';
+
+  // Use the browser's default locale
+  const locale = navigator.language || 'id-ID';
+
+  return new Date(isoString).toLocaleDateString(locale, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+};
+
+// 2. Fetching happens safely inside the hook after the DOM mounts
 const fetchProfile = async () => {
   const token = localStorage.getItem('jwt_token');
 
@@ -189,7 +215,8 @@ const fetchProfile = async () => {
   }
 
   try {
-    const res = await fetch('http://localhost:3000/api/profile', {
+    // Corrected endpoint target matching your NestJS endpoint configuration
+    const res = await fetch('api/user/me', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -201,11 +228,15 @@ const fetchProfile = async () => {
       const data = await res.json();
       if (data) {
         userData.value = {
-          name: data.name || userData.value.name,
-          email: data.email || userData.value.email,
-          initials: data.name ? data.name.substring(0, 2).toUpperCase() : 'AM',
-          joinDate: data.joinDate || userData.value.joinDate,
-          stats: data.stats || userData.value.stats
+          name: data.fullName || '',
+          email: data.email || '',
+          initials: getInitials(data.fullName || ''),
+          joinDate: `Bergabung sejak ${formatDate(data.createdAt) || ''}`,
+          stats: {
+            completed: 12, // fallback static values from your template
+            created: 5,
+            badges: 3
+          }
         };
       }
     } else if (res.status === 401) {
