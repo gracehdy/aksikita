@@ -6,9 +6,10 @@ import { AchievementsModule } from './achievements/achievements.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AchievementsController } from './achievements/achievements.controller';
 import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [ReportModule, AchievementsModule, PrismaModule, AuthModule],
+  imports: [ReportModule, AchievementsModule, PrismaModule, AuthModule, UserModule],
   controllers: [AppController, AchievementsController],
   providers: [AppService],
 })

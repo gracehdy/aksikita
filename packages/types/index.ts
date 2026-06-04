@@ -6,14 +6,7 @@
  * Sanitised User object clean of sensitive credentials.
  * Safe for transmission to client applications and frontend storage.
  */
-export interface User {
-  id: string;
-  fullName: string;
-  email: string;
-  username: string;
-  createdAt: string | Date;
-  updatedAt: string | Date;
-}
+export * from './user';
 
 // ==========================================
 // AUTHENTICATION REQUESTS (DTOs)
