@@ -13,27 +13,27 @@ const routes = [
   {
     path: '/resetPassword',
     name: 'resetPassword',
-    component : () => import('../views/resetPassword.vue')  
+    component : () => import('../views/resetPassword.vue')
   },
   {
     path: '/registrasi',
     name: 'registrasi',
-    component : () => import('../views/registrasi.vue') 
+    component : () => import('../views/registrasi.vue')
   },
   {
     path: '/home',
     name: 'home',
-    component : () => import('../views/home.vue') 
+    component : () => import('../views/home.vue')
   },
   {
     path: '/profile',
     name: 'profile',
-    component : () => import('../views/profile.vue') 
+    component : () => import('../views/profile.vue')
   },
   {
     path: '/komunitas',
     name: 'komunitas',
-    component : () => import('../views/komunitas.vue') 
+    component : () => import('../views/komunitas.vue')
   },
   {
     path: '/buatLaporan',
@@ -43,25 +43,25 @@ const routes = [
   {
     path: '/detailLaporan/:id',
     name: 'detailLaporan',
-    component : () => import('../views/detailLaporan.vue') 
-  }, 
+    component : () => import('../views/detailLaporan.vue')
+  },
   {
-    path: '/daftarRelawan', 
+    path: '/daftarRelawan',
     name: 'daftarRelawan',
     component : () => import('../views/daftarRelawan.vue')
   },
    {
-  path: '/buatAksi/:id',
-  name: 'buatAksi', 
+  path: '/buatAksi',
+  name: 'buatAksi',
   component: () => import('../views/buatAksi.vue')
   },
-  
+
   {
   path: '/detailAksi/:id',
-  name: 'detailAksi', 
+  name: 'detailAksi',
   component: () => import('../views/detailAksi.vue')
   }
-  
+
 
 ]
 

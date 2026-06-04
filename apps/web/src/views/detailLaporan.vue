@@ -199,7 +199,7 @@ const submitComment = async () => {
 const goToBuatAksi = (id: number) => {
   router.push({
     path: '/buatAksi',
-    query: { idLaporan: id }
+    // query: { idLaporan: id }
   });
 };
 
