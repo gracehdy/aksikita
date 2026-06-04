@@ -44,7 +44,7 @@
 
         <v-row v-if="filteredReports.length > 0">
           <v-col
-            v-for="report in filteredReports"
+            v-for="{ report, displayName } in filteredReports"
             :key="report.id"
             cols="12" md="6" lg="4"
           >
@@ -63,13 +63,12 @@
               <v-card-text class="px-0 pt-4">
                 <div class="d-flex align-center mb-4 ga-3">
                   <v-avatar size="36" color="#11698E">
-                    <v-img v-if="report.author?.avatar" :src="report.author.avatar" />
-                    <span v-else class="text-[#11698E] font-weight-bold">
-                      {{ report.author?.name?.charAt(0).toUpperCase() || 'U' }}
+                    <span class="text-white font-weight-bold">
+                      {{ displayName.charAt(0).toUpperCase() || 'U' }}
                     </span>
                   </v-avatar>
                   <div>
-                    <div class="author-name">{{ report.author?.name || 'User Tanpa Nama' }}</div>
+                    <div class="author-name">{{ displayName }}</div>
                     <div class="post-date">{{ formatDate(report.createdAt) }}</div>
                   </div>
                 </div>
@@ -152,7 +151,12 @@ import Navbar from '../components/Navbar.vue'
 
 const router = useRouter()
 
-const reports = ref<ReportModel[]>([])
+export interface UIReportItem {
+  report: ReportModel
+  displayName: string
+}
+
+const reports = ref<UIReportItem[]>([])
 const filterCategory = ref('all')
 
 const categories = ['all', 'Lingkungan', 'Infrastruktur', 'Sosial', 'Kesehatan']
@@ -175,8 +179,38 @@ const fetchReports = async () => {
     })
 
     if (res.ok) {
-      const data = await res.json()
-      reports.value = data
+      const rawReports: ReportModel[] = await res.json()
+
+      const mappedReports = await Promise.all(
+        rawReports.map(async (item) => {
+          try {
+            const nameRes = await fetch(`api/user/displayName/${item.userId}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              }
+            })
+
+            if (nameRes.ok) {
+              const nameData = await nameRes.json()
+              return {
+                report: item,
+                displayName: nameData.result || 'User Tanpa Nama'
+              }
+            }
+          } catch (err) {
+            console.error(`Gagal memuat nama untuk report ${item.id}:`, err)
+          }
+
+          return {
+            report: item,
+            displayName: 'User Tanpa Nama'
+          }
+        })
+      )
+
+      reports.value = mappedReports
     } else if (res.status === 401) {
       alert("Sesi Anda telah berakhir. Silakan login kembali.")
       localStorage.removeItem('jwt_token')
@@ -193,10 +227,10 @@ onMounted(() => {
   fetchReports()
 })
 
-const filteredReports = computed(() => {
+const filteredReports = computed((): UIReportItem[] => {
   return filterCategory.value === 'all'
     ? reports.value
-    : reports.value.filter(r => r.category === filterCategory.value)
+    : reports.value.filter(item => item.report.category === filterCategory.value)
 })
 
 const getActionProperties = (status: string) => {
@@ -225,14 +259,13 @@ const goToCreate = () => {
   router.push('/buatLaporan')
 }
 
-const goToDetail = (report: any) => {
+const goToDetail = (report: ReportModel) => {
   if (report.volunteerAction) {
     router.push({
       name: 'detailAksi',
       params: { id: report.id }
     });
-  }
-  else {
+  } else {
     router.push({
       name: 'detailLaporan',
       params: { id: report.id }

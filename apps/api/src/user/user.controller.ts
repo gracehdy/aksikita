@@ -1,4 +1,10 @@
-import { Controller, Get, NotFoundException, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Request,
+  Param,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 
@@ -16,5 +22,10 @@ export class UserController {
     }
 
     return result;
+  }
+
+  @Get('displayName/:id')
+  async displayName(@Param('id') id: string) {
+    return await this.userService.getDisplayName(id);
   }
 }

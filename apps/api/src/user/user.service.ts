@@ -28,4 +28,19 @@ export class UserService {
       queryResult.username,
     );
   }
+
+  async getDisplayName(id: string) {
+    const queryResult = await this.prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        displayName: true,
+      },
+    });
+
+    return {
+      result: queryResult?.displayName,
+    };
+  }
 }
