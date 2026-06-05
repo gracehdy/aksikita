@@ -60,7 +60,7 @@
               <span class="font-weight-bold" style="color: #19456B;">650 / 1000 poin</span>
             </div>
             <v-progress-linear
-              model-value="65"
+              :model-value="65"
               color="#16C79A"
               height="12"
               rounded
@@ -214,7 +214,7 @@ const fetchProfile = async () => {
 
   try {
 
-    const res = await fetch('api/user/me', {
+    const res = await fetch('/api/user/me', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
