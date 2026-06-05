@@ -6,16 +6,29 @@ import {
   HttpStatus,
   Request,
   UseGuards,
+  Get,
 } from '@nestjs/common';
 import { ActionService } from './action.service';
 import type { CreateActionDto } from './dto/create-action.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('actions')
-@UseGuards(AuthGuard('jwt'))
 export class ActionController {
   constructor(private readonly actionService: ActionService) {}
+  @Get()
+  @UseGuards(AuthGuard('jwt'))
+  async findAll() {
+    try {
+      return await this.actionService.findAll();
+    } catch (error) {
+      throw new HttpException(
+        { message: 'Failed to fetch actions', error: error.message },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() createActionDto: CreateActionDto, @Request() req) {
     try {
