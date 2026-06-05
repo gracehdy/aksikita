@@ -231,16 +231,24 @@ const fetchProfile = async () => {
           initials: getInitials(data.fullName || ''),
           joinDate: `Bergabung sejak ${formatDate(data.createdAt) || ''}`,
           stats: {
-            completed: 12, // fallback static values from your template
-            created: 5,
-            badges: 3
+            data.stats
           }
         };
+        badges.value = data.badges.map(b => ({
+        name: b.name,
+        desc: b.desc,
+        date: formatDate(b.earnedAt),
+        earned: true
+      }));
+
+      certs.value = data.certificates.map(c => ({
+        title: c.title,
+        date: formatDate(c.issuedAt),
+        tag: c.category
+      }));
+      } else {
+        alert("Gagal memuat data profil");
       }
-    } else if (res.status === 401) {
-      alert("Sesi Anda telah berakhir. Silakan login kembali.");
-      localStorage.removeItem('jwt_token');
-      router.push('/');
     }
   } catch (error) {
     console.error("Gagal mengambil data profil:", error);

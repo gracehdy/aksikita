@@ -16,6 +16,7 @@ import type {
   LoginRequest,
   LoginResponse,
 } from './auth.contract';
+import { Public } from '@prisma/client/runtime/client';
 
 @Controller('auth')
 export class AuthController {
