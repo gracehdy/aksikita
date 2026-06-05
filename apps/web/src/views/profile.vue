@@ -141,7 +141,6 @@ import Navbar from '../components/Navbar.vue'
 
 const router = useRouter()
 
-// 1. Initialize default/empty state structure so the template doesn't crash
 const userData = ref({
   name: '',
   email: '',
@@ -195,7 +194,6 @@ const handleLogout = () => {
 const formatDate = (isoString) => {
   if (!isoString) return '';
 
-  // Use the browser's default locale
   const locale = navigator.language || 'id-ID';
 
   return new Date(isoString).toLocaleDateString(locale, {
@@ -205,7 +203,7 @@ const formatDate = (isoString) => {
   });
 };
 
-// 2. Fetching happens safely inside the hook after the DOM mounts
+
 const fetchProfile = async () => {
   const token = localStorage.getItem('jwt_token');
 
@@ -215,7 +213,7 @@ const fetchProfile = async () => {
   }
 
   try {
-    // Corrected endpoint target matching your NestJS endpoint configuration
+
     const res = await fetch('api/user/me', {
       method: 'GET',
       headers: {

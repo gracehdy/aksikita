@@ -16,7 +16,7 @@ const login = async () => {
       password: credentials.value.password,
     };
 
-    const res = await fetch("/auth/login", {
+    const res = await fetch("api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -26,6 +26,8 @@ const login = async () => {
     if (res.ok) {
       const data = await res.json();
       const token = data.access_token || data.token;
+      localStorage.setItem("jwt_token", data.access_token); 
+      router.push("/home");
 
       if (token) {
         localStorage.setItem("jwt_token", token);
