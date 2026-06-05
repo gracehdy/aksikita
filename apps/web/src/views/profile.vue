@@ -191,7 +191,7 @@ const handleLogout = () => {
   }
 }
 
-const formatDate = (isoString) => {
+const formatDate = (isoString: string) => {
   if (!isoString) return '';
 
   const locale = navigator.language || 'id-ID';
@@ -230,18 +230,17 @@ const fetchProfile = async () => {
           email: data.email || '',
           initials: getInitials(data.fullName || ''),
           joinDate: `Bergabung sejak ${formatDate(data.createdAt) || ''}`,
-          stats: {
-            data.stats
-          }
+          stats: data.stats
         };
-        badges.value = data.badges.map(b => ({
+
+      badges.value = data.badges.map((b:any) => ({
         name: b.name,
         desc: b.desc,
         date: formatDate(b.earnedAt),
         earned: true
       }));
 
-      certs.value = data.certificates.map(c => ({
+      certs.value = data.certificates.map((c:any) => ({
         title: c.title,
         date: formatDate(c.issuedAt),
         tag: c.category
