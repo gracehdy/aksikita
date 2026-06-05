@@ -9,6 +9,7 @@ import {
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UserProfileResponseDto } from './dto/user-profile.dto'; // <-- Import DTO baru
 
 @Controller('user')
 export class UserController {
@@ -21,7 +22,23 @@ export class UserController {
     const result = await this.userService.findById(id);
 
     if (result === null) {
-      throw new NotFoundException(`User with id${id} not found`);
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return result;
+  }
+
+  // === ENDPOINT BARU UNTUK HALAMAN PROFILE AKSIMITA ===
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getProfile(@Request() req): Promise<UserProfileResponseDto> {
+    const id = req.user.id;
+    
+    // Kita panggil fungsi getUserProfile yang ada di UserService nanti
+    const result = await this.userService.getUserProfile(id);
+
+    if (result === null) {
+      throw new NotFoundException(`User profile with id ${id} not found`);
     }
 
     return result;
