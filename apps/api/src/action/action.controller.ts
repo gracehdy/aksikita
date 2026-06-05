@@ -7,6 +7,7 @@ import {
   Request,
   UseGuards,
   Get,
+  Param,
 } from '@nestjs/common';
 import { ActionService } from './action.service';
 import type { CreateActionDto } from './dto/create-action.dto';
@@ -20,9 +21,32 @@ export class ActionController {
   async findAll() {
     try {
       return await this.actionService.findAll();
-    } catch (error) {
+    } catch (error : unknown) {
       throw new HttpException(
-        { message: 'Failed to fetch actions', error: error.message },
+        { message: 'Failed to fetch actions', error: (error as Error).message },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Get(':id')
+  @UseGuards(AuthGuard('jwt'))
+  async findOne(@Param('id') id: string) {
+    try {
+      const result = await this.actionService.findByReportId(id);
+      if (!result) {
+        throw new HttpException(
+          { message: 'Action not found' },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      return result;
+    } catch (error : unknown) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        { message: 'Failed to fetch action', error: (error as Error).message },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -34,9 +58,9 @@ export class ActionController {
     try {
       const userId = req.user.id;
       return await this.actionService.createAction(createActionDto, userId);
-    } catch (error) {
+    } catch (error : unknown) {
       throw new HttpException(
-        { message: 'Failed to create action', error: error.message },
+        { message: 'Failed to create action', error: (error as Error).message },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

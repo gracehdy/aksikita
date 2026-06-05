@@ -177,10 +177,46 @@ const form = ref({
   reason: ''
 })
 
-onMounted(() => {
-  const id = Number(route.query.idLaporan || route.query.idAksi)
-  if (id) {
-    report.value = mockReports.find(r => r.id === id)
+onMounted(async () => {
+  const idAksi = route.query.idAksi as string
+  const idLaporan = route.query.idLaporan
+
+  const token = localStorage.getItem('jwt_token')
+  if (!token) {
+    router.push('/')
+    return
+  }
+
+  try {
+    // Coba ambil dari backend dulu dengan idAksi
+    if (idAksi) {
+      const res = await fetch(`http://localhost:3000/api/actions/${idAksi}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        report.value = data
+        return
+      }
+    }
+
+    // Fallback: cari dari mockReports
+    const id = Number(idLaporan)
+    if (id) {
+      report.value = mockReports.find(r => r.id === id)
+    }
+  } catch (error) {
+    console.error('Error fetching action:', error)
+    // Fallback ke mockReports jika error
+    const id = Number(idLaporan)
+    if (id) {
+      report.value = mockReports.find(r => r.id === id)
+    }
   }
 })
 

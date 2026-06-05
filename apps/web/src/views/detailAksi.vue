@@ -90,66 +90,71 @@
                 <div class="text-black">{{ report.location }}</div>
               </div>
             </div>
-
-            <v-sheet color="#FFF7F7" class="pa-6 rounded-xl border-red-light">
-              <h4 class="font-weight-bold text-primary-dark mb-2">Informasi Tambahan</h4>
-              <p class="text-black mb-0">Peralatan untuk aksi ini sudah dikoordinasikan. Pastikan Anda datang tepat waktu.</p>
-            </v-sheet>
           </v-card-text>
         </v-card>
 
-        <v-card id="komentar-section" class="rounded-xl border-card px-4 py-4" elevation="0">
-          <v-card-title class="font-weight-bold text-h5 text-primary-dark mb-4 d-flex align-center">
-            <v-icon class="mr-2" size="28">mdi-comment-outline</v-icon> Komentar (2)
-          </v-card-title>
-
+        <v-card class="pa-6 rounded-xl border-card mb-6" elevation="0">
+          <v-card-title class="font-weight-bold text-h5 text-primary-dark mb-4">Informasi Tambahan</v-card-title>
           <v-card-text>
-            <v-sheet color="#F8F1F1" class="pa-5 rounded-xl mb-4 d-flex">
-              <v-avatar color="#11698E" size="40" class="text-white font-weight-bold mr-4 mt-1">R</v-avatar>
-              <div class="w-100">
-                <div class="d-flex justify-space-between align-center mb-1">
-                  <div class="font-weight-bold text-black text-body-1">Rina Putri</div>
-                  <div class="text-caption text-grey-darken-1">3/5/2026 09.20</div>
-                </div>
-                <p class="text-grey-darken-2 mb-0">Saya sudah mendaftar! Tidak sabar untuk bergabung.</p>
-              </div>
-            </v-sheet>
-
-            <v-sheet color="#F8F1F1" class="pa-5 rounded-xl mb-8 d-flex">
-              <v-avatar color="#11698E" size="40" class="text-white font-weight-bold mr-4 mt-1">A</v-avatar>
-              <div class="w-100">
-                <div class="d-flex justify-space-between align-center mb-1">
-                  <div class="font-weight-bold text-black text-body-1">Ahmad Rizki</div>
-                  <div class="text-caption text-grey-darken-1">4/5/2026 11.45</div>
-                </div>
-                <p class="text-grey-darken-2 mb-0">Apakah perlu membawa peralatan sendiri?</p>
-              </div>
-            </v-sheet>
-
-            <div class="d-flex align-start gap-4 mt-6">
-              <v-text-field
-                v-model="newComment"
-                placeholder="Tulis komentar..."
-                variant="outlined"
-                rounded="lg"
-                hide-details
-                color="#11698E"
-                class="comment-input"
-                @keyup.enter="submitComment"
-              ></v-text-field>
-              <v-btn
-                color="#11698E"
-                height="56"
-                rounded="lg"
-                class="text-none font-weight-bold px-8 text-white"
-                flat
-                :disabled="!newComment.trim()"
-                @click="submitComment"
-              >
-                <v-icon start>mdi-send-outline</v-icon> Kirim
-              </v-btn>
+            <div v-if="report.volunteerAction?.notes">
+              <p class="text-black mb-0">{{ report.volunteerAction.notes }}</p>
+            </div>
+            <div v-else>
+              <p class="text-grey mb-0">Tidak ada catatan tambahan untuk aksi ini.</p>
             </div>
           </v-card-text>
+        </v-card>
+
+        <v-card class="pa-6 rounded-xl border-card" elevation="0">
+          <div class="d-flex align-center mb-6">
+            <v-icon class="mr-2" color="#19456B" size="28">mdi-comment-outline</v-icon>
+            <span class="text-h5 font-weight-bold" style="color: #19456b">Komentar ({{ report.comments?.length || 0 }})</span>
+          </div>
+
+          <div
+            v-for="comment in report.comments"
+            :key="comment.id"
+            class="pa-5 rounded-xl mb-4 d-flex"
+            style="background-color: #f8f1f1"
+          >
+            <v-avatar size="40" color="#11698E" class="mr-4 mt-1">
+              <span class="text-white font-weight-bold">{{ comment.user.name.charAt(0).toUpperCase() }}</span>
+            </v-avatar>
+            <div class="w-100">
+              <div class="d-flex justify-space-between align-center mb-1">
+                <div class="font-weight-bold text-black text-body-1">{{ comment.user.name }}</div>
+                <div class="text-caption text-grey-darken-1">{{ formatDate(comment.createdAt) }}</div>
+              </div>
+              <p class="text-grey-darken-2 mb-0">{{ comment.text }}</p>
+            </div>
+          </div>
+
+          <div v-if="!report.comments?.length" class="text-center text-grey my-6">
+            Belum ada komentar. Jadilah yang pertama berkomentar!
+          </div>
+
+          <div class="d-flex align-start gap-4 mt-6">
+            <v-text-field
+              v-model="newComment"
+              placeholder="Tulis komentar..."
+              variant="outlined"
+              hide-details
+              rounded="lg"
+              color="#11698E"
+              class="comment-input"
+              @keyup.enter="submitComment"
+            ></v-text-field>
+            <v-btn
+              color="#11698E"
+              height="56"
+              class="px-8 text-none font-weight-bold rounded-lg text-white"
+              flat
+              :disabled="!newComment.trim()"
+              @click="submitComment"
+            >
+              <v-icon start>mdi-send-outline</v-icon> Kirim
+            </v-btn>
+          </div>
         </v-card>
 
       </v-container>

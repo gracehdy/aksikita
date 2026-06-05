@@ -8,6 +8,7 @@ import { AchievementsController } from './achievements/achievements.controller';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ActionModule } from './action/action.module';
+import { VolunteerModule } from './volunteer/volunteer.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ActionModule } from './action/action.module';
     AuthModule,
     UserModule,
     ActionModule,
+    VolunteerModule,
   ],
   controllers: [AppController, AchievementsController],
   providers: [AppService],
