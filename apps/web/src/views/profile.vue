@@ -141,7 +141,6 @@ import Navbar from '../components/Navbar.vue'
 
 const router = useRouter()
 
-// 1. Initialize default/empty state structure so the template doesn't crash
 const userData = ref({
   name: '',
   email: '',
@@ -195,7 +194,6 @@ const handleLogout = () => {
 const formatDate = (isoString) => {
   if (!isoString) return '';
 
-  // Use the browser's default locale
   const locale = navigator.language || 'id-ID';
 
   return new Date(isoString).toLocaleDateString(locale, {
@@ -205,7 +203,7 @@ const formatDate = (isoString) => {
   });
 };
 
-// 2. Fetching happens safely inside the hook after the DOM mounts
+
 const fetchProfile = async () => {
   const token = localStorage.getItem('jwt_token');
 
@@ -215,7 +213,7 @@ const fetchProfile = async () => {
   }
 
   try {
-    // Corrected endpoint target matching your NestJS endpoint configuration
+
     const res = await fetch('api/user/me', {
       method: 'GET',
       headers: {
@@ -233,16 +231,24 @@ const fetchProfile = async () => {
           initials: getInitials(data.fullName || ''),
           joinDate: `Bergabung sejak ${formatDate(data.createdAt) || ''}`,
           stats: {
-            completed: 12, // fallback static values from your template
-            created: 5,
-            badges: 3
+            data.stats
           }
         };
+        badges.value = data.badges.map(b => ({
+        name: b.name,
+        desc: b.desc,
+        date: formatDate(b.earnedAt),
+        earned: true
+      }));
+
+      certs.value = data.certificates.map(c => ({
+        title: c.title,
+        date: formatDate(c.issuedAt),
+        tag: c.category
+      }));
+      } else {
+        alert("Gagal memuat data profil");
       }
-    } else if (res.status === 401) {
-      alert("Sesi Anda telah berakhir. Silakan login kembali.");
-      localStorage.removeItem('jwt_token');
-      router.push('/');
     }
   } catch (error) {
     console.error("Gagal mengambil data profil:", error);
