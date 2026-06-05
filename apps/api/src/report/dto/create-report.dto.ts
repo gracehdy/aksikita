@@ -14,4 +14,7 @@ export class CreateReportRequest implements CreateReportInterface {
 
   @IsString()
   title: string;
+
+  @IsString()
+  reportId: string;
 }

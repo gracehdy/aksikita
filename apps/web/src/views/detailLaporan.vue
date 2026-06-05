@@ -1,91 +1,146 @@
 <template>
-  <v-app style="background-color:white;" theme="light">
+  <v-app style="background-color: white" theme="light">
     <Navbar />
 
-    <v-app-bar flat class="px-15 border-b" color="white" height="90" theme="light">
-      <v-btn variant="text" @click="$router.back()" class="text-none font-weight-medium text-grey-darken-3" style="font-family: 'Poppins', sans-serif;">
+    <v-app-bar
+      flat
+      class="px-15 border-b"
+      color="white"
+      height="90"
+      theme="light"
+    >
+      <v-btn
+        variant="text"
+        @click="$router.back()"
+        class="text-none font-weight-medium text-grey-darken-3"
+        style="font-family: &quot;Poppins&quot;, sans-serif"
+      >
         <v-icon start>mdi-arrow-left</v-icon> Kembali
       </v-btn>
     </v-app-bar>
 
-    <v-main style="background-color:white;" theme="light">
+    <v-main style="background-color: white" theme="light">
       <v-container class="px-15 py-10 text-center" v-if="!reportData">
-        <v-progress-circular indeterminate color="#11698E" size="50"></v-progress-circular>
+        <v-progress-circular
+          indeterminate
+          color="#11698E"
+          size="50"
+        ></v-progress-circular>
       </v-container>
 
       <v-container class="px-15 py-10" v-else>
         <v-row justify="center">
           <v-col cols="12" md="10" lg="8">
-
             <v-card class="pa-6 mb-6 rounded-xl border-card" elevation="0">
               <div class="d-flex align-center mb-4">
                 <v-avatar color="#11698E" size="48" class="mr-3">
                   <span class="text-white text-h6 font-weight-bold">
-                    {{ reportData.author?.name ? reportData.author.name.charAt(0).toUpperCase() : 'U' }}
+                    {{
+                      reportData.author?.name
+                        ? reportData.author.name.charAt(0).toUpperCase()
+                        : "U"
+                    }}
                   </span>
                 </v-avatar>
 
                 <div>
-                  <div class="font-weight-bold text-body-1" style="color: #1a202c;">{{ reportData.author?.name || 'User' }}</div>
-                  <div class="text-caption text-grey">{{ formatDate(reportData.createdAt) }}</div>
+                  <div
+                    class="font-weight-bold text-body-1"
+                    style="color: #1a202c"
+                  >
+                    {{ reportData.author?.name || "User" }}
+                  </div>
+                  <div class="text-caption text-grey">
+                    {{ formatDate(reportData.createdAt) }}
+                  </div>
                 </div>
               </div>
 
-
-            <div class="d-flex justify-space-between align-center mb-6">
-              <div class="d-flex gap-3 mb-6">
-                <v-chip class="category-chip px-4" size="large">{{ reportData.category }}</v-chip>
+              <div class="d-flex justify-space-between align-center mb-6">
+                <div class="d-flex gap-3 mb-6">
+                  <v-chip class="category-chip px-4" size="large">{{
+                    reportData.category
+                  }}</v-chip>
+                </div>
+                <v-btn
+                  color="#11698E"
+                  class="text-white font-weight-bold text-none"
+                  elevation="0"
+                  height="44"
+                  style="
+                    border-radius: 12px;
+                    font-family: &quot;Poppins&quot;, sans-serif !important;
+                  "
+                  @click="goToBuatAksi(reportData.id)"
+                >
+                  <v-icon start>mdi-plus</v-icon>
+                  Ubah Menjadi Aksi
+                </v-btn>
               </div>
-              <v-btn
-                color="#11698E"
-                class="text-white font-weight-bold text-none"
-                elevation="0"
-                height="44"
-                style="border-radius: 12px; font-family: 'Poppins', sans-serif !important;"
-                @click="goToBuatAksi(reportData.id)"
-              >
-                <v-icon start>mdi-plus</v-icon>
-                Ubah Menjadi Aksi
-              </v-btn>
-            </div>
 
               <div class="d-flex justify-space-between align-center mb-6">
-                <h1 class="font-weight-bold text-h4 mb-0" style="color: #19456B; font-family: 'Poppins', sans-serif !important;">
+                <h1
+                  class="font-weight-bold text-h4 mb-0"
+                  style="
+                    color: #19456b;
+                    font-family: &quot;Poppins&quot;, sans-serif !important;
+                  "
+                >
                   {{ reportData.title }}
                 </h1>
-
               </div>
 
               <div class="d-flex flex-wrap ga-4 mb-6 text-grey-darken-3">
                 <div class="d-flex align-center text-body-1">
-                  <v-icon start size="small" color="grey-darken-1" class="mr-2">mdi-map-marker-outline</v-icon>
+                  <v-icon start size="small" color="grey-darken-1" class="mr-2"
+                    >mdi-map-marker-outline</v-icon
+                  >
                   {{ reportData.location }}
                 </div>
                 <div class="d-flex align-center text-body-1">
-                  <v-icon start size="small" color="grey-darken-1" class="mr-2">mdi-calendar-blank-outline</v-icon>
+                  <v-icon start size="small" color="grey-darken-1" class="mr-2"
+                    >mdi-calendar-blank-outline</v-icon
+                  >
                   {{ formatDate(reportData.createdAt) }}
                 </div>
               </div>
 
-              <p class="text-body-1 text-black" style="line-height: 1.6;">
+              <p class="text-body-1 text-black" style="line-height: 1.6">
                 {{ reportData.description }}
               </p>
             </v-card>
 
             <v-card class="pa-6 rounded-xl border-card" elevation="0">
               <div class="d-flex align-center mb-6">
-                <v-icon class="mr-2" color="#19456B" size="28">mdi-comment-outline</v-icon>
-                <span class="text-h5 font-weight-bold" style="color: #19456B;">Komentar ({{ reportData.comments?.length || 0 }})</span>
+                <v-icon class="mr-2" color="#19456B" size="28"
+                  >mdi-comment-outline</v-icon
+                >
+                <span class="text-h5 font-weight-bold" style="color: #19456b"
+                  >Komentar ({{ reportData.comments?.length || 0 }})</span
+                >
               </div>
 
-              <div v-for="comment in reportData.comments" :key="comment.id" class="pa-5 rounded-xl mb-4 d-flex" style="background-color: #F8F1F1;">
+              <div
+                v-for="comment in reportData.comments"
+                :key="comment.id"
+                class="pa-5 rounded-xl mb-4 d-flex"
+                style="background-color: #f8f1f1"
+              >
                 <v-avatar size="40" color="#11698E" class="mr-4 mt-1">
-                  <span class="text-white font-weight-bold">{{ comment.author ? comment.author.charAt(0).toUpperCase() : 'U' }}</span>
+                  <span class="text-white font-weight-bold">{{
+                    comment.author
+                      ? comment.author.charAt(0).toUpperCase()
+                      : "U"
+                  }}</span>
                 </v-avatar>
                 <div class="w-100">
                   <div class="d-flex justify-space-between align-center mb-1">
-                    <div class="font-weight-bold text-black text-body-1">{{ comment.author }}</div>
-                    <div class="text-caption text-grey-darken-1">{{ comment.time }}</div>
+                    <div class="font-weight-bold text-black text-body-1">
+                      {{ comment.author }}
+                    </div>
+                    <div class="text-caption text-grey-darken-1">
+                      {{ comment.time }}
+                    </div>
                   </div>
                   <p class="text-grey-darken-2 mb-0">{{ comment.text }}</p>
                 </div>
@@ -114,7 +169,6 @@
                 </v-btn>
               </div>
             </v-card>
-
           </v-col>
         </v-row>
       </v-container>
@@ -123,33 +177,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import Navbar from '../components/Navbar.vue';
-
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import Navbar from "../components/Navbar.vue";
 
 const route = useRoute();
 const router = useRouter();
 
 const reportData = ref<any>(null);
-const newComment = ref<string>('');
+const newComment = ref<string>("");
 const reportId = route.params.id;
 
 const fetchReportDetail = async () => {
-  const token = localStorage.getItem('jwt_token');
+  const token = localStorage.getItem("jwt_token");
 
   if (!token) {
-    router.push('/');
+    router.push("/");
     return;
   }
 
   try {
     const res = await fetch(`http://localhost:3000/api/reports/${reportId}`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (res.ok) {
@@ -157,8 +210,8 @@ const fetchReportDetail = async () => {
       reportData.value = data;
     } else if (res.status === 401) {
       alert("Sesi Anda telah berakhir. Silakan login kembali.");
-      localStorage.removeItem('jwt_token');
-      router.push('/');
+      localStorage.removeItem("jwt_token");
+      router.push("/");
     } else {
       console.error("Gagal memuat detail laporan");
     }
@@ -170,23 +223,26 @@ const fetchReportDetail = async () => {
 const submitComment = async () => {
   if (!newComment.value.trim()) return;
 
-  const token = localStorage.getItem('jwt_token');
+  const token = localStorage.getItem("jwt_token");
   if (!token) return;
 
   try {
-    const res = await fetch(`http://localhost:3000/api/reports/${reportId}/comments`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+    const res = await fetch(
+      `http://localhost:3000/api/reports/${reportId}/comments`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          text: newComment.value,
+        }),
       },
-      body: JSON.stringify({
-        text: newComment.value
-      })
-    });
+    );
 
     if (res.ok) {
-      newComment.value = '';
+      newComment.value = "";
       fetchReportDetail();
     } else {
       alert("Gagal mengirim komentar.");
@@ -196,9 +252,9 @@ const submitComment = async () => {
   }
 };
 
-const goToBuatAksi = (id: number) => {
+const goToBuatAksi = (id: string) => {
   router.push({
-    path: '/buatAksi',
+    path: `/buatAksi/${id}`,
     // query: { idLaporan: id }
   });
 };
@@ -208,16 +264,21 @@ onMounted(() => {
 });
 
 const formatDate = (dateString: string | Date) => {
-  if (!dateString) return '';
+  if (!dateString) return "";
   const date = new Date(dateString);
-  const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-  return date.toLocaleDateString('id-ID', options);
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  };
+  return date.toLocaleDateString("id-ID", options);
 };
 </script>
 
 <style scoped>
 * {
-  font-family: 'Poppins', sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
 }
 
 .logo-text {
@@ -234,18 +295,18 @@ const formatDate = (dateString: string | Date) => {
 }
 
 .active-nav {
-  color: #11698E !important;
-  background-color: #F8F1F1 !important;
+  color: #11698e !important;
+  background-color: #f8f1f1 !important;
   --v-activated-opacity: 0 !important;
   opacity: 1 !important;
 }
 
 .active-nav :deep(.v-icon) {
-  color: #11698E !important;
+  color: #11698e !important;
 }
 
 .v-btn--variant-text:hover {
-  color: #11698E !important;
+  color: #11698e !important;
 }
 
 .gap-2 {
@@ -268,17 +329,17 @@ const formatDate = (dateString: string | Date) => {
 }
 
 .border-card {
-  border: 1px solid #EAEAEA !important;
-  background-color: #FFFFFF;
+  border: 1px solid #eaeaea !important;
+  background-color: #ffffff;
 }
 
 .category-chip {
-  background-color: #F8F1F1 !important;
-  color: #11698E !important;
+  background-color: #f8f1f1 !important;
+  color: #11698e !important;
   font-weight: 600 !important;
 }
 
 .comment-input :deep(.v-field__outline) {
-  border-color: #EAEAEA;
+  border-color: #eaeaea;
 }
 </style>
