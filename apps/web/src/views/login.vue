@@ -16,7 +16,7 @@ const login = async () => {
       password: credentials.value.password,
     };
 
-    const res = await fetch("/auth/login", {
+    const res = await fetch("http://127.0.0.1:3000/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
