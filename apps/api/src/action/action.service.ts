@@ -9,6 +9,9 @@ import {
 
 type ActionWithReport = Action & {
   report: Report & { user: User };
+  volunteers?: Array<{ id: string }>;
+  requiredPeople?: number | null;
+  content?: string | null;
 };
 
 @Injectable()
@@ -32,8 +35,9 @@ export class ActionService {
       status: '',
       volunteerAction: {
         scheduledDate: action.scheduledAt,
-        requiredPeople: 0,
-        registeredPeople: 0,
+        requiredPeople: action.requiredPeople ?? 0,
+        registeredPeople: action.volunteers?.length ?? 0,
+        notes: action.content ?? '',
         status: '',
       },
     };
@@ -46,6 +50,7 @@ export class ActionService {
         mediaId: data.mediaId ?? '',
         assemblyPoint: data.meetingPoint,
         scheduledAt: data.date,
+        requiredPeople: Number(data.requiredPeople) || 0,
         // Connect existing records using IDs passed in the DTO
         report: { connect: { id: data.reportId } },
         user: { connect: { id: userId } },
@@ -61,6 +66,7 @@ export class ActionService {
             user: true,
           },
         },
+        volunteers: true,
       },
     });
 
@@ -76,6 +82,7 @@ export class ActionService {
             user: true,
           },
         },
+        volunteers: true,
       },
     });
 

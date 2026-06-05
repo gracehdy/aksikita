@@ -8,10 +8,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { PrismaService } from '../prisma/prisma.service';
 import type { RegisterVolunteerDto } from './dto/register-volunteer.dto';
 
 @Controller('volunteers')
 export class VolunteerController {
+  constructor(private readonly prisma: PrismaService) {}
+
   @UseGuards(AuthGuard('jwt'))
   @Post('register')
   async register(
@@ -25,17 +28,21 @@ export class VolunteerController {
       );
     }
 
-    return {
-      message: 'Pendaftaran relawan diterima.',
-      registration: {
-        actionId: dto.actionId,
+    const registration = await this.prisma.volunteer.create({
+      data: {
+        action: { connect: { id: dto.actionId } },
         fullName: dto.fullName,
         email: dto.email,
         phone: dto.phone,
-        healthCondition: dto.healthCondition,
-        reason: dto.reason,
+        healthCondition: dto.healthCondition ?? '',
+        reason: dto.reason ?? '',
         registeredBy: req.user?.id,
       },
+    });
+
+    return {
+      message: 'Pendaftaran relawan diterima.',
+      registration,
     };
   }
 }

@@ -23,6 +23,7 @@ model User {
 
   reports      Report[]
   actions      Action[]
+  volunteers   Volunteer[]
   points       Point[]
   certificates Certificate[]
   rewards      Reward[]
@@ -62,9 +63,26 @@ model Action {
   category      String?
   assemblyPoint String?
   scheduledAt   DateTime?
+  requiredPeople Int?
 
   report Report @relation(fields: [reportId], references: [id])
   user   User   @relation(fields: [userId], references: [id])
+  volunteers Volunteer[]
+}
+
+model Volunteer {
+  id             String   @id @default(uuid())
+  actionId       String
+  fullName       String
+  email          String
+  phone          String
+  healthCondition String?
+  reason         String?
+  registeredBy   String?
+  createdAt      DateTime @default(now())
+
+  action Action @relation(fields: [actionId], references: [id])
+  user   User?   @relation(fields: [registeredBy], references: [id])
 }
 
 model Point {
