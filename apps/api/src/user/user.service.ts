@@ -47,9 +47,8 @@ export class UserService {
     };
   }
 
-  // === FUNGSI BARU UNTUK PROFILE DINAMIS ===
   async getUserProfile(userId: string): Promise<UserProfileResponseDto | null> {
-    // 1. Ambil data dasar user beserta relasi sertifikat dan rewards (badge)
+    
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: {
@@ -64,7 +63,7 @@ export class UserService {
 
     if (!user) return null;
 
-    // Buat instance UserDto untuk data basic-nya
+    
     const userDto = new UserDto(
       user.id,
       user.email,
@@ -73,7 +72,7 @@ export class UserService {
       user.createdAt,
     );
 
-    // 2. Hitung statistik: Total Laporan & Total Aksi secara real-time
+    
     const totalLaporanDibuat = await this.prisma.report.count({
       where: { userId },
     });
@@ -82,7 +81,7 @@ export class UserService {
       where: { userId },
     });
 
-    // 3. Hitung total Poin Kontribusi (Sum value dari tabel Point)
+    
     const aggregatePoints = await this.prisma.point.aggregate({
       where: { userId },
       _sum: {
@@ -92,7 +91,7 @@ export class UserService {
     const currentPoin = aggregatePoints._sum.value || 0;
     const targetPoin = 1000; // ini itu nanti bisa diubah2, ini aku sesuaiin dulu kayak di UInya
 
-    // 4. Ambil semua Master Badge dari sistem, pasangkan status apakah sudah diraih user
+    
     const allBadges = await this.prisma.badge.findMany();
     const earnedBadgeIds = user.rewards.map((r) => r.badgeId);
 
@@ -103,14 +102,14 @@ export class UserService {
       isEarned: earnedBadgeIds.includes(b.id),
     }));
 
-    // 5. Mapping data Sertifikat milik user
+    
     const sertifikat = user.certificates.map((c) => ({
       id: c.id,
       title: c.title ?? 'Sertifikat Tanpa Judul',
       file: c.file ?? '',
     }));
 
-    // 6. Return response utuh sesuai struktur DTO profile
+    
     return {
       user: userDto,
       stats: {

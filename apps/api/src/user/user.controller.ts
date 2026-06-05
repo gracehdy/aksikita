@@ -28,13 +28,12 @@ export class UserController {
     return result;
   }
 
-  // === ENDPOINT BARU UNTUK HALAMAN PROFILE AKSIMITA ===
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req): Promise<UserProfileResponseDto> {
     const id = req.user.id;
     
-    // Kita panggil fungsi getUserProfile yang ada di UserService nanti
+
     const result = await this.userService.getUserProfile(id);
 
     if (result === null) {
