@@ -34,7 +34,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<LoginResponse> {
     const result = await this.authService.login(loginDto);
-    const maxAge = 24 * 60 * 60 * 1000; // 1 full day
+    const maxAge = 24 * 60 * 60 * 1000;
 
     res.cookie('token', result.access_token, {
       httpOnly: true,
