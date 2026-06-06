@@ -1,140 +1,141 @@
 <template>
   <v-app style="background-color: white" theme="light">
-  <Navbar />
+    <Navbar />
+    <v-spacer></v-spacer>
 
-<v-main class="bg-white">
-    <v-container class="px-md-15 py-10" fluid>
+    <v-main class="bg-white">
+        <v-container class="px-md-15 py-10" fluid>
 
-    <div class="mb-10">
-      <h1 class="text-h4 font-weight-bold section-title mb-2">Aksi Komunitas</h1>
-      <div class="d-flex justify-space-between align-center">
-        <p class="section-subtitle">
-          Bergabunglah dengan aksi relawan di sekitar Anda
-        </p>
-      </div>
-    </div>
-
-      <v-text-field
-        prepend-inner-icon="mdi-magnify"
-        placeholder="Cari aksi berdasarkan judul, deskripsi, atau lokasi..."
-        variant="outlined"
-        rounded="lg"
-        hide-details
-        class="mb-6 search-bar"
-        color="#11698E"
-      ></v-text-field>
-
-      <div class="d-flex ga-3 mb-8 overflow-x-auto pb-2">
-        <v-btn
-          v-for="status in filterOptions"
-          :key="status.value"
-          class="filter-btn text-none font-weight-medium"
-          :class="{ 'filter-active': filterStatus === status.value }"
-          variant="flat"
-          rounded="lg"
-          @click="filterStatus = status.value"
-        >
-          {{ status.label }}
-        </v-btn>
-      </div>
-
-      <v-row v-if="filteredReports.length > 0">
-        <v-col
-          v-for="report in filteredReports"
-          :key="report.id"
-          cols="12" md="6" lg="4"
-        >
-          <v-card class="rounded-xl border-card report-card pa-0" elevation="0" @click="goToDetail(report)">
-           <div class="pa-0">
-                <MediaGallery :mediaList="report.media" />
-              </div>
-
-            <v-card-text class="pa-5">
-              <div class="d-flex align-center mb-4">
-                <v-avatar color="#11698E" size="36" class="text-white font-weight-bold">
-                  {{ report.author.name.charAt(0).toUpperCase() }}
-                </v-avatar>
-                <div class="ml-3">
-                  <div class="author-name">{{ report.author.name }}</div>
-                  <div class="post-date">{{ formatDate(report.createdAt) }}</div>
-                </div>
-              </div>
-
-              <div class="d-flex align-center mb-3">
-                <v-chip size="small" class="category-chip">
-                  {{ report.category }}
-                </v-chip>
-                <v-chip size="small" :color="getStatusColor(report.status)" variant="flat" class="text-white font-weight-bold px-3">
-                  <v-icon start :icon="getStatusIcon(report.status)" size="small"></v-icon>
-                  {{ formatStatusText(report.status) }}
-                </v-chip>
-              </div>
-
-              <h3 class="report-title text-truncate">{{ report.title }}</h3>
-              <p class="text-body-2 text-grey-darken-1 mb-4 report-desc" style="line-height: 1.5; height: 60px;">{{ report.description }}</p>
-
-              <div class="text-body-2 text-grey-darken-2 mb-1 text-truncate">
-                <v-icon color="#14b8a6" size="small" class="mr-2">mdi-map-marker</v-icon> {{ report.location }}
-              </div>
-              <div class="text-body-2 text-grey-darken-2 mb-5">
-                <v-icon color="#14b8a6" size="small" class="mr-2">mdi-calendar-blank</v-icon>
-                {{ report.volunteerAction ? formatDate(report.volunteerAction.scheduledDate) : 'Tanggal belum ditentukan' }}
-              </div>
-
-              <div v-if="report.volunteerAction">
-                <div class="d-flex justify-space-between text-body-2 mb-1">
-                  <span class="text-grey-darken-2">Relawan terdaftar</span>
-                  <span class="font-weight-bold">{{ report.volunteerAction.registeredPeople }}/{{ report.volunteerAction.requiredPeople }}</span>
-                </div>
-                <v-progress-linear
-                  :model-value="(report.volunteerAction.registeredPeople / report.volunteerAction.requiredPeople) * 100"
-                  :color="getProgressBarColor(report.status)"
-                  height="8"
-                  rounded
-                  class="mb-5"
-                ></v-progress-linear>
-              </div>
-
-              <v-btn
-                block
-                :color="getButtonConfig(report.status).color"
-                :class="getButtonConfig(report.status).textClass"
-                rounded="lg"
-                size="large"
-                flat
-                :disabled="report.status === 'Selesai'"
-                @click.stop="handleActionClick(report)"
-              >
-                {{ getButtonConfig(report.status).text }}
-              </v-btn>
-
-              <div class="text-center mt-4">
-                <a href="#"
-                @click.prevent="goToDetail(report)"
-                class="text-grey-darken-1 text-decoration-none text-caption d-inline-flex align-center hover-blue">
-                  <v-icon size="small" class="mr-1">mdi-comment-outline</v-icon> Lihat komentar
-                </a>
-              </div>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-
-      <v-row v-else>
-        <v-col cols="12">
-          <div class="no-reports-placeholder rounded-xl d-flex flex-column align-center justify-center py-15">
-            <v-icon size="80" color="#11698E" class="mb-4">
-              mdi-account-group-outline
-            </v-icon>
-            <h3 class="placeholder-title" style="font-family: 'Poppins', sans-serif; color: #19456B;">Belum Ada Aksi</h3>
-            <p class="placeholder-subtitle text-center mt-2 text-grey">
-              Tidak ada aksi komunitas untuk filter yang dipilih.
+        <div class="mb-10">
+          <h1 class="text-h4 font-weight-bold section-title mb-2">Aksi Komunitas</h1>
+          <div class="d-flex justify-space-between align-center">
+            <p class="section-subtitle">
+              Bergabunglah dengan aksi relawan di sekitar Anda
             </p>
           </div>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-main>
+        </div>
+
+          <v-text-field
+            prepend-inner-icon="mdi-magnify"
+            placeholder="Cari aksi berdasarkan judul, deskripsi, atau lokasi..."
+            variant="outlined"
+            rounded="lg"
+            hide-details
+            class="mb-6 search-bar"
+            color="#11698E"
+          ></v-text-field>
+
+          <div class="d-flex ga-3 mb-8 overflow-x-auto pb-2">
+            <v-btn
+              v-for="status in filterOptions"
+              :key="status.value"
+              class="filter-btn text-none font-weight-medium"
+              :class="{ 'filter-active': filterStatus === status.value }"
+              variant="flat"
+              rounded="lg"
+              @click="filterStatus = status.value"
+            >
+              {{ status.label }}
+            </v-btn>
+          </div>
+
+          <v-row v-if="filteredReports.length > 0">
+            <v-col
+              v-for="report in filteredReports"
+              :key="report.id"
+              cols="12" md="6" lg="4"
+            >
+              <v-card class="rounded-xl border-card report-card pa-0" elevation="0" @click="goToDetail(report)">
+              <div class="pa-0">
+                    <MediaGallery :mediaList="report.media" />
+                  </div>
+
+                <v-card-text class="pa-5">
+                  <div class="d-flex align-center mb-4">
+                    <v-avatar color="#11698E" size="36" class="text-white font-weight-bold">
+                      {{ report.author.name.charAt(0).toUpperCase() }}
+                    </v-avatar>
+                    <div class="ml-3">
+                      <div class="author-name">{{ report.author.name }}</div>
+                      <div class="post-date">{{ formatDate(report.createdAt) }}</div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-center mb-3">
+                    <v-chip size="small" class="category-chip">
+                      {{ report.category }}
+                    </v-chip>
+                    <v-chip size="small" :color="getStatusColor(report.status)" variant="flat" class="text-white font-weight-bold px-3">
+                      <v-icon start :icon="getStatusIcon(report.status)" size="small"></v-icon>
+                      {{ formatStatusText(report.status) }}
+                    </v-chip>
+                  </div>
+
+                  <h3 class="report-title text-truncate">{{ report.title }}</h3>
+                  <p class="text-body-2 text-grey-darken-1 mb-4 report-desc" style="line-height: 1.5; height: 60px;">{{ report.description }}</p>
+
+                  <div class="text-body-2 text-grey-darken-2 mb-1 text-truncate">
+                    <v-icon color="#14b8a6" size="small" class="mr-2">mdi-map-marker</v-icon> {{ report.location }}
+                  </div>
+                  <div class="text-body-2 text-grey-darken-2 mb-5">
+                    <v-icon color="#14b8a6" size="small" class="mr-2">mdi-calendar-blank</v-icon>
+                    {{ report.volunteerAction ? formatDate(report.volunteerAction.scheduledDate) : 'Tanggal belum ditentukan' }}
+                  </div>
+
+                  <div v-if="report.volunteerAction">
+                    <div class="d-flex justify-space-between text-body-2 mb-1">
+                      <span class="text-grey-darken-2">Relawan terdaftar</span>
+                      <span class="font-weight-bold">{{ report.volunteerAction.registeredPeople }}/{{ report.volunteerAction.requiredPeople }}</span>
+                    </div>
+                    <v-progress-linear
+                      :model-value="(report.volunteerAction.registeredPeople / report.volunteerAction.requiredPeople) * 100"
+                      :color="getProgressBarColor(report.status)"
+                      height="8"
+                      rounded
+                      class="mb-5"
+                    ></v-progress-linear>
+                  </div>
+
+                  <v-btn
+                    block
+                    :color="getButtonConfig(report.status).color"
+                    :class="getButtonConfig(report.status).textClass"
+                    rounded="lg"
+                    size="large"
+                    flat
+                    :disabled="report.status === 'Selesai'"
+                    @click.stop="handleActionClick(report)"
+                  >
+                    {{ getButtonConfig(report.status).text }}
+                  </v-btn>
+
+                  <div class="text-center mt-4">
+                    <a href="#"
+                    @click.prevent="goToDetail(report)"
+                    class="text-grey-darken-1 text-decoration-none text-caption d-inline-flex align-center hover-blue">
+                      <v-icon size="small" class="mr-1">mdi-comment-outline</v-icon> Lihat komentar
+                    </a>
+                  </div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+
+          <v-row v-else>
+            <v-col cols="12">
+              <div class="no-reports-placeholder rounded-xl d-flex flex-column align-center justify-center py-15">
+                <v-icon size="80" color="#11698E" class="mb-4">
+                  mdi-account-group-outline
+                </v-icon>
+                <h3 class="placeholder-title" style="font-family: 'Poppins', sans-serif; color: #19456B;">Belum Ada Aksi</h3>
+                <p class="placeholder-subtitle text-center mt-2 text-grey">
+                  Tidak ada aksi komunitas untuk filter yang dipilih.
+                </p>
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-main>
 </v-app>
 </template>
 

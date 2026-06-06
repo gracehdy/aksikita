@@ -20,6 +20,8 @@
     "jsx": "preserve",
     "jsxImportSource": "vue",
     "isolatedModules": true,
+    "noEmit": true,
+    "skipLibCheck": true
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
 }
