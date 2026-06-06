@@ -1,79 +1,53 @@
-// ==========================================
-// USER ENTITIES
-// ==========================================
-
-/**
- * Sanitised User object clean of sensitive credentials.
- * Safe for transmission to client applications and frontend storage.
- */
+import { User } from './user';
 export * from './user';
 
-// ==========================================
-// AUTHENTICATION REQUESTS (DTOs)
-// ==========================================
-
-/**
- * Payload configuration for registration endpoint.
- * Matches POST /auth/register
- */
 export interface RegisterRequest {
   fullName: string;
   email: string;
   username: string;
-  password?: string; // Kept optional for flexible client handling; enforced at boundary
+  password?: string; 
 }
 
-/**
- * Payload configuration for authentication verification.
- * Matches POST /auth/login
- */
+
 export interface LoginRequest {
   usernameOrEmail: string;
   password?: string;
 }
 
-// ==========================================
-// AUTHENTICATION RESPONSES
-// ==========================================
-
-/**
- * Response structure following successful account creation.
- */
 export interface RegisterResponse {
   message: string;
 }
 
-/**
- * Core authentication payload containing bearer token and entity metadata.
- */
 export interface LoginResponse {
   access_token: string;
   user: User;
 }
 
-// ==========================================
-// SYSTEM SECURITY & INTERNAL CONTRACTS
-// ==========================================
-
-/**
- * Decoded JSON Web Token structure.
- */
 export interface JwtPayload {
-  sub: string; // User identifier (UUID/CUID)
-  username: string; // Primary identifier
-  iat?: number; // Issued at timestamp
-  exp?: number; // Expiration timestamp
+  sub: string; 
+  username: string; 
+  iat?: number;
+  exp?: number; 
+}
+
+export interface VolunteerAction {
+  status: string
+  registeredPeople?: number
+  requiredPeople?: number
+  scheduledDate?: string
 }
 
 export interface ReportModel {
-    id: string;
-    userId: string;
-    title: string;
-    description: string;
-    category: string;
-    postType: boolean;
-    location: string | null;
-    createdAt: Date;
+  id: string
+  userId: string
+  title: string
+  description: string
+  category: string
+  postType: boolean
+  location: string | null
+  createdAt: Date
+  image?: string
+  volunteerAction?: VolunteerAction
 }
 
 export interface CreateReportInterface {
