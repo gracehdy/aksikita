@@ -135,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
 
@@ -146,6 +146,8 @@ const userData = ref({
   email: '',
   initials: '',
   joinDate: '',
+  points: 0,
+  nextLevelPoints: 1000,
   stats: {
     completed: 0,
     created: 0,
@@ -160,17 +162,24 @@ const poinInfo = ref([
   { val: 100, text: 'Per badge diraih' }
 ])
 
-const badges = ref([
-  { name: 'Aksi Pertama', desc: 'Menyelesaikan aksi relawan pertama', date: '15/4/2026', icon: 'mdi-star', color: '#19456B', earned: true },
-  { name: 'Kontributor Aktif', desc: 'Mengikuti 5+ aksi dalam sebulan', date: '20/4/2026', icon: 'mdi-trending-up', color: '#11698E', earned: true },
-  { name: 'Spesialis Lingkungan', desc: 'Mengikuti 10 aksi kategori Lingkungan', date: '25/4/2026', icon: 'mdi-leaf', color: '#16C79A', earned: true },
-  { name: 'Perintis Aksi', desc: 'Membuat 5 aksi relawan', date: '', icon: 'mdi-account-group', color: '#BDBDBD', earned: false }
-])
+interface Badge {
+  name: string
+  desc?: string
+  date?: string
+  earned: boolean
+  color?: string
+  icon?: string
+}
 
-const certs = ref([
-  { title: 'Bersih-Bersih Taman Menteng', date: '20/4/2026', tag: 'Lingkungan' },
-  { title: 'Donor Darah Komunitas', date: '15/4/2026', tag: 'Kesehatan' }
-])
+const badges = ref<Badge[]>([])
+
+interface Cert {
+  title: string
+  date?: string
+  tag?: string
+}
+
+const certs = ref<Cert[]>([])
 
 function getInitials(name: string) {
   if (!name) return '';
@@ -214,7 +223,7 @@ const fetchProfile = async () => {
 
   try {
 
-    const res = await fetch('/api/user/me', {
+      const res = await fetch('/api/user/profile', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -223,31 +232,38 @@ const fetchProfile = async () => {
     });
 
     if (res.ok) {
-      const data = await res.json();
-      if (data) {
-        userData.value = {
-          name: data.fullName || '',
-          email: data.email || '',
-          initials: getInitials(data.fullName || ''),
-          joinDate: `Bergabung sejak ${formatDate(data.createdAt) || ''}`,
-          stats: data.stats
-        };
+        const data = await res.json();
+        if (data) {
+          // Map backend UserProfileResponseDto to frontend state
+          userData.value.name = data.user?.fullName || ''
+          userData.value.email = data.user?.email || ''
+          userData.value.initials = getInitials(data.user?.fullName || '')
+          userData.value.joinDate = `Bergabung sejak ${formatDate(data.user?.createdAt) || ''}`
+          userData.value.stats = {
+            completed: data.stats?.totalAksiSelesai || 0,
+            created: data.stats?.totalLaporanDibuat || 0,
+            badges: data.stats?.totalBadgeDiraih || 0
+          }
+          userData.value.points = data.kontribusi?.currentPoin || 0
+          userData.value.nextLevelPoints = data.kontribusi?.targetPoin || 1000
 
-      badges.value = data.badges.map((b:any) => ({
-        name: b.name,
-        desc: b.desc,
-        date: formatDate(b.earnedAt),
-        earned: true
-      }));
+          badges.value = (data.badges || []).map((b:any) => ({
+            name: b.name,
+            desc: b.description || '',
+            date: b.isEarned ? '' : '',
+            icon: 'mdi-star',
+            color: b.isEarned ? '#16C79A' : '#BDBDBD',
+            earned: !!b.isEarned
+          }))
 
-      certs.value = data.certificates.map((c:any) => ({
-        title: c.title,
-        date: formatDate(c.issuedAt),
-        tag: c.category
-      }));
-      } else {
-        alert("Gagal memuat data profil");
-      }
+          certs.value = (data.sertifikat || []).map((c:any) => ({
+            title: c.title,
+            date: '',
+            tag: c.file || ''
+          }))
+        } else {
+          alert('Gagal memuat data profil')
+        }
     }
   } catch (error) {
     console.error("Gagal mengambil data profil:", error);
@@ -256,6 +272,12 @@ const fetchProfile = async () => {
 
 onMounted(() => {
   fetchProfile();
+})
+
+const progressPercent = computed(() => {
+  const p = userData.value.points || 0
+  const t = userData.value.nextLevelPoints || 1
+  return Math.round((p / t) * 100)
 })
 </script>
 
