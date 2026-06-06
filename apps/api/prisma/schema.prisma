@@ -20,14 +20,13 @@ model User {
   password     String?
   email        String  @unique
   profileImage String?
-
   reports      Report[]
   actions      Action[]
   volunteers   Volunteer[]
   points       Point[]
   certificates Certificate[]
   rewards      Reward[]
-
+  updatedAt DateTime @updatedAt @map("updated_at")
   createdAt DateTime @default(now()) @map("created_at")
 }
 
@@ -40,7 +39,6 @@ model Report {
   postType    Boolean
   location    String?
   createdAt   DateTime @default(now()) @map("created_at")
-
   user    User     @relation(fields: [userId], references: [id])
   media   Media[]
   actions Action[]
@@ -50,8 +48,9 @@ model Media {
   id       String  @id @default(uuid())
   reportId String
   type     String?
-
   report Report @relation(fields: [reportId], references: [id])
+  actionId String?
+  action   Action? @relation(fields: [actionId], references: [id])
 }
 
 model Action {
@@ -64,7 +63,6 @@ model Action {
   assemblyPoint String?
   scheduledAt   DateTime?
   requiredPeople Int?
-
   report Report @relation(fields: [reportId], references: [id])
   user   User   @relation(fields: [userId], references: [id])
   volunteers Volunteer[]
@@ -89,7 +87,6 @@ model Point {
   userId String
   source String?
   value  Int?
-
   user    User     @relation(fields: [userId], references: [id])
   rewards Reward[]
 }
@@ -98,7 +95,6 @@ model Badge {
   id          String  @id @default(uuid())
   name        String?
   description String?
-
   rewards Reward[]
 }
 
@@ -107,7 +103,6 @@ model Certificate {
   userId String
   title  String?
   file   String?
-
   user    User     @relation(fields: [userId], references: [id])
   rewards Reward[]
 }
@@ -118,7 +113,6 @@ model Reward {
   pointId       String
   badgeId       String
   certificateId String
-
   user        User        @relation(fields: [userId], references: [id])
   point       Point       @relation(fields: [pointId], references: [id])
   badge       Badge       @relation(fields: [badgeId], references: [id])

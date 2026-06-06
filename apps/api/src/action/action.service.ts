@@ -5,11 +5,12 @@ import {
   Action,
   Report,
   User,
-} from '../generated/prisma/client/client';
+  Media
+} from '../generated/prisma/client';
 
 type ActionWithReport = Action & {
-  report: Report & { user: User };
-  volunteers?: Array<{ id: string }>;
+  report: Report & { user: User; media: Media[] };
+  volunteers?: Array<{ id: number}>;
   requiredPeople?: number | null;
   content?: string | null;
 };
@@ -32,6 +33,7 @@ export class ActionService {
           action.report.user.username ||
           'Pengguna',
       },
+      media: action.report.media,
       status: '',
       volunteerAction: {
         scheduledDate: action.scheduledAt,
@@ -51,7 +53,6 @@ export class ActionService {
         assemblyPoint: data.meetingPoint,
         scheduledAt: data.date,
         requiredPeople: Number(data.requiredPeople) || 0,
-        // Connect existing records using IDs passed in the DTO
         report: { connect: { id: data.reportId } },
         user: { connect: { id: userId } },
       },
@@ -64,6 +65,7 @@ export class ActionService {
         report: {
           include: {
             user: true,
+            media: true,
           },
         },
         volunteers: true,
@@ -80,6 +82,7 @@ export class ActionService {
         report: {
           include: {
             user: true,
+            media: true,
           },
         },
         volunteers: true,

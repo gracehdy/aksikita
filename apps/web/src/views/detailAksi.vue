@@ -14,6 +14,10 @@
         </v-btn>
 
         <v-card class="mb-6 rounded-xl border-card px-4 py-4" elevation="0">
+          <div class="mt-6">
+            <h3 class="text-h6 font-weight-bold mb-3" style="color: #19456b;">Lampiran</h3>
+            <MediaGallery :mediaList="report.media" />
+          </div>
           <v-card-text>
             <div class="d-flex align-center mb-6">
               <v-avatar color="#11698E" size="48" class="text-white font-weight-bold text-h6">
@@ -203,6 +207,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
+import MediaGallery from "../components/mediagallery.vue";
 
 const route = useRoute()
 const router = useRouter()

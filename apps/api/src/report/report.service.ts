@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateReportRequest } from './dto/create-report.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Report } from '../generated/prisma/client/client';
+import { Report } from '../generated/prisma/client';
 
 @Injectable()
 export class ReportService {
@@ -23,15 +23,23 @@ export class ReportService {
   }
 
   async findAll(): Promise<Report[]> {
-    // Logic to return an array of all reports
-    const allReports = await this.prismaClient.report.findMany();
+
+    const allReports: Report[] = await this.prismaClient.report.findMany({
+      include: {
+        user: true,
+        media: true,
+      },
+    });
     return allReports;
   }
 
   async findOne(id: string): Promise<Report | null> {
-    // Logic to find a report by ID
     const result: Report | null = await this.prismaClient.report.findUnique({
       where: { id: id },
+      include: {
+        user: true,
+        media: true,
+      },
     });
 
     return result;

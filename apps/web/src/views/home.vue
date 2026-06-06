@@ -21,7 +21,7 @@
 
         <v-text-field
           prepend-inner-icon="mdi-magnify"
-          placeholder="Cari aksi berdasarkan judul, deskripsi, atau lokasi..."
+          placeholder="Cari laporan berdasarkan judul, deskripsi, atau lokasi..."
           variant="outlined"
           rounded="lg"
           hide-details
@@ -61,6 +61,10 @@
               </div>
 
               <v-card-text class="px-0 pt-4">
+                <div class="mt-6">
+                  <h3 class="text-h6 font-weight-bold mb-3" style="color: #19456b;">Lampiran</h3>
+                  <MediaGallery :mediaList="report.media" />
+                </div>
                 <div class="d-flex align-center mb-4 ga-3">
                   <v-avatar size="36" color="#11698E">
                     <span class="text-white font-weight-bold">
@@ -150,6 +154,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ReportModel } from '@aksikita/types'
 import Navbar from '../components/Navbar.vue'
+import MediaGallery from '../components/mediagallery.vue'
 
 const router = useRouter()
 

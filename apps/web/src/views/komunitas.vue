@@ -1,14 +1,18 @@
 <template>
-  <v-app>
+  <v-app style="background-color: white" theme="light">
   <Navbar />
 
 <v-main class="bg-white">
     <v-container class="px-md-15 py-10" fluid>
 
-      <div class="mb-6">
-        <h1 class="font-weight-bold" style="color: #1a202c; font-size: 32px; font-family: 'Poppins', sans-serif;">Aksi Komunitas</h1>
-        <p class="text-grey-darken-1 mt-1" style="font-family: 'Poppins', sans-serif; font-size: 16px;">Bergabunglah dengan aksi relawan di sekitar Anda</p>
+    <div class="mb-10">
+      <h1 class="text-h4 font-weight-bold section-title mb-2">Aksi Komunitas</h1>
+      <div class="d-flex justify-space-between align-center">
+        <p class="section-subtitle">
+          Bergabunglah dengan aksi relawan di sekitar Anda
+        </p>
       </div>
+    </div>
 
       <v-text-field
         prepend-inner-icon="mdi-magnify"
@@ -40,10 +44,10 @@
           :key="report.id"
           cols="12" md="6" lg="4"
         >
-          <v-card elevation="0" class="rounded-xl card-hover" style="font-family: 'Poppins', sans-serif;" @click="goToDetail(report)">
-            <v-sheet color="#F8F1F1" height="200" class="d-flex justify-center align-center">
-              <v-icon size="80" color="#4a5568">mdi-account-group</v-icon>
-            </v-sheet>
+          <v-card class="rounded-xl border-card report-card pa-0" elevation="0" @click="goToDetail(report)">
+           <div class="pa-0">
+                <MediaGallery :mediaList="report.media" />
+              </div>
 
             <v-card-text class="pa-5">
               <div class="d-flex align-center mb-4">
@@ -51,12 +55,12 @@
                   {{ report.author.name.charAt(0).toUpperCase() }}
                 </v-avatar>
                 <div class="ml-3">
-                  <div class="font-weight-bold text-body-1" style="color: #1a202c;">{{ report.author.name }}</div>
-                  <div class="text-caption text-grey">{{ formatDate(report.createdAt) }}</div>
+                  <div class="author-name">{{ report.author.name }}</div>
+                  <div class="post-date">{{ formatDate(report.createdAt) }}</div>
                 </div>
               </div>
 
-              <div class="d-flex justify-space-between align-center mb-4">
+              <div class="d-flex align-center mb-3">
                 <v-chip size="small" class="category-chip">
                   {{ report.category }}
                 </v-chip>
@@ -163,6 +167,11 @@
 .v-btn--variant-text:hover {
   color: #11698E !important;
 }
+
+.border-card { 
+  border: 1px solid #EAEAEA !important; 
+  background-color: #FFFFFF !important; }
+
 .border-b {
   border-bottom: 1px solid #eeeeee !important;
 }
@@ -199,10 +208,12 @@
 }
 
 .report-desc {
+  font-size: 14px; 
+  color: #777;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  -webkit-line-clamp: 2;
+  height: 40px;
 }
 
 .hover-blue:hover {
@@ -219,16 +230,41 @@
 
 .report-title {
   font-family: 'Poppins', sans-serif !important;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #19456B;
 }
+
+.section-title {
+  font-family: 'Poppins', sans-serif !important;
+  color: #19456B;
+}
+
+.section-subtitle {
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 16px;
+  color: #666;
+}
+
+.action-btn {
+  font-family: 'Poppins', sans-serif !important;
+  text-transform: none !important;
+  font-weight: 600;
+  border-radius: 12px;
+}
+
+.report-card { transition: transform 0.2s; }
+.report-card:hover { 
+  transform: translateY(-4px); 
+  box-shadow: 0 8px 16px rgba(0,0,0,0.08) !important; }
+
 </style>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
+import MediaGallery from '../components/mediagallery.vue'
 
 const router = useRouter()
 const reports = ref<any[]>([])

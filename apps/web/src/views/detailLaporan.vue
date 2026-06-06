@@ -32,14 +32,16 @@
         <v-row justify="center">
           <v-col cols="12" md="10" lg="8">
             <v-card class="pa-6 mb-6 rounded-xl border-card" elevation="0">
+              <div class="mt-6">
+                <h3 class="text-h6 font-weight-bold mb-3" style="color: #19456b;">Lampiran</h3>
+                <MediaGallery :mediaList="reportData.media" />
+              </div>
+            </v-card>
+            <v-card class="pa-6 mb-6 rounded-xl border-card" elevation="0">
               <div class="d-flex align-center mb-4">
                 <v-avatar color="#11698E" size="48" class="mr-3">
                   <span class="text-white text-h6 font-weight-bold">
-                    {{
-                      reportData.author?.name
-                        ? reportData.author.name.charAt(0).toUpperCase()
-                        : "U"
-                    }}
+                    {{ authorName ? authorName.charAt(0).toUpperCase() : "U" }}
                   </span>
                 </v-avatar>
 
@@ -48,7 +50,7 @@
                     class="font-weight-bold text-body-1"
                     style="color: #1a202c"
                   >
-                    {{ reportData.author?.name || "User" }}
+                    {{ authorName }}
                   </div>
                   <div class="text-caption text-grey">
                     {{ formatDate(reportData.createdAt) }}
@@ -177,9 +179,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Navbar from "../components/Navbar.vue";
+import MediaGallery from "../components/mediagallery.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -187,6 +190,17 @@ const router = useRouter();
 const reportData = ref<any>(null);
 const newComment = ref<string>("");
 const reportId = route.params.id;
+
+const authorName = computed(() => {
+      const a = reportData.value?.author;
+      if (a && typeof a === "object" && a.name && a.name !== "User") return a.name;
+      if (a && typeof a === "string" && a !== "User") return a;
+
+      const u = reportData.value?.user;
+      if (u) return u.displayName || u.username || "User";
+
+      return "User";
+});
 
 const fetchReportDetail = async () => {
   const token = localStorage.getItem("jwt_token");
@@ -207,6 +221,7 @@ const fetchReportDetail = async () => {
 
     if (res.ok) {
       const data = await res.json();
+      console.log("fetchReportDetail response:", data);
       reportData.value = data;
     } else if (res.status === 401) {
       alert("Sesi Anda telah berakhir. Silakan login kembali.");
