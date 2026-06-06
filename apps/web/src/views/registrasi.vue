@@ -49,7 +49,13 @@ const register = async () => {
       }
 
     } else {
-      const error = await res.json()
+      const text = await res.text()
+      let error: any = { message: 'Registrasi gagal' }
+      try {
+        error = JSON.parse(text)
+      } catch {
+        error.message = text || 'Registrasi gagal'
+      }
       alert(error.message || 'Registrasi gagal')
     }
   } catch (err) {

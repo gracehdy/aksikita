@@ -71,7 +71,7 @@ model Action {
 }
 
 model Volunteer {
-  id             String   @id @default(uuid())
+  id             Int     @id @default(autoincrement())
   actionId       String
   fullName       String
   email          String
@@ -79,10 +79,9 @@ model Volunteer {
   healthCondition String?
   reason         String?
   registeredBy   String?
+  action         Action  @relation(fields: [actionId], references: [id])
+  user           User?    @relation(fields: [registeredBy], references: [id])
   createdAt      DateTime @default(now())
-
-  action Action @relation(fields: [actionId], references: [id])
-  user   User?   @relation(fields: [registeredBy], references: [id])
 }
 
 model Point {

@@ -81,10 +81,10 @@
                   <v-chip
                     v-if="report.volunteerAction"
                     size="small"
-                    :color="getActionProperties(report.volunteerAction.status).color"
+                    :color="getActionProperties(report.volunteerAction?.status).color"
                     class="text-white font-weight-bold"
                   >
-                    {{ report.volunteerAction.status }}
+                    {{ report.volunteerAction?.status }}
                   </v-chip>
                 </div>
 
@@ -104,20 +104,22 @@
                     </div>
                     <div class="volunteer-info">
                       <v-icon size="18" class="mr-1">mdi-calendar-blank-outline</v-icon>
-                      {{ formatDate(report.volunteerAction.scheduledDate) }}
+                      {{ report.volunteerAction.scheduledDate
+                        ? formatDate(report.volunteerAction.scheduledDate)
+                        : 'Tanggal belum tersedia' }}
                     </div>
                   </div>
 
                   <v-btn
                     block
-                    :color="getActionProperties(report.volunteerAction.status).color"
-                    :class="getActionProperties(report.volunteerAction.status).textClass"
+                    :color="getActionProperties(report.volunteerAction?.status).color"
+                    :class="getActionProperties(report.volunteerAction?.status).textClass"
                     class="volunteer-btn"
                     elevation="0"
-                    :disabled="report.volunteerAction.status === 'Selesai'"
+                    :disabled="report.volunteerAction?.status === 'Selesai'"
                     @click.stop="goToDaftarRelawan(report.id)"
                   >
-                    {{ getActionProperties(report.volunteerAction.status).text }}
+                    {{ getActionProperties(report.volunteerAction?.status).text }}
                   </v-btn>
                 </div>
               </v-card-text>
@@ -151,9 +153,17 @@ import Navbar from '../components/Navbar.vue'
 
 const router = useRouter()
 
+interface VolunteerAction {
+  status: string
+  registeredPeople: number
+  requiredPeople: number
+  scheduledDate: string
+}
+
 export interface UIReportItem {
   report: ReportModel
   displayName: string
+  volunteerAction?: VolunteerAction
 }
 
 const reports = ref<UIReportItem[]>([])
@@ -233,26 +243,14 @@ const filteredReports = computed((): UIReportItem[] => {
     : reports.value.filter(item => item.report.category === filterCategory.value)
 })
 
-const getActionProperties = (status: string) => {
-  if (status === 'Sedang Berjalan') {
-    return {
-      color: '#11698E',
-      text: 'Lihat Detail',
-      textClass: 'text-none text-white font-weight-bold'
-    }
-  }
+const getActionProperties = (status: string | undefined) => {
   if (status === 'Selesai') {
-    return {
-      color: '#E0E0E0',
-      text: 'Aksi Selesai',
-      textClass: 'text-none text-grey-darken-3 font-weight-bold'
-    }
+    return { color: 'grey', text: 'Sudah selesai', textClass: 'text-grey' }
   }
-  return {
-    color: '#16C79A',
-    text: 'Daftar Sekarang',
-    textClass: 'text-none text-white font-weight-bold'
+  if (status === 'Berlangsung') {
+    return { color: 'primary', text: 'Ikut Sekarang', textClass: 'text-primary' }
   }
+  return { color: 'secondary', text: 'Ikuti aksi', textClass: 'text-secondary' }
 }
 
 const goToCreate = () => {

@@ -17,9 +17,9 @@
     <div class="d-flex align-center gap-4">
         <v-btn
         variant="flat"
-        class="nav-btn active-nav mr-2"
+        :class="['nav-btn', { 'active-nav': route.name === 'home' }, 'mr-2']"
         to="/home"
-        rounded="xl"
+        rounded="lg"
         >
         <v-icon start>mdi-home-variant-outline</v-icon>
         Beranda
@@ -27,17 +27,29 @@
 
         <v-btn
         variant="text"
-        class="nav-btn mr-2"
+        :class="['nav-btn', { 'active-nav': route.name === 'komunitas' }, 'mr-2']"
         to="/komunitas"
+        rounded="lg"
         >
         <v-icon start>mdi-account-group-outline</v-icon>
         Aksi Komunitas
         </v-btn>
 
-        <v-btn variant="text" class="nav-btn" to="/profile">
+        <v-btn
+        variant="text"
+        :class="['nav-btn', { 'active-nav': route.name === 'profile' }]"
+        to="/profile"
+        rounded="lg"
+        >
         <v-icon start>mdi-account-outline</v-icon>
         Akun
         </v-btn>
     </div>
     </v-app-bar>
 </template>
+
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+</script>

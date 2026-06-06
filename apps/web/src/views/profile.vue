@@ -57,10 +57,10 @@
             </div>
             <div class="d-flex justify-space-between mb-2 progress-text text-body-2 text-grey-darken-2">
               <span>Progress menuju level berikutnya</span>
-              <span class="font-weight-bold" style="color: #19456B;">650 / 1000 poin</span>
+              <span class="font-weight-bold" style="color: #19456B;">{{ userData.points }} / {{ userData.nextLevelPoints }} poin</span>
             </div>
             <v-progress-linear
-              :model-value="65"
+              :model-value="progressPercent"
               color="#16C79A"
               height="12"
               rounded
