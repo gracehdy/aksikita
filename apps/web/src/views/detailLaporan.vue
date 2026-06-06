@@ -129,19 +129,17 @@
                 style="background-color: #f8f1f1"
               >
                 <v-avatar size="40" color="#11698E" class="mr-4 mt-1">
-                  <span class="text-white font-weight-bold">{{
-                    comment.author
-                      ? comment.author.charAt(0).toUpperCase()
-                      : "U"
-                  }}</span>
+                  <span class="text-white font-weight-bold">
+                  {{ comment.user?.displayName ? comment.user.displayName.charAt(0).toUpperCase() : "U" }}
+                  </span>
                 </v-avatar>
                 <div class="w-100">
                   <div class="d-flex justify-space-between align-center mb-1">
                     <div class="font-weight-bold text-black text-body-1">
-                      {{ comment.author }}
+                      {{ comment.user?.displayName || "User" }}
                     </div>
                     <div class="text-caption text-grey-darken-1">
-                      {{ comment.time }}
+                      {{ formatDate(comment.createdAt) }}
                     </div>
                   </div>
                   <p class="text-grey-darken-2 mb-0">{{ comment.text }}</p>

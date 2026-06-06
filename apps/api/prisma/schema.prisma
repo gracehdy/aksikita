@@ -28,6 +28,7 @@ model User {
   rewards      Reward[]
   updatedAt    DateTime      @updatedAt @map("updated_at")
   createdAt    DateTime      @default(now()) @map("created_at")
+  comments  Comment[]
 }
 
 model Report {
@@ -42,6 +43,7 @@ model Report {
   user        User     @relation(fields: [userId], references: [id])
   media       Media[]
   actions     Action[]
+  comments  Comment[]
 }
 
 model Media {
@@ -119,3 +121,14 @@ model Reward {
   badge         Badge       @relation(fields: [badgeId], references: [id])
   certificate   Certificate @relation(fields: [certificateId], references: [id])
 }
+
+model Comment {
+  id        String   @id @default(uuid())
+  text      String
+  createdAt DateTime @default(now())
+  reportId  String
+  report    Report   @relation(fields: [reportId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}
+

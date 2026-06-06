@@ -39,6 +39,12 @@ export class ReportService {
       include: {
         user: true,
         media: true,
+        comments: {
+        include: {
+          user: true,
+        },
+        orderBy: { createdAt: 'desc' }
+      }
       },
     });
 

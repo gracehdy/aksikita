@@ -136,7 +136,7 @@ const volunteerForm = ref({
 })
 
 
-const handleFileUpload = (event) => {
+const handleFileUpload = (event : any) => {
   const file = event.target.files[0]
   if (file) {
     fileName.value = file.name
@@ -152,6 +152,28 @@ const submitReport = async () => {
   }
 
   const token = localStorage.getItem('jwt_token')
+  let uploadedFilename = null;
+
+  if (fileObj.value) {
+    const formData = new FormData();
+    formData.append('file', fileObj.value);
+
+    try {
+      const uploadRes = await fetch('/api/reports/upload', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: formData
+      });
+      
+      if (uploadRes.ok) {
+        const data = await uploadRes.json();
+        uploadedFilename = data.filename;
+      }
+    } catch (err) {
+      console.error("Gagal upload gambar:", err);
+    }
+  }
+
   if (!token) {
     alert("Anda harus login terlebih dahulu untuk membuat laporan.")
     router.push('/')
@@ -164,13 +186,14 @@ const submitReport = async () => {
       description: form.value.description,
       location: form.value.location,
       title: form.value.title,
+      image: uploadedFilename ? [uploadedFilename] : []
     };
 
     const res = await fetch('/api/reports', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(payloadData)
     })

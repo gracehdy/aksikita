@@ -9,9 +9,16 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ActionModule } from './action/action.module';
 import { VolunteerModule } from './volunteer/volunteer.module';
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'uploads'),
+      serveRoot: '/uploads',
+    }),
     ReportModule,
     AchievementsModule,
     PrismaModule,
@@ -19,6 +26,7 @@ import { VolunteerModule } from './volunteer/volunteer.module';
     UserModule,
     ActionModule,
     VolunteerModule,
+    CommentModule,
   ],
   controllers: [AppController, AchievementsController],
   providers: [AppService],
