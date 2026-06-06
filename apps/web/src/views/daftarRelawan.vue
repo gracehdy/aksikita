@@ -188,7 +188,6 @@ onMounted(async () => {
   }
 
   try {
-    // Coba ambil dari backend dulu dengan idAksi
     if (idAksi) {
       const res = await fetch(`http://localhost:3000/api/actions/${idAksi}`, {
         method: 'GET',
@@ -200,6 +199,14 @@ onMounted(async () => {
 
       if (res.ok) {
         const data = await res.json()
+        // Pastikan id yang diterima di query cocok dengan id action yang diambil
+        if (idAksi && String(data.id) !== String(idAksi) && String(data.volunteerAction?.id) !== String(idAksi)) {
+          console.warn('Mismatched action id:', { idAksi, dataId: data.id, volunteerActionId: data.volunteerAction?.id })
+          alert('ID aksi tidak cocok. Anda akan dialihkan ke daftar aksi.')
+          router.push('/komunitas')
+          return
+        }
+
         report.value = data
         return
       }
@@ -241,11 +248,19 @@ const submitRegistration = async () => {
   }
 
   try {
+    const actionId = report.value?.volunteerAction?.id || report.value?.id;
+    if (!actionId) {
+      alert('Tidak ada data aksi untuk didaftarkan (missing action id).')
+      return
+    }
+
     const payload = {
-      actionId: report.value?.id,
+      actionId: String(actionId),
       ...form.value
     }
 
+    console.debug('Submitting volunteer registration', payload)
+    console.log("ID yang dikirim ke server:", actionId);
     const res = await fetch('http://localhost:3000/api/volunteers/register', {
       method: 'POST',
       headers: {
@@ -258,13 +273,25 @@ const submitRegistration = async () => {
     if (res.ok) {
       alert("Pendaftaran berhasil! Terima kasih atas partisipasi Anda.")
       router.push('/komunitas')
-    } else if (res.status === 401) {
+      return
+    }
+
+    let bodyText = ''
+    try { bodyText = await res.text() } catch (e) { /* ignore */ }
+    console.error('Registration failed', { status: res.status, body: bodyText })
+
+    if (res.status === 401) {
       alert("Sesi login Anda sudah habis. Silakan login ulang.")
       localStorage.removeItem('jwt_token')
       router.push('/')
-    } else {
-      const error = await res.json()
-      alert(error.message || "Gagal mendaftar. Silakan coba lagi.")
+      return
+    }
+
+    try {
+      const errJson = JSON.parse(bodyText || '{}')
+      alert(errJson.message || 'Gagal mendaftar. Silakan coba lagi.')
+    } catch (e) {
+      alert('Gagal mendaftar. Silakan coba lagi. (lihat console untuk detail)')
     }
   } catch (err) {
     console.error("Terjadi kesalahan jaringan:", err)

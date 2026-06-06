@@ -13,12 +13,12 @@ datasource db {
 }
 
 model User {
-  id           String  @id @default(uuid())
-  username     String  @unique
+  id           String        @id @default(uuid())
+  username     String        @unique
   displayName  String?
   phoneNumber  String?
   password     String?
-  email        String  @unique
+  email        String        @unique
   profileImage String?
   reports      Report[]
   actions      Action[]
@@ -26,8 +26,8 @@ model User {
   points       Point[]
   certificates Certificate[]
   rewards      Reward[]
-  updatedAt DateTime @updatedAt @map("updated_at")
-  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  createdAt    DateTime      @default(now()) @map("created_at")
 }
 
 model Report {
@@ -39,82 +39,83 @@ model Report {
   postType    Boolean
   location    String?
   createdAt   DateTime @default(now()) @map("created_at")
-  user    User     @relation(fields: [userId], references: [id])
-  media   Media[]
-  actions Action[]
+  user        User     @relation(fields: [userId], references: [id])
+  media       Media[]
+  actions     Action[]
 }
 
 model Media {
   id       String  @id @default(uuid())
   reportId String
   type     String?
-  report Report @relation(fields: [reportId], references: [id])
+  report   Report  @relation(fields: [reportId], references: [id])
   actionId String?
   action   Action? @relation(fields: [actionId], references: [id])
 }
 
 model Action {
-  id            String    @id @default(uuid())
-  reportId      String
-  userId        String
-  content       String?
-  mediaId       String?
-  category      String?
-  assemblyPoint String?
-  scheduledAt   DateTime?
+  id             String      @id @default(uuid())
+  reportId       String
+  userId         String
+  content        String?
+  mediaId        String?
+  category       String?
+  assemblyPoint  String?
+  scheduledAt    DateTime?
   requiredPeople Int?
-  report Report @relation(fields: [reportId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
-  volunteers Volunteer[]
+  report         Report      @relation(fields: [reportId], references: [id])
+  user           User        @relation(fields: [userId], references: [id])
+  volunteers     Volunteer[]
+  media          Media[]
 }
 
 model Volunteer {
-  id             Int     @id @default(autoincrement())
-  actionId       String
-  fullName       String
-  email          String
-  phone          String
+  id              Int      @id @default(autoincrement())
+  actionId        String
+  fullName        String
+  email           String
+  phone           String
   healthCondition String?
-  reason         String?
-  registeredBy   String?
-  action         Action  @relation(fields: [actionId], references: [id])
-  user           User?    @relation(fields: [registeredBy], references: [id])
-  createdAt      DateTime @default(now())
+  reason          String?
+  registeredBy    String?
+  action          Action   @relation(fields: [actionId], references: [id])
+  user            User?    @relation(fields: [registeredBy], references: [id])
+  createdAt       DateTime @default(now())
 }
 
 model Point {
-  id     String  @id @default(uuid())
-  userId String
-  source String?
-  value  Int?
+  id      String   @id @default(uuid())
+  userId  String
+  source  String?
+  value   Int?
   user    User     @relation(fields: [userId], references: [id])
   rewards Reward[]
 }
 
 model Badge {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String?
   description String?
-  rewards Reward[]
+  rewards     Reward[]
 }
 
 model Certificate {
-  id     String  @id @default(uuid())
-  userId String
-  title  String?
-  file   String?
+  id      String   @id @default(uuid())
+  userId  String
+  title   String?
+  file    String?
   user    User     @relation(fields: [userId], references: [id])
   rewards Reward[]
 }
 
 model Reward {
-  id            String @id @default(uuid())
+  id            String      @id @default(uuid())
   userId        String
   pointId       String
   badgeId       String
   certificateId String
-  user        User        @relation(fields: [userId], references: [id])
-  point       Point       @relation(fields: [pointId], references: [id])
-  badge       Badge       @relation(fields: [badgeId], references: [id])
-  certificate Certificate @relation(fields: [certificateId], references: [id])
+  user          User        @relation(fields: [userId], references: [id])
+  point         Point       @relation(fields: [pointId], references: [id])
+  badge         Badge       @relation(fields: [badgeId], references: [id])
+  certificate   Certificate @relation(fields: [certificateId], references: [id])
 }

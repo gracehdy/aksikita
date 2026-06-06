@@ -1,264 +1,128 @@
 <template>
   <v-app style="background-color: white" theme="light">
     <Navbar />
-    <v-spacer></v-spacer>
-
     <v-main class="bg-white">
-        <v-container class="px-md-15 py-10" fluid>
-
+      <v-container class="px-15 py-10" fluid>
         <div class="mb-10">
           <h1 class="text-h4 font-weight-bold section-title mb-2">Aksi Komunitas</h1>
-          <div class="d-flex justify-space-between align-center">
-            <p class="section-subtitle">
-              Bergabunglah dengan aksi relawan di sekitar Anda
-            </p>
-          </div>
+          <p class="section-subtitle">Bergabunglah dengan aksi relawan di sekitar Anda</p>
         </div>
 
-          <v-text-field
-            prepend-inner-icon="mdi-magnify"
-            placeholder="Cari aksi berdasarkan judul, deskripsi, atau lokasi..."
-            variant="outlined"
-            rounded="lg"
-            hide-details
-            class="mb-6 search-bar"
-            color="#11698E"
-          ></v-text-field>
+        <v-text-field
+          prepend-inner-icon="mdi-magnify"
+          placeholder="Cari aksi berdasarkan judul, deskripsi, atau lokasi..."
+          variant="outlined"
+          rounded="lg"
+          hide-details
+          class="mb-6 search-bar"
+          color="#11698E"
+        ></v-text-field>
 
-          <div class="d-flex ga-3 mb-8 overflow-x-auto pb-2">
-            <v-btn
-              v-for="status in filterOptions"
-              :key="status.value"
-              class="filter-btn text-none font-weight-medium"
-              :class="{ 'filter-active': filterStatus === status.value }"
-              variant="flat"
-              rounded="lg"
-              @click="filterStatus = status.value"
-            >
-              {{ status.label }}
-            </v-btn>
-          </div>
+        <v-row v-if="filteredReports.length > 0">
+          <v-col v-for="report in filteredReports" :key="report.id" cols="12" md="6" lg="4">
+            <v-card class="report-card" elevation="0" @click="goToDetail(report)">
+              
+              <div class="card-image-wrapper">
+                <MediaGallery :mediaList="report.media" />
+                <div v-if="!report.media || report.media.length === 0" class="no-image-placeholder">
+                  <v-icon size="48" color="#11698E">mdi-alert-circle-outline</v-icon>
+                </div>
+              </div>
 
-          <v-row v-if="filteredReports.length > 0">
-            <v-col
-              v-for="report in filteredReports"
-              :key="report.id"
-              cols="12" md="6" lg="4"
-            >
-              <v-card class="rounded-xl border-card report-card pa-0" elevation="0" @click="goToDetail(report)">
-              <div class="pa-0">
-                    <MediaGallery :mediaList="report.media" />
+              <v-card-text class="pa-5">
+                <div class="d-flex align-center mb-4 ga-3">
+                  <v-avatar color="#11698E" size="36">
+                    <span class="text-white font-weight-bold">{{ report.author.name.charAt(0).toUpperCase() }}</span>
+                  </v-avatar>
+                  <div>
+                    <div class="author-name">{{ report.author.name }}</div>
+                    <div class="post-date">{{ formatDate(report.createdAt) }}</div>
                   </div>
+                </div>
 
-                <v-card-text class="pa-5">
-                  <div class="d-flex align-center mb-4">
-                    <v-avatar color="#11698E" size="36" class="text-white font-weight-bold">
-                      {{ report.author.name.charAt(0).toUpperCase() }}
-                    </v-avatar>
-                    <div class="ml-3">
-                      <div class="author-name">{{ report.author.name }}</div>
-                      <div class="post-date">{{ formatDate(report.createdAt) }}</div>
+                <div class="d-flex align-center mb-3">
+                  <v-chip size="small" class="category-chip mr-2">{{ report.category }}</v-chip>
+                  <v-chip size="small" :color="getStatusColor(report.status)" variant="flat" class="text-white font-weight-bold">
+                    <v-icon start :icon="getStatusIcon(report.status)" size="small"></v-icon>
+                    {{ formatStatusText(report.status) }}
+                  </v-chip>
+                </div>
+
+                <h3 class="report-title mb-2">{{ report.title }}</h3>
+                <p class="report-desc mb-4">{{ report.description }}</p>
+
+                <div class="location-text mb-4">
+                  <v-icon size="16" class="mr-1">mdi-map-marker-outline</v-icon> {{ report.location }}
+                </div>
+
+                <div class="volunteer-box mt-4 pt-4">
+                  <div class="d-flex align-center justify-space-between mb-4">
+                    <div class="volunteer-info">
+                      <v-icon size="18" class="mr-1">mdi-account-group-outline</v-icon>
+                      {{ report.volunteerAction?.registeredPeople || 0 }}/{{ report.volunteerAction?.requiredPeople }} Relawan
                     </div>
-                  </div>
-
-                  <div class="d-flex align-center mb-3">
-                    <v-chip size="small" class="category-chip">
-                      {{ report.category }}
-                    </v-chip>
-                    <v-chip size="small" :color="getStatusColor(report.status)" variant="flat" class="text-white font-weight-bold px-3">
-                      <v-icon start :icon="getStatusIcon(report.status)" size="small"></v-icon>
-                      {{ formatStatusText(report.status) }}
-                    </v-chip>
-                  </div>
-
-                  <h3 class="report-title text-truncate">{{ report.title }}</h3>
-                  <p class="text-body-2 text-grey-darken-1 mb-4 report-desc" style="line-height: 1.5; height: 60px;">{{ report.description }}</p>
-
-                  <div class="text-body-2 text-grey-darken-2 mb-1 text-truncate">
-                    <v-icon color="#14b8a6" size="small" class="mr-2">mdi-map-marker</v-icon> {{ report.location }}
-                  </div>
-                  <div class="text-body-2 text-grey-darken-2 mb-5">
-                    <v-icon color="#14b8a6" size="small" class="mr-2">mdi-calendar-blank</v-icon>
-                    {{ report.volunteerAction ? formatDate(report.volunteerAction.scheduledDate) : 'Tanggal belum ditentukan' }}
-                  </div>
-
-                  <div v-if="report.volunteerAction">
-                    <div class="d-flex justify-space-between text-body-2 mb-1">
-                      <span class="text-grey-darken-2">Relawan terdaftar</span>
-                      <span class="font-weight-bold">{{ report.volunteerAction.registeredPeople }}/{{ report.volunteerAction.requiredPeople }}</span>
+                    <div class="volunteer-info">
+                      <v-icon size="18" class="mr-1">mdi-calendar-blank-outline</v-icon>
+                      {{ report.volunteerAction ? formatDate(report.volunteerAction.scheduledDate) : 'Tanggal belum ditentukan' }}
                     </div>
-                    <v-progress-linear
-                      :model-value="(report.volunteerAction.registeredPeople / report.volunteerAction.requiredPeople) * 100"
-                      :color="getProgressBarColor(report.status)"
-                      height="8"
-                      rounded
-                      class="mb-5"
-                    ></v-progress-linear>
                   </div>
 
                   <v-btn
                     block
                     :color="getButtonConfig(report.status).color"
-                    :class="getButtonConfig(report.status).textClass"
-                    rounded="lg"
-                    size="large"
-                    flat
+                    class="volunteer-btn text-white"
+                    elevation="0"
                     :disabled="report.status === 'Selesai'"
                     @click.stop="handleActionClick(report)"
                   >
                     {{ getButtonConfig(report.status).text }}
                   </v-btn>
-
-                  <div class="text-center mt-4">
-                    <a href="#"
-                    @click.prevent="goToDetail(report)"
-                    class="text-grey-darken-1 text-decoration-none text-caption d-inline-flex align-center hover-blue">
-                      <v-icon size="small" class="mr-1">mdi-comment-outline</v-icon> Lihat komentar
-                    </a>
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-
-          <v-row v-else>
-            <v-col cols="12">
-              <div class="no-reports-placeholder rounded-xl d-flex flex-column align-center justify-center py-15">
-                <v-icon size="80" color="#11698E" class="mb-4">
-                  mdi-account-group-outline
-                </v-icon>
-                <h3 class="placeholder-title" style="font-family: 'Poppins', sans-serif; color: #19456B;">Belum Ada Aksi</h3>
-                <p class="placeholder-subtitle text-center mt-2 text-grey">
-                  Tidak ada aksi komunitas untuk filter yang dipilih.
-                </p>
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-main>
-</v-app>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <style scoped>
-.logo-text {
-  font-family: 'Poppins', sans-serif !important;
-  color: #000000;
-  letter-spacing: -0.5px;
-  font-size: 25px !important;
-}
-
-.nav-btn {
-  font-family: 'Poppins', sans-serif !important;
-  text-transform: none !important;
-  font-weight: 600 !important;
-  font-size: 18px !important;
-  color: #555555;
-}
-
-.active-nav {
-  color: #11698E !important;
-  background-color: #F8F1F1 !important;
-  --v-activated-opacity: 0 !important;
-  opacity: 1 !important;
-}
-
-.active-nav :deep(.v-icon) {
-  color: #11698E !important;
-}
-.v-btn--variant-text:hover {
-  color: #11698E !important;
-}
-
-.border-card { 
-  border: 1px solid #EAEAEA !important; 
-  background-color: #FFFFFF !important; }
-
-.border-b {
-  border-bottom: 1px solid #eeeeee !important;
-}
-
-
-.search-bar :deep(input) {
-  font-family: 'Poppins', sans-serif;
-}
-.search-bar :deep(.v-field__outline) {
-  color: #e0e0e0;
-}
-
-.filter-btn {
-  background-color: white !important;
-  border: 1px solid #E0E0E0 !important;
-  color: #757575 !important;
-}
-
-.filter-active {
-  background-color: #11698E !important;
-  color: white !important;
-  border-color: #11698E !important;
-}
-
-
-.card-hover {
-  transition: all 0.3s ease;
-  background: white !important;
-}
-.card-hover:hover {
-  border-color: #11698E !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  transform: translateY(-4px);
-}
-
-.report-desc {
-  font-size: 14px; 
-  color: #777;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
+/* Layout fixes */
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background-color: #F8F1F1;
   overflow: hidden;
-  height: 40px;
 }
 
-.hover-blue:hover {
-  color: #11698E !important;
+.no-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-
-.category-chip {
-  background-color: #F8F1F1 !important;
-  color: #11698E !important;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif !important;
+.report-card {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+  border: 1px solid #eee;
 }
 
-.report-title {
-  font-family: 'Poppins', sans-serif !important;
-  font-size: 16px;
-  font-weight: 700;
-  color: #19456B;
-}
+.report-card:hover { transform: translateY(-4px); }
 
-.section-title {
-  font-family: 'Poppins', sans-serif !important;
-  color: #19456B;
-}
-
-.section-subtitle {
-  font-family: 'Poppins', sans-serif !important;
-  font-size: 16px;
-  color: #666;
-}
-
-.action-btn {
-  font-family: 'Poppins', sans-serif !important;
-  text-transform: none !important;
-  font-weight: 600;
-  border-radius: 12px;
-}
-
-.report-card { transition: transform 0.2s; }
-.report-card:hover { 
-  transform: translateY(-4px); 
-  box-shadow: 0 8px 16px rgba(0,0,0,0.08) !important; }
-
+.section-title { font-family: 'Poppins', sans-serif !important; color: #19456B; }
+.section-subtitle { font-family: 'Poppins', sans-serif !important; font-size: 16px; color: #666; }
+.report-title { font-family: 'Poppins', sans-serif !important; font-size: 18px; font-weight: 700; color: #19456B; }
+.report-desc { font-family: 'Poppins', sans-serif !important; font-size: 14px; color: #777; height: 40px; overflow: hidden; }
+.author-name { font-weight: 600; color: #333; }
+.post-date, .location-text, .volunteer-info { font-size: 12px; color: #888; }
+.category-chip { background-color: #F8F1F1 !important; color: #11698E !important; font-weight: 600; }
+.volunteer-box { background-color: #fcfcfc; border-top: 1px solid #eee; }
+.volunteer-btn { text-transform: none !important; font-weight: 600; border-radius: 8px; }
 </style>
 
 <script setup lang="ts">
@@ -280,58 +144,25 @@ const filterOptions = [
 
 const fetchActions = async () => {
   const token = localStorage.getItem('jwt_token')
-
-  if (!token) {
-    router.push('/')
-    return
-  }
-
+  if (!token) { router.push('/'); return }
   try {
     const res = await fetch('http://localhost:3000/api/actions', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
+      headers: { 'Authorization': `Bearer ${token}` }
     })
-
-    if (res.ok) {
-      const data = await res.json()
-      reports.value = data
-    } else if (res.status === 401) {
-      localStorage.removeItem('jwt_token')
-      router.push('/')
-    }
-  } catch (error) {
-    console.error("Error mengambil data aksi:", error)
-  }
+    if (res.ok) reports.value = await res.json()
+  } catch (error) { console.error(error) }
 }
 
-onMounted(() => {
-  fetchActions()
-})
+onMounted(fetchActions)
 
 const filteredReports = computed(() => {
   const dataAksiSaja = reports.value.filter(r => r.volunteerAction)
-
   if (filterStatus.value === 'Semua') return dataAksiSaja
-
-  return dataAksiSaja.filter(r => {
-    const rStatus = formatStatusText(r.status)
-    return rStatus === filterStatus.value
-  })
+  return dataAksiSaja.filter(r => formatStatusText(r.status) === filterStatus.value)
 })
 
-
-const goToDetail = (report: any) => {
-  router.push({ name: 'detailAksi', params: { id: report.id } });
-}
-
-const formatDate = (date: Date | string) => {
-  return new Date(date).toLocaleDateString('id-ID', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-  })
-}
+const goToDetail = (report: any) => router.push({ name: 'detailAksi', params: { id: report.id } })
+const formatDate = (date: any) => new Date(date).toLocaleDateString('id-ID')
 
 const formatStatusText = (status: string) => {
   if (!status) return 'Akan Datang'
@@ -340,47 +171,26 @@ const formatStatusText = (status: string) => {
   return 'Akan Datang'
 }
 
-const getStatusColor = (status: string) => {
-  const s = formatStatusText(status)
-  if (s === 'Sedang Berjalan') return '#19456B'
-  if (s === 'Selesai') return '#16C79A'
-  return '#11698E'
-}
+const getStatusColor = (s: string) => ({
+  'Sedang Berjalan': '#19456B',
+  'Selesai': '#16C79A',
+  'Akan Datang': '#11698E'
+})[formatStatusText(s)] || '#11698E'
 
-const getStatusIcon = (status: string) => {
-  const s = formatStatusText(status)
-  if (s === 'Sedang Berjalan') return 'mdi-play'
-  if (s === 'Selesai') return 'mdi-check-circle-outline'
-  return 'mdi-clock-outline'
-}
+const getStatusIcon = (s: string) => ({
+  'Sedang Berjalan': 'mdi-play',
+  'Selesai': 'mdi-check-circle-outline',
+  'Akan Datang': 'mdi-clock-outline'
+})[formatStatusText(s)] || 'mdi-clock-outline'
 
-const getProgressBarColor = (status: string) => {
-  const s = formatStatusText(status)
-  if (s === 'Sedang Berjalan') return '#11698E'
-  if (s === 'Selesai') return 'grey'
-  return '#16C79A'
-}
-
-const getButtonConfig = (status: string) => {
-  const s = formatStatusText(status)
-  if (s === 'Sedang Berjalan') {
-    return { color: '#11698E', text: 'Lihat Detail', textClass: 'text-none text-white font-weight-bold' }
-  }
-  if (s === 'Selesai') {
-    return { color: 'grey-lighten-2', text: 'Aksi Selesai', textClass: 'text-none text-grey-darken-3 font-weight-bold' }
-  }
-  return { color: '#16C79A', text: 'Daftar Sekarang', textClass: 'text-none text-white font-weight-bold' }
+const getButtonConfig = (s: string) => {
+  const status = formatStatusText(s)
+  if (status === 'Sedang Berjalan') return { color: '#11698E', text: 'Lihat Detail' }
+  if (status === 'Selesai') return { color: 'grey', text: 'Aksi Selesai' }
+  return { color: '#16C79A', text: 'Daftar Sekarang' }
 }
 
 const handleActionClick = (report: any) => {
-  const statusText = formatStatusText(report.status)
-  if (statusText === 'Akan Datang') {
-    router.push({ path: '/daftarRelawan', query: { idAksi: report.id } })
-  } else {
-    goToDetail(report)
-  }
-}
-const goToDaftarRelawan = (id: number) => {
-  router.push({ path: '/daftarRelawan', query: { idAksi: id } });
+  formatStatusText(report.status) === 'Akan Datang' ? router.push({ path: '/daftarRelawan', query: { idAksi: report.id } }) : goToDetail(report)
 }
 </script>

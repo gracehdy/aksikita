@@ -22,6 +22,7 @@ export class ActionService {
   private mapActionToReportView(action: ActionWithReport) {
     return {
       id: action.report.id,
+      actionId: action.id,
       title: action.report.title,
       description: action.report.description,
       category: action.report.category,
@@ -36,6 +37,7 @@ export class ActionService {
       media: action.report.media,
       status: '',
       volunteerAction: {
+        id: action.id,
         scheduledDate: action.scheduledAt,
         requiredPeople: action.requiredPeople ?? 0,
         registeredPeople: action.volunteers?.length ?? 0,

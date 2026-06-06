@@ -36,6 +36,7 @@
             class="filter-btn"
             :class="{ 'filter-active': filterCategory === cat }"
             variant="flat"
+            rounded="lg"
             @click="filterCategory = cat"
           >
             {{ cat === 'all' ? 'Semua Kategori' : cat }}
@@ -49,22 +50,14 @@
             cols="12" md="6" lg="4"
           >
             <v-card class="report-card" elevation="0" @click="goToDetail(report)">
-              <v-img
-                v-if="report.image"
-                :src="report.image"
-                height="220"
-                cover
-                class="rounded-lg"
-              ></v-img>
-              <div v-else class="no-image-placeholder rounded-lg">
+              <div class="pa-0">
+                    <MediaGallery :mediaList="report.media" />
+                  </div>
+              <div class="no-image-placeholder rounded-lg">
                 <v-icon size="48" color="#11698E">mdi-alert-circle-outline</v-icon>
               </div>
 
               <v-card-text class="px-0 pt-4">
-                <div class="mt-6">
-                  <h3 class="text-h6 font-weight-bold mb-3" style="color: #19456b;">Lampiran</h3>
-                  <MediaGallery :mediaList="report.media" />
-                </div>
                 <div class="d-flex align-center mb-4 ga-3">
                   <v-avatar size="36" color="#11698E">
                     <span class="text-white font-weight-bold">
@@ -121,7 +114,7 @@
                     class="volunteer-btn"
                     elevation="0"
                     :disabled="report.volunteerAction?.status === 'Selesai'"
-                    @click.stop="goToDaftarRelawan(report.id)"
+                    @click.stop="goToDaftarRelawan(report.volunteerAction?.id)"
                   >
                     {{ getActionProperties(report.volunteerAction?.status).text }}
                   </v-btn>
@@ -281,10 +274,15 @@ const formatDate = (date: string | Date) => {
   return new Date(date).toLocaleDateString('id-ID')
 }
 
-const goToDaftarRelawan = (id: number) => {
+const goToDaftarRelawan = (actionId: string | undefined) => {
+  console.log("Tombol diklik. Mengirim actionId:", actionId);
+  if (!actionId) {
+    alert("Data aksi tidak ditemukan.");
+    return;
+  }
   router.push({
     path: '/daftarRelawan',
-    query: { idLaporan: id }
+    query: { idAksi: actionId }
   });
 }
 </script>
