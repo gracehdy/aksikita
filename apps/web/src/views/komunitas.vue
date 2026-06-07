@@ -28,13 +28,16 @@
             group
             class="filter-group"
           >
-            <v-btn 
-              v-for="cat in categories" 
+            <v-btn
+              v-for="cat in categories"
               :key="cat"
-              :value="cat"
-              class="text-none px-6"
+              class="filter-btn"
+              :class="{ 'filter-active': filterCategory === cat }"
+              variant="flat"
+              rounded="pill" 
+              @click="filterCategory = cat"
             >
-              {{ cat }}
+              {{ cat === 'all' ? 'Semua Kategori' : cat }}
             </v-btn>
           </v-btn-toggle>
         </div>
@@ -64,9 +67,9 @@
 
                 <div class="d-flex align-center mb-3">
                   <v-chip size="small" class="category-chip mr-2">{{ report.category }}</v-chip>
-                  <v-chip size="small" :color="getStatusColor(report.status)" variant="flat" class="text-white font-weight-bold">
-                    <v-icon start :icon="getStatusIcon(report.status)" size="small"></v-icon>
-                    {{ formatStatusText(report.status) }}
+                  <v-chip size="small" :color="getStatusColor(report._virtualStatus)" variant="flat" class="text-white font-weight-bold">
+                    <v-icon start :icon="getStatusIcon(report._virtualStatus)" size="small"></v-icon>
+                    {{ formatStatusText(report._virtualStatus) }}
                   </v-chip>
                 </div>
 
@@ -91,13 +94,13 @@
 
                   <v-btn
                     block
-                    :color="getButtonConfig(report.status).color"
+                    :color="getButtonConfig(report._virtualStatus).color"
                     class="volunteer-btn text-white"
                     elevation="0"
                     :disabled="report.status === 'Selesai'"
                     @click.stop="handleActionClick(report)"
                   >
-                    {{ getButtonConfig(report.status).text }}
+                    {{ getButtonConfig(report._virtualStatus).text }}
                   </v-btn>
                 </div>
               </v-card-text>
@@ -158,26 +161,23 @@
 .volunteer-box { background-color: #fcfcfc; border-top: 1px solid #eee; }
 .volunteer-btn { text-transform: none !important; font-weight: 600; border-radius: 8px; }
 
-.filter-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.filter-group :deep(.v-btn) {
-  font-family: 'Poppins', sans-serif !important;
-  text-transform: none !important;
-  border: 1px solid #E0E0E0 !important;
-  color: #555 !important;
+.filter-btn {
+  font-family: 'Poppins', sans-serif !important; 
+  text-transform: none !important; 
+  background-color: white !important; 
+  border: 1px solid #E0E0E0 !important; 
+  color: #555 !important; 
+  border-radius: 20px !important;
   font-weight: 500;
-  border-radius: 8px !important;
-  margin: 0 !important;
+  transition: all 0.2s ease; 
+  margin-right: 8px !important; 
+  margin-bottom: 8px !important;
 }
 
-.filter-group :deep(.v-btn--active) {
-  background-color: #11698E !important;
-  color: white !important;
-  border-color: #11698E !important;
+.filter-active {
+  background-color: #11698E !important; 
+  color: white !important; 
+  border: 1px solid #11698E !important;
 }
 </style>
 
@@ -210,22 +210,28 @@ const fetchActions = async () => {
 onMounted(fetchActions)
 
 const filteredReports = computed(() => {
-  const query = searchQuery.value.toLowerCase();
-  
-  return reports.value.filter(item => {
-    const matchCategory = filterCategory.value === 'Semua' || item.report.category === filterCategory.value;
-    const matchSearch = 
-      item.report.title.toLowerCase().includes(query) ||
-      item.report.description.toLowerCase().includes(query) ||
-      (item.report.location && item.report.location.toLowerCase().includes(query));
+  const now = new Date();
+  const processedReports = reports.value.map(item => {
+    const scheduled = item.scheduledAt ? new Date(item.scheduledAt) : null;
+    let status = 'Akan Datang';
+    
+    if (scheduled) {
+      if (scheduled > now) status = 'Akan Datang';
+      else if (scheduled.toDateString() === now.toDateString()) status = 'Sedang Berjalan';
+      else status = 'Selesai';
+    }
 
-    return matchCategory && matchSearch;
+    return { ...item, _virtualStatus: status };
   });
+
+  if (filterCategory.value === 'Semua') return processedReports;
+  return processedReports.filter(r => r._virtualStatus === filterCategory.value);
 })
 
 const goToDetail = (report: any) => router.push({ name: 'detailAksi', params: { id: report.id } })
 
 const handleActionClick = (report: any) => {
-  formatStatusText(report.status) === 'Akan Datang' ? router.push({ path: '/daftarRelawan', query: { idAksi: report.id } }) : goToDetail(report)
+  const status = formatStatusText(report.volunteerAction);
+  status === 'Akan Datang' ? router.push({ path: '/daftarRelawan', query: { idAksi: report.id } }) : goToDetail(report)
 }
 </script>

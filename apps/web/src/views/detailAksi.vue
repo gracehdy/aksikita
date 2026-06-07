@@ -33,9 +33,9 @@
               <v-chip class="category-chip px-4" size="large">
                 {{ report.category }}
               </v-chip>
-              <v-chip :color="getStatusColor(report.status)" class="text-white font-weight-medium px-4" size="large">
-                <v-icon start size="small">{{ getStatusIcon(report.status) }}</v-icon>
-                {{ formatStatusText(report.status) }}
+              <v-chip :color="getStatusColor(statusAction)" class="text-white font-weight-medium px-4" size="large">
+                <v-icon start size="small">{{ getStatusIcon(statusAction) }}</v-icon>
+                {{ formatStatusText(statusAction) }}
               </v-chip>
             </div>
 
@@ -204,7 +204,7 @@
 </style>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
 import MediaGallery from "../components/mediagallery.vue";
@@ -217,6 +217,11 @@ const router = useRouter();
 const report = ref<any>(null);
 const newComment = ref<string>('');
 const idAksi = route.params.id;
+
+const statusAction = computed(() => {
+  if (!report.value || !report.value.volunteerAction) return null;
+  return report.value.volunteerAction;
+});
 
 const fetchDetailAksi = async () => {
   const token = localStorage.getItem('jwt_token')
