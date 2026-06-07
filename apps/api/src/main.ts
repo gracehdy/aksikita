@@ -13,11 +13,13 @@ async function bootstrap() {
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
+        imgSrc: ["'self'", "data:", "http://localhost:3000", "*"], 
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", "data:", "http://localhost:3000"], 
+        
       },
     },
+    crossOriginResourcePolicy: { policy: "cross-origin" },
   }));
 
   app.enableCors({
