@@ -150,6 +150,7 @@ import { useRouter } from 'vue-router'
 import { ReportModel } from '@aksikita/types'
 import Navbar from '../components/Navbar.vue'
 import MediaGallery from '../components/mediagallery.vue'
+import { formatDate } from '../utils/date.js'
 
 const router = useRouter()
 
@@ -271,10 +272,6 @@ const goToDetail = (report: ReportModel) => {
   }
 }
 
-const formatDate = (date: string | Date) => {
-  if (!date) return ''
-  return new Date(date).toLocaleDateString('id-ID')
-}
 
 const goToDaftarRelawan = (actionId: string | undefined) => {
   console.log("Tombol diklik. Mengirim actionId:", actionId);

@@ -208,6 +208,8 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
 import MediaGallery from "../components/mediagallery.vue";
+import { formatDate, formatDateWithTime } from '../utils/date';
+import { formatStatusText, getStatusColor, getStatusIcon } from '../utils/status.js';
 
 const route = useRoute();
 const router = useRouter();
@@ -291,37 +293,4 @@ const goBack = () => {
   router.back()
 }
 
-const formatDate = (date: Date | string) => {
-  if (!date) return ''
-  return new Date(date).toLocaleDateString('id-ID')
-}
-
-const formatDateWithTime = (date: Date | string) => {
-  if (!date) return ''
-  const d = new Date(date)
-  const day = d.toLocaleDateString('id-ID', { weekday: 'long' })
-  const dateStr = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-  return `${day}, ${dateStr} pukul 08.00`
-}
-
-const formatStatusText = (status: string) => {
-  if (!status) return 'Akan Datang'
-  if (status.toLowerCase().includes('jalan')) return 'Sedang Berjalan'
-  if (status.toLowerCase().includes('selesai')) return 'Selesai'
-  return 'Akan Datang'
-}
-
-const getStatusColor = (status: string) => {
-  const s = formatStatusText(status)
-  if (s === 'Sedang Berjalan') return '#19456B'
-  if (s === 'Selesai') return '#16C79A'
-  return '#11698E'
-}
-
-const getStatusIcon = (status: string) => {
-  const s = formatStatusText(status)
-  if (s === 'Sedang Berjalan') return 'mdi-play'
-  if (s === 'Selesai') return 'mdi-check-circle-outline'
-  return 'mdi-clock-outline'
-}
 </script>

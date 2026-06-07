@@ -181,6 +181,7 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Navbar from "../components/Navbar.vue";
 import MediaGallery from "../components/mediagallery.vue";
+import { formatDate } from "../utils/date";
 
 const route = useRoute();
 const router = useRouter();
@@ -276,17 +277,7 @@ onMounted(() => {
   fetchReportDetail();
 });
 
-const formatDate = (dateString: string | Date) => {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  };
-  return date.toLocaleDateString("id-ID", options);
-};
+
 </script>
 
 <style scoped>

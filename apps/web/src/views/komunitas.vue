@@ -143,6 +143,8 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
 import MediaGallery from '../components/mediagallery.vue'
+import { formatStatusText, getStatusColor, getStatusIcon, getButtonConfig } from '../utils/status.js'
+import { formatDate } from '../utils/date.js'
 
 const router = useRouter()
 const reports = ref<any[]>([])
@@ -175,33 +177,6 @@ const filteredReports = computed(() => {
 })
 
 const goToDetail = (report: any) => router.push({ name: 'detailAksi', params: { id: report.id } })
-const formatDate = (date: any) => new Date(date).toLocaleDateString('id-ID')
-
-const formatStatusText = (status: string) => {
-  if (!status) return 'Akan Datang'
-  if (status.toLowerCase().includes('jalan')) return 'Sedang Berjalan'
-  if (status.toLowerCase().includes('selesai')) return 'Selesai'
-  return 'Akan Datang'
-}
-
-const getStatusColor = (s: string) => ({
-  'Sedang Berjalan': '#19456B',
-  'Selesai': '#16C79A',
-  'Akan Datang': '#11698E'
-})[formatStatusText(s)] || '#11698E'
-
-const getStatusIcon = (s: string) => ({
-  'Sedang Berjalan': 'mdi-play',
-  'Selesai': 'mdi-check-circle-outline',
-  'Akan Datang': 'mdi-clock-outline'
-})[formatStatusText(s)] || 'mdi-clock-outline'
-
-const getButtonConfig = (s: string) => {
-  const status = formatStatusText(s)
-  if (status === 'Sedang Berjalan') return { color: '#11698E', text: 'Lihat Detail' }
-  if (status === 'Selesai') return { color: 'grey', text: 'Aksi Selesai' }
-  return { color: '#16C79A', text: 'Daftar Sekarang' }
-}
 
 const handleActionClick = (report: any) => {
   formatStatusText(report.status) === 'Akan Datang' ? router.push({ path: '/daftarRelawan', query: { idAksi: report.id } }) : goToDetail(report)

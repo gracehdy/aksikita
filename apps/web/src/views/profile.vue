@@ -138,6 +138,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
+import { formatDate } from '../utils/date.js'
 
 const router = useRouter()
 
@@ -199,18 +200,6 @@ const handleLogout = () => {
     router.push('/');
   }
 }
-
-const formatDate = (isoString: string) => {
-  if (!isoString) return '';
-
-  const locale = navigator.language || 'id-ID';
-
-  return new Date(isoString).toLocaleDateString(locale, {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
-};
 
 
 const fetchProfile = async () => {
