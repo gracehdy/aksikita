@@ -16,6 +16,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload) {
-    return { id: payload.sub, username: payload.username };
+    const start = performance.now();
+    const user = { id: payload.sub, username: payload.username };
+    const end = performance.now();
+    console.log(`JWT Validation Time: ${end - start} ms`);
+    return user;
   }
 }

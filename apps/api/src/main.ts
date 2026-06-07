@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { json, urlencoded } from 'express';
+import { UnauthorizedFilter } from './common/filters/unauthorized.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +16,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api', {
     exclude: ['auth/(.*)', 'auth'],
   });
+
+  app.useGlobalFilters(new UnauthorizedFilter());
 
   await app.listen(process.env.PORT ?? 3000);
 }
