@@ -90,7 +90,6 @@ const handleForgotPassword = async () => {
 </v-app>
 </template>
 
-
 <style scoped> 
 .login-wrapper {
   font-family: 'Poppins', sans-serif !important;

@@ -201,7 +201,6 @@ const handleLogout = () => {
   }
 }
 
-
 const fetchProfile = async () => {
   const token = localStorage.getItem('jwt_token');
 
@@ -223,7 +222,6 @@ const fetchProfile = async () => {
     if (res.ok) {
         const data = await res.json();
         if (data) {
-          // Map backend UserProfileResponseDto to frontend state
           userData.value.name = data.user?.fullName || ''
           userData.value.email = data.user?.email || ''
           userData.value.initials = getInitials(data.user?.fullName || '')
