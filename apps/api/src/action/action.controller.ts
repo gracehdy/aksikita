@@ -21,13 +21,12 @@ interface RequestWithUser extends Request {
   };
 }
 
-
 @Controller('actions')
 export class ActionController {
   constructor(private readonly actionService: ActionService) {}
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  async findAll()  {
+  async findAll() {
     try {
       return await this.actionService.findAll();
     } catch (error: unknown) {
@@ -40,7 +39,7 @@ export class ActionController {
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
-  async findOne(@Param('id') id: string)  {
+  async findOne(@Param('id') id: string) {
     try {
       const result = await this.actionService.findByReportId(id);
       if (!result) {
@@ -63,7 +62,10 @@ export class ActionController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  async create(@Body() createActionDto: CreateActionDto, @Req() req: RequestWithUser) {
+  async create(
+    @Body() createActionDto: CreateActionDto,
+    @Req() req: RequestWithUser,
+  ) {
     try {
       const userId = req.user.id;
       return await this.actionService.createAction(createActionDto, userId);

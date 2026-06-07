@@ -8,14 +8,15 @@ import { ConfigService } from '@nestjs/config';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(configService: ConfigService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      jwtFromRequest: (ExtractJwt as any).fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey:
         configService.get<string>('JWT_SECRET') || 'RAHASIA_AKSI_KITA',
     });
   }
 
-  async validate(payload: JwtPayload) {
+  validate(payload: JwtPayload): { id: string; username: string } {
     const start = performance.now();
     const user = { id: payload.sub, username: payload.username };
     const end = performance.now();

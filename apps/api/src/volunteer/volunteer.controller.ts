@@ -4,13 +4,21 @@ import {
   Body,
   HttpException,
   HttpStatus,
-  Request,
+  Req,
   UseGuards,
   NotFoundException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { PrismaService } from '../prisma/prisma.service';
 import type { RegisterVolunteerDto } from './dto/register-volunteer.dto';
+import type { Request } from 'express';
+
+interface RequestWithUser extends Request {
+  user: {
+    id: string;
+    [key: string]: any;
+  };
+}
 
 @Controller('volunteers')
 export class VolunteerController {
@@ -18,7 +26,10 @@ export class VolunteerController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('register')
-  async register(@Body() dto: RegisterVolunteerDto, @Request() req) {
+  async register(
+    @Body() dto: RegisterVolunteerDto,
+    @Req() req: RequestWithUser,
+  ): Promise<any> {
     if (!dto.actionId || !dto.fullName || !dto.email || !dto.phone) {
       throw new HttpException(
         { message: 'Missing required fields' },
@@ -47,7 +58,7 @@ export class VolunteerController {
           phone: dto.phone,
           healthCondition: dto.healthCondition ?? '',
           reason: dto.reason ?? '',
-          user: { connect: { id: req.user?.id } },
+          user: { connect: { id: req.user.id } },
         },
       });
 

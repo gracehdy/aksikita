@@ -13,6 +13,14 @@ import { ReportService } from './report.service';
 import { CreateReportRequest } from './dto/create-report.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors/file.interceptor';
+import type { Request } from 'express';
+
+interface RequestWithUser extends Request {
+  user: {
+    id: string;
+    [key: string]: any;
+  };
+}
 
 @Controller('reports')
 export class ReportController {
@@ -20,7 +28,7 @@ export class ReportController {
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
     console.log('File diterima:', file);
     if (!file) {
       console.log('File tidak ditemukan dalam request!');
@@ -31,19 +39,22 @@ export class ReportController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  create(@Body() createPelaporanRequest: CreateReportRequest, @Req() req) {
+  create(
+    @Body() createPelaporanRequest: CreateReportRequest,
+    @Req() req: RequestWithUser,
+  ): Promise<any> {
     const userId: string = req.user.id ?? '';
     return this.pelaporanService.create(createPelaporanRequest, userId);
   }
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  findAll() {
+  findAll(): Promise<any> {
     return this.pelaporanService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<any> {
     return this.pelaporanService.findOne(id);
   }
 }

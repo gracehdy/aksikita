@@ -5,17 +5,24 @@ import {
   Res,
   Get,
   UseGuards,
-  Request,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
-import type { Response } from 'express';
+import type { Response, Request } from 'express';
 import type {
   RegisterRequest,
   RegisterResponse,
   LoginRequest,
   LoginResponse,
 } from './auth.contract';
+
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+    [key: string]: any;
+  };
+}
 
 @Controller('auth')
 export class AuthController {
@@ -50,14 +57,14 @@ export class AuthController {
   }
 
   @Post('logout')
-async logout(@Res({ passthrough: true }) res: Response): Promise<{ message: string }> {
-  res.clearCookie('token');
-  return { message: 'Logged out successfully' }; 
-}
+  logout(@Res({ passthrough: true }) res: Response): { message: string } {
+    res.clearCookie('token');
+    return { message: 'Logged out successfully' };
+  }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('me')
-  getProfile(@Request() req) {
+  getProfile(@Req() req: AuthenticatedRequest) {
     return req.user;
   }
 }

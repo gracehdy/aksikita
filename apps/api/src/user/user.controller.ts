@@ -2,14 +2,22 @@ import {
   Controller,
   Get,
   NotFoundException,
-  Request,
+  Req,
   Param,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { UserProfileResponseDto } from './dto/user-profile.dto'; // <-- Import DTO baru
+import { UserProfileResponseDto } from './dto/user-profile.dto';
+import type { Request } from 'express';
+
+interface RequestWithUser extends Request {
+  user: {
+    id: string;
+    [key: string]: any;
+  };
+}
 
 @Controller('user')
 export class UserController {
@@ -17,7 +25,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  async me(@Request() req): Promise<UserDto> {
+  async me(@Req() req: RequestWithUser): Promise<UserDto> {
     const id = req.user.id;
     const result = await this.userService.findById(id);
 
@@ -30,7 +38,9 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async getProfile(@Request() req): Promise<UserProfileResponseDto> {
+  async getProfile(
+    @Req() req: RequestWithUser,
+  ): Promise<UserProfileResponseDto> {
     const id = req.user.id;
 
     const result = await this.userService.getUserProfile(id);
