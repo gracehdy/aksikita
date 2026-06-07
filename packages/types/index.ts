@@ -31,6 +31,7 @@ export interface JwtPayload {
 }
 
 export interface VolunteerAction {
+  id: string;
   status: string
   registeredPeople?: number
   requiredPeople?: number
@@ -46,7 +47,7 @@ export interface ReportModel {
   postType: boolean
   location: string | null
   createdAt: Date
-  image?: string
+  media?: any[];
   volunteerAction?: VolunteerAction
 }
 
@@ -55,6 +56,7 @@ export interface CreateReportInterface {
   description: string;
   location: string;
   title: string;
+  image?: any[];
 }
 
 export type UpdatePelaporanDto = Partial<CreateReportInterface>;
