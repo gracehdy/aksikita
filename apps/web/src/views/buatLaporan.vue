@@ -155,7 +155,7 @@ const submitReport = async () => {
   const token = localStorage.getItem('jwt_token');
    if (!token) {
     alert("Anda harus login terlebih dahulu untuk membuat laporan.");
-    router.push('/');
+    window.location.href = '/';
     return;
   }
 
@@ -213,7 +213,7 @@ const submitReport = async () => {
       }
     } else if (res.status === 401) {
       alert("Sesi login Anda tidak valid. Silakan login ulang.")
-      router.push('/')
+      window.location.href = '/';
     } else {
       const error = await res.json()
       alert(error.message || "Gagal mengirim laporan")
