@@ -1,17 +1,24 @@
 <template>
-  <div v-if="mediaList && mediaList.length > 0" class="d-flex flex-wrap ga-2">
-    <v-img
-      v-for="item in mediaList"
-      :key="item.id"
-      :src="`http://localhost:3000/uploads/${item.file}`"
-      width="150"
-      height="150"
-      cover
-      class="rounded-lg"
-    ></v-img>
+  <div v-for="media in mediaList" :key="media.id">
+    {{ console.log("Mencoba memuat:", 'http://localhost:3000/uploads/' + media.url) }}
+    
+    <img 
+      :src="'http://localhost:3000/uploads/' + media.url" 
+      alt="Media" 
+      style="max-width: 100%; border: 1px solid red;"
+      @error="onImageError"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{ mediaList: Array<{ id: string, file: string }> }>();
+defineProps<{mediaList: MediaItem[];}>();
+interface MediaItem {
+  id: string;
+  url: string;
+  type?: string;
+}
+const onImageError = (e: any) => {
+  console.error("Gagal memuat gambar dari path:", e.target.src);
+}
 </script>

@@ -22,12 +22,13 @@
           <v-col v-for="report in filteredReports" :key="report.id" cols="12" md="6" lg="4">
             <v-card class="report-card" elevation="0" @click="goToDetail(report)">
               
-              <div class="card-image-wrapper">
-                <MediaGallery :mediaList="report.media" />
-                <div v-if="!report.media || report.media.length === 0" class="no-image-placeholder">
+              <MediaGallery 
+                  v-if="report.media && report.media.length > 0" 
+                  :mediaList="report.media" 
+                />
+                <div v-else class="no-image-placeholder rounded-lg">
                   <v-icon size="48" color="#11698E">mdi-alert-circle-outline</v-icon>
                 </div>
-              </div>
 
               <v-card-text class="pa-5">
                 <div class="d-flex align-center mb-4 ga-3">
@@ -82,13 +83,25 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-row v-else>
+          <v-col cols="12">
+            <div class="no-reports-placeholder rounded-xl d-flex flex-column align-center justify-center py-15">
+              <v-icon size="80" color="#11698E" class="mb-4">
+                mdi-clipboard-text-search-outline
+              </v-icon>
+              <h3 class="placeholder-title">Belum Ada Aksi</h3>
+              <p class="placeholder-subtitle text-center mt-2">
+                Jadilah yang pertama membuat aksi komunitas di sekitar Anda!
+              </p>
+            </div>
+          </v-col>
+        </v-row>
       </v-container>
     </v-main>
   </v-app>
 </template>
 
 <style scoped>
-/* Layout fixes */
 .card-image-wrapper {
   position: relative;
   width: 100%;

@@ -17,4 +17,6 @@ export class CreateReportRequest implements CreateReportInterface {
 
   @IsString()
   reportId: string;
+
+  image?: string[];
 }

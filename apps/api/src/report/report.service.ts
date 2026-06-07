@@ -16,6 +16,9 @@ export class ReportService {
         title: request.title,
         postType: false,
         userId: userId,
+        media: request.image && request.image.length > 0 ? {
+          create: request.image.map((url) => ({ url }))
+        } : undefined,
       },
     });
 

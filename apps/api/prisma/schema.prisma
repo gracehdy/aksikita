@@ -48,6 +48,7 @@ model Report {
 
 model Media {
   id       String  @id @default(uuid())
+  url      String
   reportId String
   type     String?
   report   Report  @relation(fields: [reportId], references: [id])

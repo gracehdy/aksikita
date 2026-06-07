@@ -14,9 +14,8 @@
         @click="$router.back()"
         class="text-none font-weight-medium text-grey-darken-3 poppins-font"
       >
-        Back
+        <v-icon start>mdi-arrow-left</v-icon> Kembali
       </v-btn>
-      <v-icon start>mdi-arrow-left</v-icon> Kembali
     </v-app-bar>
 
     <v-main>
@@ -51,6 +50,7 @@
                       color="#11698E"
                       class="mt-2 custom-input bg-white"
                       rounded="lg"
+                      hide-details="auto"
                     ></v-text-field>
                   </div>
 
@@ -67,6 +67,7 @@
                       color="#11698E"
                       class="mt-2 custom-input bg-white"
                       rounded="lg"
+                      hide-details="auto"
                     ></v-text-field>
                   </div>
 
@@ -79,6 +80,7 @@
                       color="#11698E"
                       class="mt-2 custom-input bg-white"
                       rounded="lg"
+                      hide-details="auto"
                     ></v-text-field>
                   </div>
 
@@ -89,6 +91,7 @@
                       variant="outlined"
                       placeholder="Contoh: Bawa sarung tangan dan kantong sampah sendiri."
                       rows="3"
+                      hide-details="auto"
                       color="#11698E"
                       class="mt-2 custom-input bg-white"
                       rounded="lg"
@@ -260,19 +263,34 @@ const submitAction = async () => {
   background-color: #ffffff;
 }
 
+.custom-input :deep(.v-field--variant-outlined) {
+  border-radius: 12px !important;
+  background-color: white !important;
+}
+
+.custom-input :deep(.v-field__outline) {
+  --v-field-border-opacity: 0.3 !important;
+}
+
+.custom-input :deep(.v-field:hover .v-field__outline) {
+  --v-field-border-opacity: 1 !important;
+  color: #11698e !important;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-label {
+  margin-bottom: 8px !important;
+  font-size: 0.95rem !important;
+}
+
 .report-wrapper {
   background-color: #fafafa;
   min-height: 100vh;
   padding-bottom: 50px;
 }
-
-.input-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #19456b;
-  display: block;
-}
-
 :deep(.v-field__outline) {
   border-color: #eaeaea !important;
 }

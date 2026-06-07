@@ -137,10 +137,11 @@ const volunteerForm = ref({
 
 
 const handleFileUpload = (event : any) => {
-  const file = event.target.files[0]
+  const file = event.target.files ? event.target.files[0] : event.target.files;
   if (file) {
-    fileName.value = file.name
-    fileObj.value = file
+    fileName.value = file.name;
+    fileObj.value = file;
+    console.log("File berhasil ditangkap:", fileObj.value);
   }
 }
 
@@ -151,7 +152,13 @@ const submitReport = async () => {
     return
   }
 
-  const token = localStorage.getItem('jwt_token')
+  const token = localStorage.getItem('jwt_token');
+   if (!token) {
+    alert("Anda harus login terlebih dahulu untuk membuat laporan.");
+    router.push('/');
+    return;
+  }
+
   let uploadedFilename = null;
 
   if (fileObj.value) {
@@ -171,14 +178,11 @@ const submitReport = async () => {
       }
     } catch (err) {
       console.error("Gagal upload gambar:", err);
+      alert("Gagal mengunggah foto. Pastikan ukuran foto sesuai.");
+      return;
     }
   }
 
-  if (!token) {
-    alert("Anda harus login terlebih dahulu untuk membuat laporan.")
-    router.push('/')
-    return
-  }
 
   try {
     const payloadData: CreateReportInterface = {

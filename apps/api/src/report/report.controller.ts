@@ -21,7 +21,12 @@ export class ReportController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return { filename: file.filename };
+    console.log("File diterima:", file);
+  if (!file) {
+    console.log("File tidak ditemukan dalam request!");
+    return { message: "File gagal diterima" };
+  }
+  return { filename: file.filename };
   }
 
   @Post()

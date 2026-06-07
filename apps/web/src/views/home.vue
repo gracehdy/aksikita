@@ -50,12 +50,14 @@
             cols="12" md="6" lg="4"
           >
             <v-card class="report-card" elevation="0" @click="goToDetail(report)">
-              <div class="pa-0">
-                    <MediaGallery :mediaList="report.media" />
-                  </div>
-              <div class="no-image-placeholder rounded-lg">
-                <v-icon size="48" color="#11698E">mdi-alert-circle-outline</v-icon>
-              </div>
+              <MediaGallery 
+                  v-if="report.media && report.media.length > 0" 
+                  :mediaList="report.media" 
+                />
+                
+                <div v-else class="no-image-placeholder rounded-lg">
+                  <v-icon size="48" color="#11698E">mdi-alert-circle-outline</v-icon>
+                </div>
 
               <v-card-text class="px-0 pt-4">
                 <div class="d-flex align-center mb-4 ga-3">
