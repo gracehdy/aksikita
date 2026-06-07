@@ -9,6 +9,7 @@
         </div>
 
         <v-text-field
+          v-model="searchQuery"
           prepend-inner-icon="mdi-magnify"
           placeholder="Cari aksi berdasarkan judul, deskripsi, atau lokasi..."
           variant="outlined"
@@ -17,6 +18,26 @@
           class="mb-6 search-bar"
           color="#11698E"
         ></v-text-field>
+
+       <div class="mb-8">
+          <v-btn-toggle
+            v-model="filterCategory"
+            color="#11698E"
+            variant="outlined"
+            rounded="lg"
+            group
+            class="filter-group"
+          >
+            <v-btn 
+              v-for="cat in categories" 
+              :key="cat"
+              :value="cat"
+              class="text-none px-6"
+            >
+              {{ cat }}
+            </v-btn>
+          </v-btn-toggle>
+        </div>
 
         <v-row v-if="filteredReports.length > 0">
           <v-col v-for="report in filteredReports" :key="report.id" cols="12" md="6" lg="4">
@@ -136,6 +157,28 @@
 .category-chip { background-color: #F8F1F1 !important; color: #11698E !important; font-weight: 600; }
 .volunteer-box { background-color: #fcfcfc; border-top: 1px solid #eee; }
 .volunteer-btn { text-transform: none !important; font-weight: 600; border-radius: 8px; }
+
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-group :deep(.v-btn) {
+  font-family: 'Poppins', sans-serif !important;
+  text-transform: none !important;
+  border: 1px solid #E0E0E0 !important;
+  color: #555 !important;
+  font-weight: 500;
+  border-radius: 8px !important;
+  margin: 0 !important;
+}
+
+.filter-group :deep(.v-btn--active) {
+  background-color: #11698E !important;
+  color: white !important;
+  border-color: #11698E !important;
+}
 </style>
 
 <script setup lang="ts">
@@ -148,14 +191,10 @@ import { formatDate } from '../utils/date.js'
 
 const router = useRouter()
 const reports = ref<any[]>([])
-const filterStatus = ref('Semua')
+const filterCategory = ref('Semua')
+const searchQuery = ref('')
 
-const filterOptions = [
-  { label: 'Semua', value: 'Semua' },
-  { label: 'Akan Datang', value: 'Akan Datang' },
-  { label: 'Sedang Berjalan', value: 'Sedang Berjalan' },
-  { label: 'Selesai', value: 'Selesai' }
-]
+const categories = ['Semua', 'Akan Datang', 'Sedang Berjalan', 'Selesai']
 
 const fetchActions = async () => {
   const token = localStorage.getItem('jwt_token')
@@ -171,9 +210,17 @@ const fetchActions = async () => {
 onMounted(fetchActions)
 
 const filteredReports = computed(() => {
-  const dataAksiSaja = reports.value.filter(r => r.volunteerAction)
-  if (filterStatus.value === 'Semua') return dataAksiSaja
-  return dataAksiSaja.filter(r => formatStatusText(r.status) === filterStatus.value)
+  const query = searchQuery.value.toLowerCase();
+  
+  return reports.value.filter(item => {
+    const matchCategory = filterCategory.value === 'Semua' || item.report.category === filterCategory.value;
+    const matchSearch = 
+      item.report.title.toLowerCase().includes(query) ||
+      item.report.description.toLowerCase().includes(query) ||
+      (item.report.location && item.report.location.toLowerCase().includes(query));
+
+    return matchCategory && matchSearch;
+  });
 })
 
 const goToDetail = (report: any) => router.push({ name: 'detailAksi', params: { id: report.id } })

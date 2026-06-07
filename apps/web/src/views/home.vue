@@ -20,6 +20,7 @@
         </div>
 
         <v-text-field
+          v-model="searchQuery"
           prepend-inner-icon="mdi-magnify"
           placeholder="Cari laporan berdasarkan judul, deskripsi, atau lokasi..."
           variant="outlined"
@@ -168,8 +169,8 @@ export interface UIReportItem {
 }
 
 const reports = ref<UIReportItem[]>([])
+const searchQuery = ref('')
 const filterCategory = ref('all')
-
 const categories = ['all', 'Lingkungan', 'Infrastruktur', 'Sosial', 'Kesehatan']
 
 const fetchReports = async () => {
@@ -239,10 +240,18 @@ onMounted(() => {
 })
 
 const filteredReports = computed((): UIReportItem[] => {
-  return filterCategory.value === 'all'
-    ? reports.value
-    : reports.value.filter(item => item.report.category === filterCategory.value)
-})
+  const query = searchQuery.value.toLowerCase().trim();
+  return reports.value.filter(item => {
+    const matchCategory = filterCategory.value === 'all' || item.report.category === filterCategory.value;
+
+    const matchSearch = 
+      item.report.title.toLowerCase().includes(query) ||
+      item.report.description.toLowerCase().includes(query) ||
+      (item.report.location && item.report.location.toLowerCase().includes(query));
+
+    return matchCategory && matchSearch;
+  });
+});
 
 const getActionProperties = (status: string | undefined) => {
   if (status === 'Selesai') {
@@ -271,7 +280,6 @@ const goToDetail = (report: ReportModel) => {
     });
   }
 }
-
 
 const goToDaftarRelawan = (actionId: string | undefined) => {
   console.log("Tombol diklik. Mengirim actionId:", actionId);
