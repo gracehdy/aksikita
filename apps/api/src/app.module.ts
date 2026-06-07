@@ -1,4 +1,4 @@
-import {ThrottlerModule} from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -21,10 +21,10 @@ import { CommentModule } from './comment/comment.module';
       serveRoot: '/uploads',
     }),
     ThrottlerModule.forRoot([
-    {
-      ttl: 60000,
-      limit: 100,
-    },
+      {
+        ttl: 60000,
+        limit: 100,
+      },
     ]),
     ReportModule,
     AchievementsModule,

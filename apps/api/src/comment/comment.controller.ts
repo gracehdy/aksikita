@@ -3,11 +3,19 @@ import {
   Param,
   Post,
   Body,
-  Request,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CommentService } from './comment.service';
+import type { Request } from 'express';
+
+interface RequestWithUser extends Request {
+  user: {
+    id: string;
+    [key: string]: any;
+  };
+}
 
 @Controller('reports')
 export class CommentController {
@@ -18,7 +26,7 @@ export class CommentController {
   async createCommentForAction(
     @Param('actionId') actionId: string,
     @Body('text') text: string,
-    @Request() req,
+    @Req() req: RequestWithUser,
   ) {
     return await this.commentService.createFromAction(
       actionId,
@@ -32,7 +40,7 @@ export class CommentController {
   async createComment(
     @Param('reportId') reportId: string,
     @Body('text') text: string,
-    @Request() req,
+    @Req() req: RequestWithUser,
   ) {
     return await this.commentService.create(reportId, text, req.user.id);
   }

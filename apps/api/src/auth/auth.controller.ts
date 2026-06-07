@@ -16,7 +16,6 @@ import type {
   LoginRequest,
   LoginResponse,
 } from './auth.contract';
-import { Public } from '@prisma/client/runtime/client';
 
 @Controller('auth')
 export class AuthController {
@@ -51,12 +50,10 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<{ message: string }> {
-    res.clearCookie('token');
-    return { message: 'Logged out successfully' };
-  }
+async logout(@Res({ passthrough: true }) res: Response): Promise<{ message: string }> {
+  res.clearCookie('token');
+  return { message: 'Logged out successfully' }; 
+}
 
   @UseGuards(AuthGuard('jwt'))
   @Get('me')

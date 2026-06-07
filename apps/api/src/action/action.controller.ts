@@ -4,7 +4,7 @@ import {
   Body,
   HttpException,
   HttpStatus,
-  Request,
+  Req,
   UseGuards,
   Get,
   Param,
@@ -12,13 +12,22 @@ import {
 import { ActionService } from './action.service';
 import type { CreateActionDto } from './dto/create-action.dto';
 import { AuthGuard } from '@nestjs/passport';
+import type { Request } from 'express';
+
+interface RequestWithUser extends Request {
+  user: {
+    id: string;
+    [key: string]: any;
+  };
+}
+
 
 @Controller('actions')
 export class ActionController {
   constructor(private readonly actionService: ActionService) {}
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  async findAll() {
+  async findAll()  {
     try {
       return await this.actionService.findAll();
     } catch (error: unknown) {
@@ -31,7 +40,7 @@ export class ActionController {
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string)  {
     try {
       const result = await this.actionService.findByReportId(id);
       if (!result) {
@@ -54,7 +63,7 @@ export class ActionController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  async create(@Body() createActionDto: CreateActionDto, @Request() req) {
+  async create(@Body() createActionDto: CreateActionDto, @Req() req: RequestWithUser) {
     try {
       const userId = req.user.id;
       return await this.actionService.createAction(createActionDto, userId);
