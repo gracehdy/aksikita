@@ -1,98 +1,160 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+## Deskripsi Proyek
+ 
+AksiKita adalah platform *civic tech* berbasis lokasi yang memungkinkan masyarakat untuk melaporkan permasalahan umum di sekitar mereka, kemudian mengubah laporan tersebut menjadi **aksi nyata** yang dikoordinasikan oleh relawan komunitas.
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+### Tujuan
+ 
+- Membangun sistem pelaporan permasalahan umum skala kecil berbasis lokasi yang mudah diakses (*crowd-sourced*).
+- Merancang platform gotong royong digital untuk penanganan masalah secara mandiri oleh komunitas.
+- Menyediakan sarana koordinasi dan pengakuan kontribusi bagi relawan.
+- Meningkatkan kesadaran pemerintah terhadap masalah lokal melalui data yang transparan dan publik.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Prasyarat (Prerequisites)
+ 
+Pastikan perangkat kamu sudah terinstal:
+[Bun](https://bun.sh/) `>= 1.0.0`  Runtime & package manager utama 
+[PostgreSQL](https://www.postgresql.org/) `>= 14.x` Database utama 
+[Git](https://git-scm.com/) latest Version control
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
+## Instalasi & Setup
+ 
+### 1. Clone Repositori
+ 
 ```bash
-$ bun install
+git clone https://github.com/username/aksikita.git
+cd aksikita
+```
+ 
+### 2. Install Dependencies
+ 
+```bash
+bun install
+```
+ 
+> Perintah ini akan menginstal semua dependencies untuk seluruh workspace (monorepo) sekaligus.
+ 
+### 3. Konfigurasi Environment Variables
+ 
+```bash
+# Backend API
+cp apps/api/.env.example apps/api/.env
+```
+ 
+Lengkapi variabel yang diperlukan (lihat bagian [Environment Variables](#️-environment-variables) di bawah).
+ 
+### 4. Setup Database
+ 
+```bash
+# Jalankan migrasi database
+cd apps/api
+bunx prisma migrate dev
+ 
+# (Opsional) Isi data awal / seed
+bunx prisma db seed
+```
+ 
+### 5. Jalankan Aplikasi
+ 
+**Jalankan semua aplikasi sekaligus (direkomendasikan):**
+ 
+```bash
+# Dari root direktori
+bun run dev
+```
+ 
+**Atau jalankan masing-masing secara terpisah:**
+ 
+```bash
+# Backend API (NestJS) — berjalan di http://localhost:3000
+cd apps/api && bun run start:dev
 ```
 
-## Compile and run the project
-
-```bash
-# development
-$ bun run start
-
-# watch mode
-$ bun run start:dev
-
-# production mode
-$ bun run start:prod
+## Struktur Folder
+ 
+```
+├── apps/
+│ ├── api/ # NestJS backend API
+│ └── web/ # Vue.js frontend application
+├── packages/types/ # Shared TypeScript types/interfaces
+├── turbo.json # Turborepo configuration
+└── package.json # Root package.json
 ```
 
-## Run tests
+## Environment Variables
+ 
+### Backend (`apps/api/.env`)
+ 
+```env
+# ==============================
+# DATABASE
+# ==============================
+DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/aksikita_db"
 
-```bash
-# unit tests
-$ bun run test
-
-# e2e tests
-$ bun run test:e2e
-
-# test coverage
-$ bun run test:cov
+# ==============================
+# APP CONFIG
+# ==============================
+PORT=3000
+NODE_ENV=development
+ 
+# ==============================
+# AUTHENTICATION
+# ==============================
+JWT_SECRET=your_super_secret_jwt_key
+JWT_EXPIRES_IN=7d
+ 
+# ==============================
+# MAPS / GEOLOCATION (opsional)
+# ==============================
+MAPS_API_KEY=your_maps_api_key
 ```
+ 
+> ** Penting:** Jangan pernah meng-*commit* file `.env` ke repositori. Pastikan `.env` sudah tercantum di `.gitignore`.
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+## Menjalankan Test
+ 
+### Semua Test (dari root)
+ 
 ```bash
-$ bun install -g @nestjs/mau
-$ mau deploy
+bun run test
 ```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+ 
+### Backend Unit Test
+ 
+```bash
+cd apps/api
+bun run test
+```
+ 
+### Backend E2E Test
+ 
+```bash
+cd apps/api
+bun run test:e2e
+```
+ 
+### Cek Coverage
+ 
+```bash
+cd apps/api
+bun run test:cov
+```
+ 
+## Scripts Tersedia
+ 
+Dari **root direktori**:
+ 
+| Perintah | Deskripsi |
+|---|---|
+| `bun run dev` | Jalankan semua apps dalam mode development |
+| `bun run build` | Build semua apps untuk production |
+| `bun run test` | Jalankan semua test |
+| `bun run lint` | Lint seluruh codebase |
+ 
+ 
+## Kontribusi
+ 
+1. Fork repositori ini
+2. Buat branch fitur baru: `git checkout -b feat/nama-fitur`
+3. Commit perubahan: `git commit -m 'feat: tambah fitur X'`
+4. Push ke branch: `git push origin feat/nama-fitur`
+5. Buat Pull Request
