@@ -38,6 +38,7 @@ export class ReportController {
   }
   
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   findAll() {
     return this.pelaporanService.findAll();
   }
