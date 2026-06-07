@@ -122,11 +122,11 @@
             style="background-color: #f8f1f1"
           >
             <v-avatar size="40" color="#11698E" class="mr-4 mt-1">
-              <span class="text-white font-weight-bold">{{ comment.user.name.charAt(0).toUpperCase() }}</span>
+              <span class="text-white font-weight-bold">{{ comment.user.displayName ? comment.user.displayName.charAt(0).toUpperCase() : 'U' }}</span>
             </v-avatar>
             <div class="w-100">
               <div class="d-flex justify-space-between align-center mb-1">
-                <div class="font-weight-bold text-black text-body-1">{{ comment.user.name }}</div>
+                <div class="font-weight-bold text-black text-body-1">{{ comment.user.displayName || comment.user.name }}</div>
                 <div class="text-caption text-grey-darken-1">{{ formatDate(comment.createdAt) }}</div>
               </div>
               <p class="text-grey-darken-2 mb-0">{{ comment.text }}</p>
@@ -209,12 +209,12 @@ import { useRoute, useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
 import MediaGallery from "../components/mediagallery.vue";
 
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 
-const report = ref<any>(null)
-const newComment = ref<string>('')
-const idAksi = route.params.id
+const report = ref<any>(null);
+const newComment = ref<string>('');
+const idAksi = route.params.id;
 
 const fetchDetailAksi = async () => {
   const token = localStorage.getItem('jwt_token')
@@ -235,7 +235,9 @@ const fetchDetailAksi = async () => {
 
     if (res.ok) {
       const data = await res.json()
-      report.value = data
+      console.log("Data Aksi yang diterima:", data);
+      report.value = {...data, comments: data.report?.comments || data.comments || []};
+      console.log("Data baru yang masuk ke state:", report.value);
     } else if (res.status === 401) {
       alert("Sesi Anda telah berakhir.")
       localStorage.removeItem('jwt_token')
@@ -247,13 +249,18 @@ const fetchDetailAksi = async () => {
 }
 
 const submitComment = async () => {
-  if (!newComment.value.trim()) return
-
-  const token = localStorage.getItem('jwt_token')
-  if (!token) return
+  if (!newComment.value.trim()) return;
+  const actionId = report.value.volunteerAction?.id;
+  if (!actionId) {
+    console.error("ID Aksi tidak ditemukan dalam objek report");
+    return;
+  }
+  const token = localStorage.getItem('jwt_token');
+  
+  if (!token) return;
 
   try {
-    const res = await fetch(`http://localhost:3000/api/reports/${idAksi}/comments`, {
+    const res = await fetch(`http://localhost:3000/api/reports/actions/${actionId}/comments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -262,13 +269,14 @@ const submitComment = async () => {
       body: JSON.stringify({
         text: newComment.value
       })
-    })
-
+    });
     if (res.ok) {
       newComment.value = ''
-      fetchDetailAksi()
+      fetchDetailAksi();
     } else {
-      alert("Gagal mengirim komentar.")
+      const errorData = await res.json();
+      console.error("Error dari server:", errorData);
+      alert("Gagal mengirim komentar.");
     }
   } catch (error) {
     console.error("Kesalahan mengirim komentar:", error)

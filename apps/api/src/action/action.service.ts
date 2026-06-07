@@ -5,11 +5,12 @@ import {
   Action,
   Report,
   User,
-  Media
+  Media,
+  Comment
 } from '../generated/prisma/client';
 
 type ActionWithReport = Action & {
-  report: Report & { user: User; media: Media[] };
+  report: Report & { user: User; media: Media[]; comments: (Comment & { user: User })[] };
   volunteers?: Array<{ id: number}>;
   requiredPeople?: number | null;
   content?: string | null;
@@ -28,6 +29,7 @@ export class ActionService {
       category: action.report.category,
       location: action.report.location,
       createdAt: action.report.createdAt,
+      comments: action.report.comments,
       author: {
         name:
           action.report.user.displayName ||
@@ -68,6 +70,9 @@ export class ActionService {
           include: {
             user: true,
             media: true,
+            comments: {
+            include: { user: true }
+          }
           },
         },
         volunteers: true,
@@ -85,6 +90,9 @@ export class ActionService {
           include: {
             user: true,
             media: true,
+            comments: {
+            include: { user: true }
+          }
           },
         },
         volunteers: true,
