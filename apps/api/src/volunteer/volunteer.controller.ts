@@ -18,21 +18,23 @@ export class VolunteerController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('register')
-  async register(
-    @Body() dto: RegisterVolunteerDto,
-    @Request() req,
-  ) {
+  async register(@Body() dto: RegisterVolunteerDto, @Request() req) {
     if (!dto.actionId || !dto.fullName || !dto.email || !dto.phone) {
       throw new HttpException(
         { message: 'Missing required fields' },
         HttpStatus.BAD_REQUEST,
       );
     }
-    console.log("Mencari Action dengan ID:", dto.actionId);
-    const action = await this.prisma.action.findUnique({ where: { id: dto.actionId } });
+    console.log('Mencari Action dengan ID:', dto.actionId);
+    const action = await this.prisma.action.findUnique({
+      where: { id: dto.actionId },
+    });
     if (!action) {
       const allActions = await this.prisma.action.findMany();
-      console.log("Daftar semua ID action yang ada di database:", allActions.map(a => a.id));
+      console.log(
+        'Daftar semua ID action yang ada di database:',
+        allActions.map((a) => a.id),
+      );
       throw new NotFoundException('Action not found');
     }
 
@@ -45,7 +47,7 @@ export class VolunteerController {
           phone: dto.phone,
           healthCondition: dto.healthCondition ?? '',
           reason: dto.reason ?? '',
-          user: {connect: { id: req.user?.id }},
+          user: { connect: { id: req.user?.id } },
         },
       });
 
@@ -56,8 +58,7 @@ export class VolunteerController {
     } catch (err: unknown) {
       console.error('Error creating volunteer registration:', err);
 
-      const detail =
-        err instanceof Error ? err.message : String(err);
+      const detail = err instanceof Error ? err.message : String(err);
 
       throw new HttpException(
         { message: 'Failed to register volunteer', detail },

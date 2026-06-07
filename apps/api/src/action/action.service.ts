@@ -6,12 +6,16 @@ import {
   Report,
   User,
   Media,
-  Comment
+  Comment,
 } from '../generated/prisma/client';
 
 type ActionWithReport = Action & {
-  report: Report & { user: User; media: Media[]; comments: (Comment & { user: User })[] };
-  volunteers?: Array<{ id: number}>;
+  report: Report & {
+    user: User;
+    media: Media[];
+    comments: (Comment & { user: User })[];
+  };
+  volunteers?: Array<{ id: number }>;
   requiredPeople?: number | null;
   content?: string | null;
 };
@@ -71,15 +75,17 @@ export class ActionService {
             user: true,
             media: true,
             comments: {
-            include: { user: true }
-          }
+              include: { user: true },
+            },
           },
         },
         volunteers: true,
       },
     });
 
-    return actions.map((action) => this.mapActionToReportView(action as ActionWithReport));
+    return actions.map((action) =>
+      this.mapActionToReportView(action as ActionWithReport),
+    );
   }
 
   async findByReportId(reportId: string) {
@@ -91,8 +97,8 @@ export class ActionService {
             user: true,
             media: true,
             comments: {
-            include: { user: true }
-          }
+              include: { user: true },
+            },
           },
         },
         volunteers: true,
@@ -101,6 +107,6 @@ export class ActionService {
 
     if (!action) return null;
 
-    return this.mapActionToReportView(action as ActionWithReport);
+    return this.mapActionToReportView(action);
   }
 }

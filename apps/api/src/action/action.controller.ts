@@ -21,7 +21,7 @@ export class ActionController {
   async findAll() {
     try {
       return await this.actionService.findAll();
-    } catch (error : unknown) {
+    } catch (error: unknown) {
       throw new HttpException(
         { message: 'Failed to fetch actions', error: (error as Error).message },
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -41,7 +41,7 @@ export class ActionController {
         );
       }
       return result;
-    } catch (error : unknown) {
+    } catch (error: unknown) {
       if (error instanceof HttpException) {
         throw error;
       }
@@ -58,7 +58,7 @@ export class ActionController {
     try {
       const userId = req.user.id;
       return await this.actionService.createAction(createActionDto, userId);
-    } catch (error : unknown) {
+    } catch (error: unknown) {
       throw new HttpException(
         { message: 'Failed to create action', error: (error as Error).message },
         HttpStatus.INTERNAL_SERVER_ERROR,

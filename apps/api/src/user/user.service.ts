@@ -48,7 +48,6 @@ export class UserService {
   }
 
   async getUserProfile(userId: string): Promise<UserProfileResponseDto | null> {
-    
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: {
@@ -63,7 +62,6 @@ export class UserService {
 
     if (!user) return null;
 
-    
     const userDto = new UserDto(
       user.id,
       user.email,
@@ -72,7 +70,6 @@ export class UserService {
       user.createdAt,
     );
 
-    
     const totalLaporanDibuat = await this.prisma.report.count({
       where: { userId },
     });
@@ -81,7 +78,6 @@ export class UserService {
       where: { userId },
     });
 
-    
     const aggregatePoints = await this.prisma.point.aggregate({
       where: { userId },
       _sum: {
@@ -91,7 +87,6 @@ export class UserService {
     const currentPoin = aggregatePoints._sum.value || 0;
     const targetPoin = 1000; // ini itu nanti bisa diubah2, ini aku sesuaiin dulu kayak di UInya
 
-    
     const allBadges = await this.prisma.badge.findMany();
     const earnedBadgeIds = user.rewards.map((r) => r.badgeId);
 
@@ -102,14 +97,12 @@ export class UserService {
       isEarned: earnedBadgeIds.includes(b.id),
     }));
 
-    
     const sertifikat = user.certificates.map((c) => ({
       id: c.id,
       title: c.title ?? 'Sertifikat Tanpa Judul',
       file: c.file ?? '',
     }));
 
-    
     return {
       user: userDto,
       stats: {

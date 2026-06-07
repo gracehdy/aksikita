@@ -291,18 +291,11 @@ const goToDaftarRelawan = (actionId: string | undefined) => {
 
 <style scoped>
 .logo-text {
-  font-family: 'Poppins', sans-serif !important;
-  color: #000000;
-  letter-spacing: -0.5px;
-  font-size: 25px !important;
+  font-family: 'Poppins', sans-serif !important; color: #000000; letter-spacing: -0.5px; font-size: 25px !important;
 }
 
 .nav-btn {
-  font-family: 'Poppins', sans-serif !important;
-  text-transform: none !important;
-  font-weight: 600 !important;
-  font-size: 18px !important;
-  color: #555555;
+  font-family: 'Poppins', sans-serif !important; text-transform: none !important; font-weight: 600 !important; font-size: 18px !important; color: #555555;
 }
 
 .search-bar :deep(input) {
@@ -313,10 +306,7 @@ const goToDaftarRelawan = (actionId: string | undefined) => {
 }
 
 .active-nav {
-  color: #11698E !important;
-  background-color: #F8F1F1 !important;
-  --v-activated-opacity: 0 !important;
-  opacity: 1 !important;
+  color: #11698E !important; background-color: #F8F1F1 !important; --v-activated-opacity: 0 !important; opacity: 1 !important;
 }
 
 .active-nav :deep(.v-icon) {
@@ -328,8 +318,7 @@ const goToDaftarRelawan = (actionId: string | undefined) => {
 }
 
 .gap-2 {
-  display: flex;
-  gap: 8px;
+  display: flex; gap: 8px;
 }
 
 .border-b {
@@ -337,42 +326,27 @@ const goToDaftarRelawan = (actionId: string | undefined) => {
 }
 
 .section-title {
-  font-family: 'Poppins', sans-serif !important;
-  color: #19456B;
+  font-family: 'Poppins', sans-serif !important; color: #19456B;
 }
 
 .section-subtitle {
-  font-family: 'Poppins', sans-serif !important;
-  font-size: 16px;
-  color: #666;
+  font-family: 'Poppins', sans-serif !important; font-size: 16px; color: #666;
 }
 
 .action-btn {
-  font-family: 'Poppins', sans-serif !important;
-  text-transform: none !important;
-  font-weight: 600;
-  border-radius: 12px;
+  font-family: 'Poppins', sans-serif !important; text-transform: none !important; font-weight: 600; border-radius: 12px;
 }
 
 .filter-btn {
-  font-family: 'Poppins', sans-serif !important;
-  text-transform: none !important;
-  background-color: white !important;
-  border: 1px solid #E0E0E0 !important;
-  color: #555 !important;
-  border-radius: 20px;
-  font-weight: 500;
+  font-family: 'Poppins', sans-serif !important; text-transform: none !important; background-color: white !important; border: 1px solid #E0E0E0 !important; color: #555 !important; border-radius: 20px; font-weight: 500;
 }
 
 .filter-active {
-  background-color: #11698E !important;
-  color: white !important;
-  border: none !important;
+  background-color: #11698E !important; color: white !important; border: none !important;
 }
 
 .report-card {
-  transition: transform 0.2s;
-  background: transparent !important;
+  transition: transform 0.2s; background: transparent !important;
 }
 
 .report-card:hover {
@@ -380,65 +354,38 @@ const goToDaftarRelawan = (actionId: string | undefined) => {
 }
 
 .no-image-placeholder {
-  height: 220px;
-  background-color: #F8F1F1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 220px; background-color: #F8F1F1; display: flex; align-items: center; justify-content: center;
 }
 
 .report-title {
-  font-family: 'Poppins', sans-serif !important;
-  font-size: 18px;
-  font-weight: 700;
-  color: #19456B;
+  font-family: 'Poppins', sans-serif !important; font-size: 18px; font-weight: 700; color: #19456B;
 }
 
 .report-desc {
-  font-family: 'Poppins', sans-serif !important;
-  font-size: 14px;
-  color: #777;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-family: 'Poppins', sans-serif !important; font-size: 14px; color: #777; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden;
 }
 
 .author-name {
-  font-family: 'Poppins', sans-serif !important;
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
+  font-family: 'Poppins', sans-serif !important; font-size: 14px; font-weight: 600; color: #333;
 }
 
 .post-date, .location-text, .volunteer-info {
-  font-family: 'Poppins', sans-serif !important;
-  font-size: 12px;
-  color: #888;
+  font-family: 'Poppins', sans-serif !important; font-size: 12px; color: #888;
 }
 
 .category-chip {
-  background-color: #F8F1F1 !important;
-  color: #11698E !important;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif !important;
+  background-color: #F8F1F1 !important; color: #11698E !important; font-weight: 600; font-family: 'Poppins', sans-serif !important;
 }
 
 .status-chip {
-  background-color: #16C79A !important;
-  color: white !important;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif !important;
+  background-color: #16C79A !important; color: white !important; font-weight: 600; font-family: 'Poppins', sans-serif !important;
 }
 
 .volunteer-box {
-  background-color: #fcfcfc;
-  border-top: 1px solid #eee;
+  background-color: #fcfcfc; border-top: 1px solid #eee;
 }
 
 .volunteer-btn {
-  font-family: 'Poppins', sans-serif !important;
-  text-transform: none !important;
-  font-weight: 600;
-  border-radius: 8px;
+  font-family: 'Poppins', sans-serif !important; text-transform: none !important; font-weight: 600; border-radius: 8px;
 }
 </style>

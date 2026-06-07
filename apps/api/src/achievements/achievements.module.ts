@@ -2,6 +2,6 @@ import { Module } from '@nestjs/common';
 import { AchievementsController } from './achievements.controller';
 
 @Module({
-  controllers: [AchievementsController]
+  controllers: [AchievementsController],
 })
 export class AchievementsModule {}

@@ -14,23 +14,22 @@ export class CommentService {
         userId,
       },
       include: {
-      user: true 
-    }
+        user: true,
+      },
     });
   }
 
   async createFromAction(actionId: string, text: string, userId: string) {
-  console.log("Mencari aksi dengan ID:", actionId);
-  const action = await this.prisma.action.findUnique({
-    where: { id: actionId },
-    select: { reportId: true }
-  });
+    console.log('Mencari aksi dengan ID:', actionId);
+    const action = await this.prisma.action.findUnique({
+      where: { id: actionId },
+      select: { reportId: true },
+    });
 
-  if (!action) {
-    throw new NotFoundException('Aksi tidak ditemukan');
+    if (!action) {
+      throw new NotFoundException('Aksi tidak ditemukan');
+    }
+    console.log('Aksi ditemukan, reportId:', action.reportId);
+    return await this.create(action.reportId, text, userId);
   }
-  console.log("Aksi ditemukan, reportId:", action.reportId);
-  return await this.create(action.reportId, text, userId);
-}
-
 }

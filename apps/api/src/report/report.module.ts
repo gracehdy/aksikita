@@ -7,17 +7,19 @@ import { extname } from 'path';
 import { MulterModule } from '@nestjs/platform-express/multer/multer.module';
 
 @Module({
-  imports: [SearchModule,
+  imports: [
+    SearchModule,
     MulterModule.register({
       storage: diskStorage({
         destination: './uploads',
         filename: (req, file, cb) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
           cb(null, `${uniqueSuffix}${extname(file.originalname)}`);
         },
       }),
       limits: {
-      fileSize: 10 * 1024 * 1024,
+        fileSize: 10 * 1024 * 1024,
       },
     }),
   ],

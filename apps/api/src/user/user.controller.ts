@@ -32,7 +32,6 @@ export class UserController {
   @Get('profile')
   async getProfile(@Request() req): Promise<UserProfileResponseDto> {
     const id = req.user.id;
-    
 
     const result = await this.userService.getUserProfile(id);
 

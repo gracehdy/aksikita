@@ -16,9 +16,12 @@ export class ReportService {
         title: request.title,
         postType: false,
         userId: userId,
-        media: request.image && request.image.length > 0 ? {
-          create: request.image.map((url) => ({ url }))
-        } : undefined,
+        media:
+          request.image && request.image.length > 0
+            ? {
+                create: request.image.map((url) => ({ url })),
+              }
+            : undefined,
       },
     });
 
@@ -26,7 +29,6 @@ export class ReportService {
   }
 
   async findAll(): Promise<Report[]> {
-
     const allReports: Report[] = await this.prismaClient.report.findMany({
       include: {
         user: true,
@@ -43,11 +45,11 @@ export class ReportService {
         user: true,
         media: true,
         comments: {
-        include: {
-          user: true,
+          include: {
+            user: true,
+          },
+          orderBy: { createdAt: 'desc' },
         },
-        orderBy: { createdAt: 'desc' }
-      }
       },
     });
 
