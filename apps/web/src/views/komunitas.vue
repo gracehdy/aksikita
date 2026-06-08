@@ -179,6 +179,13 @@
   color: white !important; 
   border: 1px solid #11698E !important;
 }
+
+.search-bar :deep(input) {
+  font-family: 'Poppins', sans-serif;
+}
+.search-bar :deep(.v-field__outline) {
+  color: #e0e0e0;
+}
 </style>
 
 <script setup lang="ts">
@@ -211,22 +218,45 @@ onMounted(fetchActions)
 
 const filteredReports = computed(() => {
   const now = new Date();
-  const processedReports = reports.value.map(item => {
-    const scheduled = item.scheduledAt ? new Date(item.scheduledAt) : null;
+  const query = searchQuery.value.toLowerCase().trim();
+  const selectedFilter = filterCategory.value;
+  const textFiltered = reports.value.filter(item => {
+    if (!item) return false;
+    const target = item.report ? item.report : item;
+    const title = target.title || '';
+    const description = target.description || '';
+    const location = target.location || '';
+    return (
+      title.toLowerCase().includes(query) ||
+      description.toLowerCase().includes(query) ||
+      location.toLowerCase().includes(query)
+    );
+  });
+  const processedReports = textFiltered.map(item => {
+    const targetReport = (item.report || {}) as any;
+    const rawDate = item.scheduledAt || targetReport.scheduledAt || (item.volunteerAction?.scheduledDate);
+    const scheduled = rawDate ? new Date(rawDate) : null;
     let status = 'Akan Datang';
     
     if (scheduled) {
-      if (scheduled > now) status = 'Akan Datang';
-      else if (scheduled.toDateString() === now.toDateString()) status = 'Sedang Berjalan';
-      else status = 'Selesai';
+      if (scheduled > now) {
+        status = 'Akan Datang';
+      } else if (scheduled.toDateString() === now.toDateString()) {
+        status = 'Sedang Berjalan';
+      } else {
+        status = 'Selesai';
+      }
     }
 
-    return { ...item, _virtualStatus: status };
+    return { ...item, ...targetReport, _virtualStatus: status};
   });
 
-  if (filterCategory.value === 'Semua') return processedReports;
-  return processedReports.filter(r => r._virtualStatus === filterCategory.value);
-})
+  if (selectedFilter === 'Semua' || selectedFilter === 'all') {
+    return processedReports;
+  }
+  
+  return processedReports.filter(item => item._virtualStatus === selectedFilter);
+});
 
 const goToDetail = (report: any) => router.push({ name: 'detailAksi', params: { id: report.id } })
 
