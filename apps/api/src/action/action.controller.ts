@@ -41,7 +41,7 @@ export class ActionController {
   @UseGuards(AuthGuard('jwt'))
   async findOne(@Param('id') id: string) {
     try {
-      const result = await this.actionService.findByReportId(id);
+      const result = await this.actionService.findById(id);
       if (!result) {
         throw new HttpException(
           { message: 'Action not found' },

@@ -33,9 +33,9 @@
               <v-chip class="category-chip px-4" size="large">
                 {{ report.category }}
               </v-chip>
-              <v-chip :color="getStatusColor(statusAction)" class="text-white font-weight-medium px-4" size="large">
-                <v-icon start size="small">{{ getStatusIcon(statusAction) }}</v-icon>
-                {{ formatStatusText(statusAction) }}
+              <v-chip :color="getStatusColor(report.volunteerAction)" class="text-white font-weight-medium px-4" size="large">
+                <v-icon start size="small">{{ getStatusIcon(report.volunteerAction) }}</v-icon>
+                {{ formatStatusText(report.volunteerAction) }}
               </v-chip>
             </div>
 
@@ -213,7 +213,6 @@ import { formatStatusText, getStatusColor, getStatusIcon } from '../utils/status
 
 const route = useRoute();
 const router = useRouter();
-
 const report = ref<any>(null);
 const newComment = ref<string>('');
 const idAksi = route.params.id;

@@ -1,3 +1,13 @@
+export const getStatusString = (action: any): string => {
+  if (!action || !action.scheduledAt) return 'Status Tidak Diketahui';
+  const now = new Date();
+  const scheduledDate = new Date(action.scheduledAt);
+  
+  if (scheduledDate > now) return 'Akan Datang';
+  if (scheduledDate.toDateString() === now.toDateString()) return 'Sedang Berjalan';
+  return 'Selesai';
+};
+
 
 export const getStatusColor = (status: string): string => {
   if (status === 'Sedang Berjalan') return '#19456B';

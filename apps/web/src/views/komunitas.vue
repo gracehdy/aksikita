@@ -193,7 +193,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Navbar from '../components/Navbar.vue'
 import MediaGallery from '../components/mediagallery.vue'
-import { formatStatusText, getStatusColor, getStatusIcon, getButtonConfig } from '../utils/status.js'
+import { formatStatusText, getStatusColor, getStatusIcon, getButtonConfig, getStatusString } from '../utils/status.js'
 import { formatDate } from '../utils/date.js'
 
 const router = useRouter()
@@ -261,7 +261,32 @@ const filteredReports = computed(() => {
 const goToDetail = (report: any) => router.push({ name: 'detailAksi', params: { id: report.id } })
 
 const handleActionClick = (report: any) => {
-  const status = formatStatusText(report.volunteerAction);
-  status === 'Akan Datang' ? router.push({ path: '/daftarRelawan', query: { idAksi: report.id } }) : goToDetail(report)
+  const actionId = report.volunteerAction?.id || report.id;
+  const status = report._virtualStatus;
+
+  console.log("--- DEBUGGING ---");
+  console.log("Action ID:", actionId);
+  console.log("Status:", status);
+
+  if (!localStorage.getItem('jwt_token')) {
+    router.push('/');
+    return;
+  }
+
+  if (status === 'Akan Datang') {
+    if (!actionId) {
+      alert("ID Aksi tidak tersedia");
+      return;
+    }
+    router.push({ 
+      path: '/daftarRelawan', 
+      query: { idAksi: actionId } 
+    }).catch(err => {
+      console.error("Navigasi gagal, cek router index.ts:", err);
+      alert("Navigasi gagal, pastikan rute /daftarRelawan ada di router/index.ts");
+    });
+  } else {
+    goToDetail(report);
+  }
 }
 </script>

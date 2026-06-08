@@ -109,4 +109,24 @@ export class ActionService {
 
     return this.mapActionToReportView(action);
   }
+
+async findById(id: string) {
+  const action = await this.prisma.action.findUnique({
+    where: { id: id },
+    include: {
+      report: {
+        include: {
+          user: true,
+          media: true,
+          comments: { include: { user: true } },
+        },
+      },
+      volunteers: true,
+    },
+  });
+
+  if (!action) return null;
+
+  return this.mapActionToReportView(action as ActionWithReport);
+}
 }
