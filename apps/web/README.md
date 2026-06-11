@@ -1,137 +1,93 @@
-## Deskripsi Proyek
- 
-AksiKita adalah platform *civic tech* berbasis lokasi yang memungkinkan masyarakat untuk melaporkan permasalahan umum di sekitar mereka, kemudian mengubah laporan tersebut menjadi **aksi nyata** yang dikoordinasikan oleh relawan komunitas.
+# AksiKita Web
 
-### Tujuan
- 
-- Membangun sistem pelaporan permasalahan umum skala kecil berbasis lokasi yang mudah diakses (*crowd-sourced*).
-- Merancang platform gotong royong digital untuk penanganan masalah secara mandiri oleh komunitas.
-- Menyediakan sarana koordinasi dan pengakuan kontribusi bagi relawan.
-- Meningkatkan kesadaran pemerintah terhadap masalah lokal melalui data yang transparan dan publik.
+Vue 3 frontend for the AksiKita civic tech platform.
 
-## Prasyarat (Prerequisites)
- 
-Pastikan perangkat kamu sudah terinstal:
-[Bun](https://bun.sh/) `>= 1.0.0`  Runtime & package manager utama 
-[PostgreSQL](https://www.postgresql.org/) `>= 14.x` Database utama 
-[Git](https://git-scm.com/) latest Version control
+## Prerequisites
 
-## Instalasi & Setup
- 
-### 1. Clone Repositori
- 
-```bash
-git clone https://github.com/username/aksikita.git
-cd aksikita
-```
- 
-### 2. Install Dependencies
- 
-```bash
-bun install
-```
- 
-> Perintah ini akan menginstal semua dependencies untuk seluruh workspace (monorepo) sekaligus.
- 
-### 3. Konfigurasi Environment Variables
- 
-```bash
-# Frontend
-cp apps/web/.env.example apps/web/.env
-```
- 
-Lengkapi variabel yang diperlukan (lihat bagian [Environment Variables](#️-environment-variables) di bawah).
- 
-### 4. Setup Database
- 
-```bash
-# Jalankan migrasi database
-cd apps/api
-bunx prisma migrate dev
- 
-# (Opsional) Isi data awal / seed
-bunx prisma db seed
-```
- 
-### 5. Jalankan Aplikasi
- 
-**Jalankan semua aplikasi sekaligus (direkomendasikan):**
- 
-```bash
-# Dari root direktori
-bun run dev
-```
- 
-**Atau jalankan masing-masing secara terpisah:**
- 
-```bash
-# Frontend (Vue.js) — berjalan di http://localhost:5173
-cd apps/web && bun run dev
-```
+- Bun ≥ 1.0
 
-## Struktur Folder
- 
-```
-├── apps/
-│ ├── api/ # NestJS backend API
-│ └── web/ # Vue.js frontend application
-├── packages/types/ # Shared TypeScript types/interfaces
-├── turbo.json # Turborepo configuration
-└── package.json # Root package.json
-```
+## Setup
 
-## Environment Variables
- 
-### Frontend (`apps/web/.env`)
- 
-```env
-# ==============================
-# API
-# ==============================
-VITE_API_BASE_URL=http://localhost:3000
- 
-```
- 
-> ** Penting:** Jangan pernah meng-*commit* file `.env` ke repositori. Pastikan `.env` sudah tercantum di `.gitignore`.
-
-## Menjalankan Test
- 
-### Semua Test (dari root)
- 
-```bash
-bun run test
-```
- 
-### Frontend Test
- 
 ```bash
 cd apps/web
-bun run test
+bun install
 ```
- 
-### Cek Coverage
- 
+
+## Development
+
 ```bash
-cd apps/api
-bun run test:cov
+bun run dev
 ```
- 
-## Scripts Tersedia
- 
-Dari **root direktori**:
- 
-| Perintah | Deskripsi |
-|---|---|
-| `bun run dev` | Jalankan semua apps dalam mode development |
-| `bun run build` | Build semua apps untuk production |
-| `bun run test` | Jalankan semua test |
-| `bun run lint` | Lint seluruh codebase |
- 
- 
-## Kontribusi
- 
-1. Fork repositori ini
-2. Buat branch fitur baru: `git checkout -b feat/nama-fitur`
-3. Commit perubahan: `git commit -m 'feat: tambah fitur X'`
-4. Push ke branch: `git push origin feat/nama-fitur`
-5. Buat Pull Request
+
+The app will be available at http://localhost:5173.
+
+## Building for Production
+
+```bash
+bun run build
+```
+
+This runs type checking and Vite build in parallel. Output is in `dist/`.
+
+## Preview Production Build
+
+```bash
+bun run preview
+```
+
+## Type Checking
+
+```bash
+bun run type-check
+```
+
+## Project Structure
+
+```
+apps/web/
+├── src/
+│   ├── components/       # Reusable components (Navbar, mediagallery)
+│   ├── views/            # Page components (home, login, buatLaporan, etc.)
+│   ├── router/           # Vue Router configuration
+│   ├── plugins/          # Vuetify and other plugin setup
+│   ├── styles/           # SCSS and UnoCSS layers
+│   ├── utils/            # Helper functions (date, status)
+│   ├── data/             # Mock data (mockReports.ts)
+│   ├── App.vue           # Root component
+│   └── main.ts           # Entry point
+├── index.html
+├── uno.config.ts         # UnoCSS configuration (with Vuetify preset)
+├── vite.config.mts       # Vite configuration
+├── tsconfig.json         # TypeScript configuration (split into app/node)
+└── package.json
+```
+
+## Technologies
+
+| Tool         | Purpose                             |
+| ------------ | ----------------------------------- |
+| Vue 3        | UI framework                        |
+| Vite         | Build tool and dev server           |
+| Vuetify 4    | Material Design component library   |
+| UnoCSS       | Utility-first CSS engine            |
+| Vue Router 4 | Client-side routing                 |
+| TypeScript   | Type safety                         |
+| Shared Types | `@aksikita/types` workspace package |
+
+## API Integration
+
+The frontend expects the backend API at `http://localhost:3000`.
+
+## Features Implemented
+
+- User registration and login (JWT)
+- Report creation with location and images
+- Action coordination (create, view, join)
+- Volunteer registration
+- Commenting system
+- Community page
+- Volunteer achievements
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](../../LICENSE) file for details.
