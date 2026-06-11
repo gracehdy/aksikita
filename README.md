@@ -21,7 +21,7 @@ bun install
 cp apps/api/.env.example apps/api/.env
 ```
 
-> # Edit apps/api/.env with your database credentials (see apps/api/README.md)
+> Edit apps/api/.env with your database credentials (see apps/api/README.md)
 
 ### Database & Run
 
