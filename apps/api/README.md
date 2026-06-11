@@ -87,16 +87,6 @@ apps/api/
 └── test/               # E2E tests
 ```
 
-## Deployment
-
-1. Set production environment variables (`DATABASE_URL`, `JWT_SECRET`)
-2. Run `bun run build`
-3. Start with a process manager:
-   ```bash
-   bun run start:prod
-   ```
-   Recommended: `pm2`, `systemd`, or Docker
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](../../LICENSE) file for details.
