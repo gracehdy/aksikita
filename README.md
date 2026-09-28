@@ -60,3 +60,5 @@ bun run dev
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Team project with teammates ([original repo](https://github.com/Reydeuss/aksikita))
